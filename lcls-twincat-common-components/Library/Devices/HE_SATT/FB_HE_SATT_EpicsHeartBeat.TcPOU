@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_EpicsHeartBeat" Id="{b80462e0-1150-43e6-9c19-0a44d1855bf4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HE_SATT_EpicsHeartBeat
+VAR
+    bHeartbeat : BOOL; // TRUE needs to be written to this externally
+    fbHeartbeatTimer : TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbHeartbeatTimer(IN := NOT bHeartbeat);
+bHeartbeat := FALSE;]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{571d0bc8-4cbd-4d7d-86dd-87382dc3af98}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    tTimeout : TIME;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbHeartbeatTimer.PT := tTimeout;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Heartbeat" Id="{8b835ce1-256b-4ff5-8e23-4a99e42792d9}">
+      <Declaration><![CDATA[METHOD PUBLIC Heartbeat
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.bHeartbeat := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsHeartbeatExpired" Id="{6cf96331-5b1e-425f-add3-6f2b9a656818}">
+      <Declaration><![CDATA[METHOD PUBLIC IsHeartbeatExpired : BOOL]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IsHeartbeatExpired := THIS^.fbHeartbeatTimer.Q;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_UserRequest_Test" Id="{f725bdf0-5866-43db-ae0d-351577d2575d}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_UserRequest_Test EXTENDS FB_TestSuite
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+GivenApplyCommandedStartNewConfiguration();
+]]></ST>
+    </Implementation>
+    <Method Name="GivenApplyCommandedStartNewConfiguration" Id="{066ac0f4-63b3-4282-91e3-be7ba1a2dd59}">
+      <Declaration><![CDATA[
+METHOD PRIVATE GivenApplyCommandedStartNewConfiguration
+VAR
+    fbHE_SATT_SequenceTestDouble : FB_HE_SATT_SequenceTestDouble;
+    // Subject under test
+    fbHE_SATT_UserRequest : FB_HE_SATT_UserRequest(iHE_SATT_Sequence := fbHE_SATT_SequenceTestDouble);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+TEST('GivenApplyCommandedStartNewConfiguration');
+
+fbHE_SATT_UserRequest.RequestAttenuation(0.8);
+AssertEquals_LREAL(Expected := 0.0,
+                   Actual := fbHE_SATT_SequenceTestDouble.GetStartAttenuationValue(),
+                   Delta := 0.01,
+                   Message := 'Not correct value #1');
+
+fbHE_SATT_UserRequest.ApplyConfig();
+
+AssertEquals_LREAL(Expected := 0.8,
+                   Actual := fbHE_SATT_SequenceTestDouble.GetStartAttenuationValue(),
+                   Delta := 0.01,
+                   Message := 'Not correct value #2');
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_UserRequest" Id="{1f4e71bb-a95a-4e02-93b5-5870a012f0a4}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_UserRequest
+VAR
+    iHE_SATT_Sequence : I_HE_SATT_Sequence;
+
+    fRequestAttenuation : LREAL; // [0.0 - 1.0] - Link to epics read-write
+    fRequestedAttenuation : LREAL; // [0.0 - 1.0] - Link to epics but read only
+    bApplyConfig : BOOL; // Link to epics - read-write
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF bApplyConfig THEN
+    ApplyConfig();
+    bApplyConfig := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+    <Method Name="ApplyConfig" Id="{9ba674a3-a3fa-42e0-88bc-8509aaaa294e}">
+      <Declaration><![CDATA[
+METHOD PUBLIC ApplyConfig
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// Check finite and between 0.0 and 1.0
+IsFinite(x := THIS^.fRequestAttenuation);
+
+THIS^.fRequestedAttenuation := THIS^.fRequestAttenuation;
+
+THIS^.iHE_SATT_Sequence.Start(fRequestedAttenuation := THIS^.fRequestAttenuation);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{640c0c29-abac-4f20-8436-e914261d9bf6}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    iHE_SATT_Sequence : I_HE_SATT_Sequence;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iHE_SATT_Sequence := iHE_SATT_Sequence]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RequestAttenuation" Id="{fc0c7425-477a-4f85-a90c-7324115e545b}">
+      <Declaration><![CDATA[METHOD PUBLIC RequestAttenuation
+VAR_INPUT
+    fRequestedAttenuation : LREAL; // [0.0 - 1.0]
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+THIS^.fRequestAttenuation := fRequestAttenuation;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

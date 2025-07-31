@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_Sequence" Id="{dfc1a105-47c7-4948-b3e0-930059e1be08}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HE_SATT_Sequence
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="SequenceState" Id="{929427a0-ccc7-4946-99ca-5deed82b5dcf}">
+      <Declaration><![CDATA[PROPERTY PUBLIC SequenceState : E_HE_SATT_SequenceState]]></Declaration>
+      <Get Name="Get" Id="{6ccd5faf-c46b-4e55-9e3a-0a24258f6c4b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_Sequence" Id="{0db00903-e467-4eba-a2ac-5c1710fe2d80}">
+    <Declaration><![CDATA[INTERFACE I_HE_SATT_Sequence
+]]></Declaration>
+    <Method Name="Start" Id="{e0b04e5d-646a-4a8b-b8e5-a82e75dd5e38}">
+      <Declaration><![CDATA[METHOD Start
+VAR_INPUT
+    fRequestedAttenuation : LREAL; // [0.0 - 1.0]
+END_VAR]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

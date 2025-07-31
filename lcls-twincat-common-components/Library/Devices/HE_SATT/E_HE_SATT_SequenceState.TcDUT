@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_HE_SATT_SequenceState" Id="{b241ab8d-0267-4717-89e0-92e9c1826918}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_HE_SATT_SequenceState :
+(
+    ERROR := 0
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

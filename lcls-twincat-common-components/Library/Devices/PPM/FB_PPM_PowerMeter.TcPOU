@@ -183,7 +183,7 @@ END_VAR]]></Declaration>
 // to type INT, update your lcls-general version to at least
 // v2.12.0
 fbGetPMVoltage(
-    iRaw := iVoltageINT,
+    iRaw := TO_INT(iVoltageINT),
     iTermBits := iTermBits,
     fTermMax := fTermMax,
     fTermMin := fTermMin,

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_SequenceTestDouble" Id="{47db70f5-0512-48d8-9648-b9b46ca0ccce}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_SequenceTestDouble IMPLEMENTS I_HE_SATT_Sequence
+VAR
+    fStartAttenuationValue : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="GetStartAttenuationValue" Id="{e74118ec-f032-4530-8f94-664c658370ef}">
+      <Declaration><![CDATA[
+METHOD PUBLIC GetStartAttenuationValue : LREAL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetStartAttenuationValue := THIS^.fStartAttenuationValue;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Start" Id="{db9ed80d-6597-4a2c-9821-62df0218fc99}">
+      <Declaration><![CDATA[METHOD Start
+VAR_INPUT
+    fRequestedAttenuation : LREAL; // [0.0 - 1.0]
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.fStartAttenuationValue := fRequestedAttenuation;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

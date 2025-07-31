@@ -5,6 +5,8 @@
 PROGRAM PRG_TEST
 VAR
     fbATMTest: FB_ATMTest;
+    fbHE_SATT_EpicsHeartBeatTest : FB_HE_SATT_EpicsHeartBeatTest;
+    fbHE_SATT_UserRequest_Test : FB_HE_SATT_UserRequest_Test;
     fbLICTest: FB_LICTest;
     fbPPMTest: FB_PPMTest;
     fbREFTest: FB_REFTest;

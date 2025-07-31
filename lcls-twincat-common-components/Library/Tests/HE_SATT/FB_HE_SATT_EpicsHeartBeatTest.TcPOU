@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_EpicsHeartBeatTest" Id="{6737a63f-a220-4ec1-8820-e4e83f0e728d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HE_SATT_EpicsHeartBeatTest EXTENDS FB_TestSuite
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GivenThatHeartbeatIsProvidedExpectNoExpiration();
+GivenThatHeartbeatTimeHasExpiredExpectHeartBeatPropertyToIndicateSo();]]></ST>
+    </Implementation>
+    <Method Name="GivenThatHeartbeatIsProvidedExpectNoExpiration" Id="{183df5e8-050c-41bd-b698-3a77bba84f8f}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenThatHeartbeatIsProvidedExpectNoExpiration
+VAR_INST
+    fbTestTimer : TON := (PT := T#2S, IN := TRUE);
+
+    // Subject under test
+    fbHE_SATT_EpicsHeartBeat : FB_HE_SATT_EpicsHeartBeat(tTimeout := T#1S);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('GivenThatHeartbeatIsProvidedExpectNoExpiration');
+fbTestTimer();
+fbHE_SATT_EpicsHeartBeat.Heartbeat();
+fbHE_SATT_EpicsHeartBeat();
+
+
+IF fbTestTimer.Q THEN
+    AssertFalse(Condition := fbHE_SATT_EpicsHeartBeat.IsHeartbeatExpired(),
+                Message := 'Expected heart beat to expire');
+    TEST_FINISHED();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenThatHeartbeatTimeHasExpiredExpectHeartBeatPropertyToIndicateSo" Id="{404e4665-6ffc-4dc9-aa69-d946929e3d31}">
+      <Declaration><![CDATA[METHOD PRIVATE GivenThatHeartbeatTimeHasExpiredExpectHeartBeatPropertyToIndicateSo
+VAR_INST
+    fbTestTimer : TON := (PT := T#2S, IN := TRUE);
+
+    // Subject under test
+    fbHE_SATT_EpicsHeartBeat : FB_HE_SATT_EpicsHeartBeat(tTimeout := T#1S);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('GivenThatHeartbeatTimeHasExpiredExpectHeartBeatPropertyToIndicateSo');
+fbTestTimer();
+fbHE_SATT_EpicsHeartBeat();
+
+IF fbTestTimer.Q THEN
+    AssertTrue(Condition := fbHE_SATT_EpicsHeartBeat.IsHeartbeatExpired(),
+               Message := 'Expected heart beat to expire');
+    TEST_FINISHED();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
