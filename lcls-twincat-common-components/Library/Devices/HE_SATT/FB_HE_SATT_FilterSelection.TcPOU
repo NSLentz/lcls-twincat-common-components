@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterSelection" Id="{03a9882a-fdb5-4066-a35a-05d3adec64d5}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterSelection
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{ddca28cb-2ee8-4e73-9fb8-aaad32671d0b}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    iFilterHolder1 : I_HE_SATT_FilterHolder;
+    iFilterHolder2 : I_HE_SATT_FilterHolder;
+    iFilterHolder3 : I_HE_SATT_FilterHolder;
+    iFilterHolder4 : I_HE_SATT_FilterHolder;
+    iFilterHolder5 : I_HE_SATT_FilterHolder;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFilterPositions" Id="{44eb97cc-a97a-4da8-9e85-294a95813109}">
+      <Declaration><![CDATA[
+METHOD PUBLIC GetFilterPositions
+VAR_INPUT
+    fRequestedTransmission : LREAL; // [1]
+    fPhotonEnergy : LREAL; // [eV]
+    eRoundingMode : E_HE_SATT_RoundingMode;
+END_VAR
+VAR_OUTPUT
+    fPosition1 : LREAL; // [mm]
+    fPosition2 : LREAL; // [mm]
+    fPosition3 : LREAL; // [mm]
+    fPosition4 : LREAL; // [mm]
+    fPosition5 : LREAL; // [mm]
+    bError : BOOL;
+    sError : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

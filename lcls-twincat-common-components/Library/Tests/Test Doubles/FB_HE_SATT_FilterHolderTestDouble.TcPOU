@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterHolderTestDouble" Id="{cdcd1eb9-bd8a-4335-a22e-020e71cca194}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterHolderTestDouble IMPLEMENTS I_HE_SATT_FilterHolder
+VAR
+    stFilter : ARRAY [1..14] OF ST_Filter;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="GetConfiguration" Id="{c9eefbaf-dcdf-44b0-8e9c-966cbc404b6a}">
+      <Declaration><![CDATA[
+METHOD GetConfiguration
+VAR_OUTPUT
+    stFilter : ARRAY [1..14] OF ST_Filter;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stFilter := THIS^.stFilter;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetConfiguration" Id="{016822f4-bd6b-4b77-9c33-1e8001b25f82}">
+      <Declaration><![CDATA[
+METHOD SetConfiguration
+VAR_INPUT
+    stFilter : ARRAY [1..14] OF ST_Filter;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.stFilter := stFilter;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

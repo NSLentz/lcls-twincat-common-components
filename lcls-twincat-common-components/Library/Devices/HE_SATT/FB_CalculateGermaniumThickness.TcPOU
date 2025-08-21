@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_CalculateGermaniumThickness" Id="{e3e3a7fb-d8d9-4b0b-a639-04b2da1ccafd}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_CalculateGermaniumThickness
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Calculate" Id="{c5739e06-e7c5-4e98-b50b-7bc8aa2c70f5}">
+      <Declaration><![CDATA[
+METHOD PUBLIC Calculate
+VAR_INPUT
+    fDesiredTransmission : LREAL; // [1]
+    fPhotonEnergy : LREAL; // [eV]
+END_VAR
+VAR_OUTPUT
+    fThickness : LREAL; // [mm]
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

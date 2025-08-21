@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_Filter" Id="{60dc1f96-f95d-46a1-9aa8-1dcc67cd5427}">
+    <Declaration><![CDATA[TYPE ST_Filter :
+STRUCT
+    eFilterType : E_FilterType;
+    eFilterMaterial : E_FilterMaterial;
+    uFilterThickness : U_FilterThickness;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

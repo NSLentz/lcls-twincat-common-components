@@ -25,8 +25,9 @@ METHOD PUBLIC ApplyConfig
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-// Check finite and between 0.0 and 1.0
-IsFinite(x := THIS^.fRequestAttenuation);
+IF NOT IsFinite(x := F_LREAL(THIS^.fRequestAttenuation)) THEN
+    RETURN;
+END_IF
 
 THIS^.fRequestedAttenuation := THIS^.fRequestAttenuation;
 
@@ -46,7 +47,9 @@ VAR_INPUT
     iHE_SATT_Sequence : I_HE_SATT_Sequence;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.iHE_SATT_Sequence := iHE_SATT_Sequence]]></ST>
+        <ST><![CDATA[
+THIS^.iHE_SATT_Sequence := iHE_SATT_Sequence;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="RequestAttenuation" Id="{fc0c7425-477a-4f85-a90c-7324115e545b}">
@@ -57,8 +60,8 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-
-THIS^.fRequestAttenuation := fRequestAttenuation;]]></ST>
+THIS^.fRequestAttenuation := fRequestedAttenuation;
+]]></ST>
       </Implementation>
     </Method>
   </POU>

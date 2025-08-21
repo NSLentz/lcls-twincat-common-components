@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterSelection_Test" Id="{e909b183-651e-48fd-b13b-c105a763fe2f}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterSelection_Test EXTENDS FB_TestSuite
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+GivenThicknessAndRoundingModeExpectCorrectFilterPosition();
+]]></ST>
+    </Implementation>
+    <Method Name="GivenThicknessAndRoundingModeExpectCorrectFilterPosition" Id="{b7690570-8b9d-4e5d-a34a-db1f5cce4f4b}">
+      <Declaration><![CDATA[
+METHOD PRIVATE GivenThicknessAndRoundingModeExpectCorrectFilterPosition
+VAR
+    stFilter : ARRAY[1..5] OF ARRAY [1..14] OF ST_Filter;
+    fbHE_SATT_FilterHolderTestDouble : ARRAY[1..5] OF FB_HE_SATT_FilterHolderTestDouble;
+
+    // Subject under test
+    fbHE_SATT_FilterSelection : FB_HE_SATT_FilterSelection(iFilterHolder1 := fbHE_SATT_FilterHolderTestDouble[1],
+                                                           iFilterHolder2 := fbHE_SATT_FilterHolderTestDouble[2],
+                                                           iFilterHolder3 := fbHE_SATT_FilterHolderTestDouble[3],
+                                                           iFilterHolder4 := fbHE_SATT_FilterHolderTestDouble[4],
+                                                           iFilterHolder5 := fbHE_SATT_FilterHolderTestDouble[5]);
+
+    nFilterNum : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+TEST('GivenThicknessAndRoundingModeExpectCorrectFilterPosition');
+
+// Test fixture
+FOR nFilterNum := 1 TO 14 BY 1 DO
+    stFilter[1][nFilterNum].eFilterType := E_FilterType.FixedThickness;
+    stFilter[1][nFilterNum].uFilterThickness.fThickness := TO_LREAL(nFilterNum);
+    stFilter[1][nFilterNum].eFilterMaterial := E_FilterMaterial.Diamond;
+
+    stFilter[2][nFilterNum].eFilterType := E_FilterType.FixedThickness;
+    stFilter[2][nFilterNum].uFilterThickness.fThickness := TO_LREAL(nFilterNum) * 2.0;
+    stFilter[2][nFilterNum].eFilterMaterial := E_FilterMaterial.Diamond;
+END_FOR
+fbHE_SATT_FilterHolderTestDouble[1].SetConfiguration(stFilter := stFilter[1]);
+fbHE_SATT_FilterHolderTestDouble[2].SetConfiguration(stFilter := stFilter[2]);
+
+stFilter[3][1].eFilterType := E_FilterType.Wedge;
+stFilter[3][1].uFilterThickness.stWedge.fThicknessRange[1] := 5.0;
+stFilter[3][1].uFilterThickness.stWedge.fThicknessRange[2] := 10.0;
+stFilter[3][1].uFilterThickness.stWedge.fLength := 2.0;
+stFilter[3][1].eFilterMaterial := E_FilterMaterial.Silicon;
+
+stFilter[3][2].eFilterType := E_FilterType.Wedge;
+stFilter[3][2].uFilterThickness.stWedge.fThicknessRange[1] := 3.0;
+stFilter[3][2].uFilterThickness.stWedge.fThicknessRange[2] := 9.0;
+stFilter[3][2].uFilterThickness.stWedge.fLength := 3.0;
+stFilter[3][2].eFilterMaterial := E_FilterMaterial.Germanium;
+
+stFilter[5][1].eFilterType := E_FilterType.Wedge;
+stFilter[5][1].uFilterThickness.stWedge.fThicknessRange[1] := 5.0;
+stFilter[5][1].uFilterThickness.stWedge.fThicknessRange[2] := 10.0;
+stFilter[5][1].uFilterThickness.stWedge.fLength := 2.0;
+stFilter[5][1].eFilterMaterial := E_FilterMaterial.Silicon;
+
+stFilter[5][2].eFilterType := E_FilterType.Wedge;
+stFilter[5][2].uFilterThickness.stWedge.fThicknessRange[1] := 3.0;
+stFilter[5][2].uFilterThickness.stWedge.fThicknessRange[2] := 9.0;
+stFilter[5][2].uFilterThickness.stWedge.fLength := 3.0;
+stFilter[5][2].eFilterMaterial := E_FilterMaterial.Germanium;
+
+fbHE_SATT_FilterHolderTestDouble[3].SetConfiguration(stFilter := stFilter[3]);
+fbHE_SATT_FilterHolderTestDouble[5].SetConfiguration(stFilter := stFilter[5]);
+
+fbHE_SATT_FilterSelection.GetFilterPositions(
+    fRequestedAttenuation := 0.1,
+    fPhotonEnergy := 13000,
+    eRoundingMode := E_HE_SATT_RoundingMode.CEIL,
+    fPosition1 => ,
+    fPosition2 => ,
+    fPosition3 => ,
+    fPosition4 => ,
+    fPosition5 => ,
+    bError => ,
+    sError =>
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

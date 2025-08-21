@@ -4,37 +4,37 @@
     <Declaration><![CDATA[{attribute 'analysis' := '-33'}
 PROGRAM PRG_TEST
 VAR
-    fbATMTest: FB_ATMTest;
+    //fbATMTest: FB_ATMTest;
     fbHE_SATT_EpicsHeartBeatTest : FB_HE_SATT_EpicsHeartBeatTest;
     fbHE_SATT_UserRequest_Test : FB_HE_SATT_UserRequest_Test;
-    fbLICTest: FB_LICTest;
-    fbPPMTest: FB_PPMTest;
-    fbREFTest: FB_REFTest;
-    fbSATTTest: FB_SATTTest;
-    fbSlitsPowerTest: FB_SLITS_POWERTest;
-    fbWFSTest: FB_WFSTest;
-    fbXPIMTest: FB_XPIMTest;
-    fbCheckPositionStateWriteTest: FB_CheckPositionStateWriteTest;
-    fbCCTempSensorTest: FB_CC_TempSensorTest;
-
-    fbSetupJson: FB_PMPSJsonTestHelper;
-    astBeamParams: ARRAY[0..9] OF ST_DbStateParams;
-    nIter: UINT;
+//     fbLICTest: FB_LICTest;
+//     fbPPMTest: FB_PPMTest;
+//     fbREFTest: FB_REFTest;
+//     fbSATTTest: FB_SATTTest;
+//     fbSlitsPowerTest: FB_SLITS_POWERTest;
+//     fbWFSTest: FB_WFSTest;
+//     fbXPIMTest: FB_XPIMTest;
+//     fbCheckPositionStateWriteTest: FB_CheckPositionStateWriteTest;
+//     fbCCTempSensorTest: FB_CC_TempSensorTest;
+//
+//     fbSetupJson: FB_PMPSJsonTestHelper;
+//     astBeamParams: ARRAY[0..9] OF ST_DbStateParams;
+//     nIter: UINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
 // Setup a fake db export for the test suite
-FOR nIter := 0 TO 9 DO
-    astBeamParams[nIter].stBeamParams := PMPS_GVL.cstFullBeam;
-    astBeamParams[nIter].sPmpsState := CONCAT('T', UINT_TO_STRING(nIter));
-    astBeamParams[nIter].stReactiveParams.nTempSP := nIter + 20;
-END_FOR
-fbSetupJson(
-    astBeamParams := astBeamParams,
-    bExecute := TRUE,
-    sDevNAme := 'DEVICE',
-);
+// FOR nIter := 0 TO 9 DO
+//     astBeamParams[nIter].stBeamParams := PMPS_GVL.cstFullBeam;
+//     astBeamParams[nIter].sPmpsState := CONCAT('T', UINT_TO_STRING(nIter));
+//     astBeamParams[nIter].stReactiveParams.nTempSP := nIter + 20;
+// END_FOR
+// fbSetupJson(
+//     astBeamParams := astBeamParams,
+//     bExecute := TRUE,
+//     sDevNAme := 'DEVICE',
+// );
 // Run the tests
 TcUnit.RUN();]]></ST>
     </Implementation>

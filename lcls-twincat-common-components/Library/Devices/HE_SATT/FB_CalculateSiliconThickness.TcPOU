@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_CalculateSiliconThickness" Id="{ef8c3797-4c77-4129-81d2-4d0dca445cec}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_CalculateSiliconThickness
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Calculate" Id="{23ca27bf-dc1b-46a3-b6bc-af51cedc5a83}">
+      <Declaration><![CDATA[
+METHOD PUBLIC Calculate
+VAR_INPUT
+    fDesiredTransmission : LREAL; // [1]
+    fPhotonEnergy : LREAL; // [eV]
+END_VAR
+VAR_OUTPUT
+    fThickness : LREAL; // [mm]
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

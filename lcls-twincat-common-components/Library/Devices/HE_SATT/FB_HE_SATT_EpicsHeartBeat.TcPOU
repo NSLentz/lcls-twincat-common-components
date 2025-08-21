@@ -8,8 +8,10 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbHeartbeatTimer(IN := NOT bHeartbeat);
-bHeartbeat := FALSE;]]></ST>
+      <ST><![CDATA[
+fbHeartbeatTimer(IN := NOT bHeartbeat);
+bHeartbeat := FALSE;
+]]></ST>
     </Implementation>
     <Method Name="FB_Init" Id="{571d0bc8-4cbd-4d7d-86dd-87382dc3af98}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
@@ -36,7 +38,9 @@ END_VAR]]></Declaration>
     <Method Name="IsHeartbeatExpired" Id="{6cf96331-5b1e-425f-add3-6f2b9a656818}">
       <Declaration><![CDATA[METHOD PUBLIC IsHeartbeatExpired : BOOL]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IsHeartbeatExpired := THIS^.fbHeartbeatTimer.Q;]]></ST>
+        <ST><![CDATA[
+IsHeartbeatExpired := THIS^.fbHeartbeatTimer.Q;
+]]></ST>
       </Implementation>
     </Method>
   </POU>

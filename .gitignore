@@ -15,6 +15,7 @@ TrialLicense.tclrs
 *.tmcRefac
 .pytmc_build
 *.tmc
+.vs*
 
 # Vim ignores
 *.swp

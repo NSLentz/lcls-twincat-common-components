@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_CalculateDiamondThickness" Id="{bc9bfacc-7d3a-4611-b219-338ca75019df}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_CalculateDiamondThickness
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Calculate" Id="{bf69efd6-1e63-4e72-bb10-5ffc888b9575}">
+      <Declaration><![CDATA[
+METHOD PUBLIC Calculate
+VAR_INPUT
+    fDesiredTransmission : LREAL; // [1]
+    fPhotonEnergy : LREAL; // [eV]
+END_VAR
+VAR_OUTPUT
+    fThickness : LREAL; // [mm]
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

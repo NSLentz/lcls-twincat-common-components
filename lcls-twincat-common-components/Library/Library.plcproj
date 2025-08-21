@@ -54,7 +54,31 @@
     <Compile Include="Devices\ATM\FB_ATM.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\E_FilterMaterial.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\E_FilterType.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\E_HE_SATT_RoundingMode.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\E_HE_SATT_SequenceState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\FB_CalculateSiliconThickness.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\FB_CalculateDiamondThickness.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\FB_CalculateGermaniumThickness.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterHolder.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterSelection.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\FB_HE_SATT_EpicsHeartBeat.TcPOU">
@@ -66,7 +90,19 @@
     <Compile Include="Devices\HE_SATT\FB_HE_SATT_UserRequest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\I_HE_SATT_FilterHolder.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\I_HE_SATT_Sequence.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\ST_Filter.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\ST_Wedge.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\U_FilterThickness.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\LIC\E_LIC_States.TcDUT">
@@ -204,7 +240,13 @@
     <Compile Include="Tests\HE_SATT\FB_HE_SATT_UserRequest_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterSelection_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\PRG_TEST.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Test Doubles\FB_HE_SATT_FilterHolderTestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\Test Doubles\FB_HE_SATT_SequenceTestDouble.TcPOU">
@@ -247,6 +289,10 @@
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_Standard</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_System">
+      <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_System</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Utilities">
       <DefaultResolution>Tc2_Utilities, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -293,6 +339,12 @@
         <o>
           <v n="Name">"{29BD8D0C-3586-4548-BB48-497B9A01693F}"</v>
           <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+            <v>NamingConventions</v>
+            <o>
+              <v n="Name">"NamingConventions"</v>
+              <d n="SubKeys" t="Hashtable" />
+              <d n="Values" t="Hashtable" />
+            </o>
             <v>Rules</v>
             <o>
               <v n="Name">"Rules"</v>

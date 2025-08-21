@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FilterHolder" Id="{50894da0-cc33-47a4-8023-07412f59bfc3}">
+    <Declaration><![CDATA[INTERFACE I_HE_SATT_FilterHolder
+]]></Declaration>
+    <Method Name="GetConfiguration" Id="{0dc13831-f14f-4407-90bf-710330175d68}">
+      <Declaration><![CDATA[
+METHOD GetConfiguration
+VAR_OUTPUT
+    stFilter : ARRAY[1..14] OF ST_Filter;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

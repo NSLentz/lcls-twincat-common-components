@@ -15,7 +15,9 @@ END_VAR
 METHOD PUBLIC GetStartAttenuationValue : LREAL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[GetStartAttenuationValue := THIS^.fStartAttenuationValue;]]></ST>
+        <ST><![CDATA[
+GetStartAttenuationValue := THIS^.fStartAttenuationValue;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="Start" Id="{db9ed80d-6597-4a2c-9821-62df0218fc99}">
@@ -24,7 +26,9 @@ VAR_INPUT
     fRequestedAttenuation : LREAL; // [0.0 - 1.0]
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.fStartAttenuationValue := fRequestedAttenuation;]]></ST>
+        <ST><![CDATA[
+THIS^.fStartAttenuationValue := fRequestedAttenuation;
+]]></ST>
       </Implementation>
     </Method>
   </POU>
