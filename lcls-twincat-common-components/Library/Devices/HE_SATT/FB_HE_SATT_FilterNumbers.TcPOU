@@ -4,6 +4,7 @@
     <Declaration><![CDATA[
 FUNCTION_BLOCK FB_HE_SATT_FilterNumbers
 VAR
+    iFilterHolder : ARRAY[1..5] OF I_HE_SATT_FilterHolder;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -25,7 +26,11 @@ VAR_INPUT
     iFilterHolder5 : I_HE_SATT_FilterHolder;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[THIS^.iFilterHolder[1] := iFilterHolder1;
+THIS^.iFilterHolder[2] := iFilterHolder2;
+THIS^.iFilterHolder[3] := iFilterHolder3;
+THIS^.iFilterHolder[4] := iFilterHolder4;
+THIS^.iFilterHolder[5] := iFilterHolder5;]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetFilterNumbersSelected" Id="{7c13fec6-168e-45cc-b0da-0d7734610d00}">
@@ -34,16 +39,137 @@ METHOD PUBLIC GetFilterNumbersSelected
 VAR_INPUT
     fThickness : LREAL;
     eRoundingMode : E_HE_SATT_RoundingMode;
-    bUseFilter : ARRAY[1..5] OF BOOL;
+    bUseFilterHolder : ARRAY[1..5] OF BOOL;
 END_VAR
 VAR_OUTPUT
     abFiltersSelected : ARRAY[1..5] OF ARRAY[1..14] OF BOOL;
 END_VAR
+VAR
+    nCurrentBestFilterForEachHolder : ARRAY[1..5] OF INT(0..14);
+    // nCurrentBestFilterForEachHolder [0, 0, 0, 0, 0]
+    fCurrentBestThickness : LREAL; // --> [1, 0, 5, 0, 0] --> thickness of [1][1] +  thickness of [3][5]
+
+    nCounterFilterHolder : INT;
+    nCounterFilter : INT;
+
+    stFilter : ARRAY[1..14] OF ST_Filter;
+END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
+IF fThickness = 0 THEN
+    RETURN;
+END_IF
+
+
+// 1.2 - 1.4 - 1.6 - 1.8 - 2.0
+// 2.0 - 1.3 - 1.4 - 1.3 - 1.0
+// ...
+// 14 rows
+
+FOR nCounterFilterHolder := 1 TO 5 BY 1 DO
+    IF bUseFilterHolder[nCounterFilterHolder] THEN
+        THIS^.iFilterHolder[nCounterFilterHolder].GetConfiguration(
+            stFilter => stFilter
+        );
+        FOR nCounterFilter := 1 TO 14 BY 1 DO
+            FOR nCounterFilterHolderInner := 1 TO 5 BY 1 DO
+                IF bUseFilterHolder[nCounterFilterHolder] THEN
+                    THIS^.iFilterHolder[nCounterFilterHolder].GetConfiguration(
+                        stFilter => stFilter
+                    );
+                    FOR nCounterFilterInner := 1 TO 14 BY 1 DO
+                        IF nCounterFilterHolder = nCounterFilterHolderInner AND nCounterFilter = nCounterFilterInner THEN
+                            // comparing to itself so skip
+                            CONTINUE;
+                        ELSE
+
+                        END_IF
+                    END_FOR
+                 END_IF
+            END_FOR
+            CASE stFilter[nCounterFilter].eFilterType OF
+                E_FilterType.None:
+                    CONTINUE;
+                E_FilterType.FixedThickness:
+                    IF eRoundingMode = E_HE_SATT_RoundingMode.CEIL THEN
+                        // do something ceiling related
+                        // Compute the thickness of the current best combination we have found so far
+                        // Compute the thickness of the combination if we used the current nCounterFilter
+                        // If the thickness of the combination with the current nCounterFilter better than the best combination thus far?
+                            // If yes --> update best combination with current nCounterFilter
+                            // If no --> continue with next filter
+                        nCurrentBestFilterForEachHolder[
+                        IF stFilter[nCounterFilter].uFilterThickness.fThickness -  > fCurrentBestThickness THEN
+                            fCurrentBestThickness := stFilter[nCounterFilter].uFilterThickness.fThickness;
+                        END_IF
+                    ELSIF IF eRoundingMode = E_HE_SATT_RoundingMode.FLOOR THEN
+                        // do something floor related
+                        IF stFilter[nCounterFilter].uFilterThickness.fThickness THEN
+                            fCurrentBestThickness := stFilter[nCounterFilter].uFilterThickness.fThickness;
+                        END_IF
+                    END_IF
+                E_FilterType.Wedge:
+                    stFilter[nCounterFilter].uFilterThickness.stWedge.fLength;
+                    stFilter[nCounterFilter].uFilterThickness.stWedge.fThicknessRange;
+            END_CASE
+        END_FOR
+    END_IF
+END_FOR
+
+IF eRoundingMode = E_HE_SATT_RoundingMode.CEIL THEN
+    iFilterHolder1
+END_IF
+
+// 50.0
+// 150.0
+// 25.0
+// 7.0
+
+// 50.0 + 25.0
+// 50.0 + 7.0
+
+// 150.0 + 25.0
+// 150.0 + 7.0
+
+// 0.0
+
+// 7.1 --> 25.0 picked for CEIL
+// > 175.0 --> ERROR for CEIL
+// < 7.0 --> 7.0 for CEIL
+
+// 7.1 --> 7.0 picked for FLOOR
+// > 175.0 --> 175.0 for FLOOR
+// < 7.0 --> ERROR for FLOOR
 
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTotalThicknessOfCurrentSelection" Id="{dca40b9f-a33e-4520-9769-258c3b544144}">
+      <Declaration><![CDATA[METHOD PRIVATE GetTotalThicknessOfCurrentSelection : LREAL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTotalThicknessOfCurrentSelectionWithCurrentHolderAndFilterSwappedIn" Id="{40fe795d-6fc5-4bd8-a041-5431415ffe0e}">
+      <Declaration><![CDATA[METHOD PRIVATE GetTotalThicknessOfCurrentSelectionWithCurrentHolderAndFilterSwappedIn : LREAL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="VisitAllCombinations" Id="{dae95028-1f21-4cec-8106-885515d209dd}">
+      <Declaration><![CDATA[METHOD VisitAllCombinations
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
   </POU>
