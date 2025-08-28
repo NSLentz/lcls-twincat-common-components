@@ -78,6 +78,9 @@
     <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterHolder.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterNumbers.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterSelection.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -88,6 +91,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\FB_HE_SATT_UserRequest.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\I_CalculateThickness.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\I_HE_SATT_FilterHolder.TcIO">
@@ -237,6 +243,9 @@
     <Compile Include="Tests\HE_SATT\FB_HE_SATT_EpicsHeartBeatTest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterNumbers_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\HE_SATT\FB_HE_SATT_UserRequest_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -244,6 +253,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\PRG_TEST.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Test Doubles\FB_CalculateThicknessTestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\Test Doubles\FB_HE_SATT_FilterHolderTestDouble.TcPOU">

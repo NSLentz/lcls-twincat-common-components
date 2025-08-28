@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_CalculateThickness" Id="{7ca46989-50f7-43cc-9cc6-210fcb015be6}">
+    <Declaration><![CDATA[INTERFACE I_CalculateThickness
+]]></Declaration>
+    <Method Name="Calculate" Id="{11c99484-72d2-4339-937d-7b0d2d2530db}">
+      <Declaration><![CDATA[
+METHOD PUBLIC Calculate
+VAR_INPUT
+    fDesiredTransmission : LREAL; // [1]
+    fPhotonEnergy : LREAL; // [eV]
+END_VAR
+VAR_OUTPUT
+    fThickness : LREAL; // [mm]
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

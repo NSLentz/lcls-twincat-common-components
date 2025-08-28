@@ -4,16 +4,21 @@
     <Declaration><![CDATA[
 FUNCTION_BLOCK FB_HE_SATT_FilterSelection
 VAR
+    iFilterHolder1 : I_HE_SATT_FilterHolder;
+    iFilterHolder2 : I_HE_SATT_FilterHolder;
+    iFilterHolder3 : I_HE_SATT_FilterHolder;
+    iFilterHolder4 : I_HE_SATT_FilterHolder;
+    iFilterHolder5 : I_HE_SATT_FilterHolder;
+    iCalculateSiliconThickness : I_CalculateThickness;
+    iCalculateDiamondThickness : I_CalculateThickness;
+    iCalculateGermaniumThickness : I_CalculateThickness;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Method Name="FB_Init" Id="{ddca28cb-2ee8-4e73-9fb8-aaad32671d0b}">
-      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
-//The return value is not evaluated. For a specific influence, you can also declare the
-//methods explicitly and provide additional code there with the standard initialization
-//code. You can evaluate the return value.
+      <Declaration><![CDATA[
 METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
@@ -23,9 +28,22 @@ VAR_INPUT
     iFilterHolder3 : I_HE_SATT_FilterHolder;
     iFilterHolder4 : I_HE_SATT_FilterHolder;
     iFilterHolder5 : I_HE_SATT_FilterHolder;
-END_VAR]]></Declaration>
+    iCalculateSiliconThickness : I_CalculateThickness;
+    iCalculateDiamondThickness : I_CalculateThickness;
+    iCalculateGermaniumThickness : I_CalculateThickness;
+END_VAR
+]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[
+THIS^.iFilterHolder1 := iFilterHolder1;
+THIS^.iFilterHolder2 := iFilterHolder2;
+THIS^.iFilterHolder3 := iFilterHolder3;
+THIS^.iFilterHolder4 := iFilterHolder4;
+THIS^.iFilterHolder5 := iFilterHolder5;
+THIS^.iCalculateSiliconThickness := iCalculateSiliconThickness;
+THIS^.iCalculateDiamondThickness := iCalculateDiamondThickness;
+THIS^.iCalculateGermaniumThickness := iCalculateGermaniumThickness;
+    ]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetFilterPositions" Id="{44eb97cc-a97a-4da8-9e85-294a95813109}">
@@ -45,9 +63,39 @@ VAR_OUTPUT
     bError : BOOL;
     sError : T_MaxString;
 END_VAR
+VAR
+    fSiliconThicknessRequired : LREAL;
+    fDiamondThicknessRequired : LREAL;
+END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[
+THIS^.iCalculateSiliconThickness.Calculate(
+    fDesiredTransmission := fRequestedTransmission,
+    fPhotonEnergy := fPhotonEnergy,
+    fThickness => fSiliconThicknessRequired
+);
+
+IF fSiliconThicknessRequired < 200 THEN
+    THIS^.iCalculateDiamondThickness.Calculate(
+        fDesiredTransmission := fRequestedTransmission,
+        fPhotonEnergy := fPhotonEnergy,
+        fThickness => fDiamondThicknessRequired
+    );
+    // Lookup which diamond filter is the closest one to the calcuated thickness accounting for the rounding mode.
+    // Then give the positions (1-5) than would put the closest thickness diamond filters in the path of the beam.
+    fPosition3 := 0.0; // 0.0 is defined as the OUT position.
+    fPosition4 := 0.0; // 0.0 is defined as the OUT position.
+    fPosition5 := 0.0; // 0.0 is defined as the OUT position.
+
+
+
+ELSIF fSiliconThicknessRequired >= 200 AND fSiliconThicknessRequired < 6000 THEN
+    // some procedure
+ELSE
+    // some procedure
+END_IF
+]]></ST>
       </Implementation>
     </Method>
   </POU>

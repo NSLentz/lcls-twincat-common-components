@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterNumbers" Id="{feca836f-e8bb-4515-a1e0-f38c0fee151e}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterNumbers
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{fe188b1b-d576-4a67-a589-f463588eddf2}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    iFilterHolder1 : I_HE_SATT_FilterHolder;
+    iFilterHolder2 : I_HE_SATT_FilterHolder;
+    iFilterHolder3 : I_HE_SATT_FilterHolder;
+    iFilterHolder4 : I_HE_SATT_FilterHolder;
+    iFilterHolder5 : I_HE_SATT_FilterHolder;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFilterNumbersSelected" Id="{7c13fec6-168e-45cc-b0da-0d7734610d00}">
+      <Declaration><![CDATA[
+METHOD PUBLIC GetFilterNumbersSelected
+VAR_INPUT
+    fThickness : LREAL;
+    eRoundingMode : E_HE_SATT_RoundingMode;
+    bUseFilter : ARRAY[1..5] OF BOOL;
+END_VAR
+VAR_OUTPUT
+    abFiltersSelected : ARRAY[1..5] OF ARRAY[1..14] OF BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
