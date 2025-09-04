@@ -3,12 +3,12 @@
   <POU Name="FB_FilterCombinations" Id="{4b240f92-978e-4d19-be0a-9ddef7b6361c}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_FilterCombinations
 VAR
-    aThicknesses : ARRAY[1..nMAXIMUM_NUMBER_OF_THICKNESSES] OF LREAL;
-    nFilterPositions : ARRAY[1..nMAXIMUM_NUMBER_OF_THICKNESSES] OF ARRAY[1..5] OF INT;
-    nNumberOfThicknesses : UDINT;
+    aFilterCombinations : ARRAY[1..nMAXIMUM_NUMBER_OF_COMBINATIONS] OF ARRAY[1..5] OF ST_Filter;
+    nFilterPositions : ARRAY[1..nMAXIMUM_NUMBER_OF_COMBINATIONS] OF ARRAY[1..5] OF INT;
+    nNumberOfCombinations : UDINT;
 END_VAR
 VAR CONSTANT
-    nMAXIMUM_NUMBER_OF_THICKNESSES : UDINT := 10000;
+    nMAXIMUM_NUMBER_OF_COMBINATIONS : UDINT := 1000;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -17,19 +17,19 @@ END_VAR]]></Declaration>
       <Declaration><![CDATA[
 METHOD PUBLIC AddFilterCombination
 VAR_INPUT
-    fThickness : LREAL;
+    aFilter : ARRAY[1..5] OF ST_Filter;
     aCombination : ARRAY[1..5] OF INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-IF nNumberOfThicknesses >= nMAXIMUM_NUMBER_OF_THICKNESSES THEN
+IF nNumberOfCombinations >= nMAXIMUM_NUMBER_OF_COMBINATIONS THEN
     RETURN;
 END_IF
 
-nNumberOfThicknesses := nNumberOfThicknesses + 1;
-aThicknesses[nNumberOfThicknesses] := fThickness;
-nFilterPositions[nNumberOfThicknesses] := aCombination;
+nNumberOfCombinations := nNumberOfCombinations + 1;
+aFilterCombinations[nNumberOfCombinations] := aFilter;
+nFilterPositions[nNumberOfCombinations] := aCombination;
 ]]></ST>
       </Implementation>
     </Method>
@@ -39,11 +39,11 @@ METHOD PUBLIC Reset
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-nNumberOfThicknesses := 0;
+nNumberOfCombinations := 0;
 
-MEMSET(destAddr := ADR(aThicknesses),
+MEMSET(destAddr := ADR(aFilterCombinations),
        fillByte := 16#0,
-       n := SIZEOF(aThicknesses));
+       n := SIZEOF(aFilterCombinations));
 
 MEMSET(destAddr := ADR(nFilterPositions),
        fillByte := 16#0,

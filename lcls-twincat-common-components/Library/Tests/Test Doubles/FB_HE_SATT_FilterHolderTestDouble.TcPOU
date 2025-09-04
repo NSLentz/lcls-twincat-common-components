@@ -21,6 +21,19 @@ END_VAR
         <ST><![CDATA[stFilter := THIS^.stFilter;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="GetFilter" Id="{f3113dd3-83dc-41e8-8f98-24b65c8cff42}">
+      <Declaration><![CDATA[
+METHOD GetFilter : ST_Filter
+VAR_INPUT
+	nFilterNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+GetFilter := THIS^.stFilter[nFilterNumber];
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetConfiguration" Id="{016822f4-bd6b-4b77-9c33-1e8001b25f82}">
       <Declaration><![CDATA[
 METHOD SetConfiguration
@@ -34,5 +47,18 @@ THIS^.stFilter := stFilter;
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.GetConfiguration">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.GetFilter">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.SetConfiguration">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

@@ -4,6 +4,7 @@
     <Declaration><![CDATA[
 FUNCTION_BLOCK FB_HE_SATT_FilterNumbers_Test EXTENDS FB_TestSuite
 VAR
+    fbHE_SATT_FilterHolderTestDouble : ARRAY[1..5] OF FB_HE_SATT_FilterHolderTestDouble;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -13,9 +14,8 @@ GivenThicknessAndRoundingModeFloorExpectCorrectFilterNumber();]]></ST>
     </Implementation>
     <Method Name="GivenThicknessAndRoundingModeCeilExpectCorrectFilterNumber" Id="{80ebffa4-0785-47a2-ac1f-106bcccb9b20}">
       <Declaration><![CDATA[METHOD PRIVATE GivenThicknessAndRoundingModeCeilExpectCorrectFilterNumber
-VAR
+VAR_INST
     stFilter : ARRAY[1..5] OF ARRAY [1..14] OF ST_Filter;
-    fbHE_SATT_FilterHolderTestDouble : ARRAY[1..5] OF FB_HE_SATT_FilterHolderTestDouble;
 
     // Subject under test
     fbHE_SATT_FilterNumbers : FB_HE_SATT_FilterNumbers(
@@ -74,11 +74,12 @@ fbHE_SATT_FilterHolderTestDouble[2].SetConfiguration(stFilter := stFilter[2]);
 // > 175.0 --> 175.0 for FLOOR
 // < 7.0 --> ERROR for FLOOR
 
-fbHE_SATT_FilterNumbers.GetFilterNumbersSelected(fThickness := 7.1,
-                                                 eRoundingMode := E_HE_SATT_RoundingMode.CEIL,
-                                                 bUseFilterHolder := bUseFilterArray,
-                                                 abFiltersSelected => abFiltersSelected);
-
+fbHE_SATT_FilterNumbers.Visit1FilterCombinationsAndStoreFilterCombinationThicknesses(
+    fThickness := 7.1,
+    eRoundingMode := E_HE_SATT_RoundingMode.CEIL,
+    bUseFilterHolder := bUseFilterArray,
+    abFiltersSelected => abFiltersSelected
+);
 
 FOR nCounterFilterHolder := 1 TO 5 BY 1 DO
     FOR nCounterFilter := 1 TO 14 BY 1 DO
@@ -169,7 +170,7 @@ fbHE_SATT_FilterHolderTestDouble[2].SetConfiguration(stFilter := stFilter[2]);
 // > 175.0 --> 175.0 for FLOOR
 // < 7.0 --> ERROR for FLOOR
 
-fbHE_SATT_FilterNumbers.GetFilterNumbersSelected(fThickness := 7.1,
+fbHE_SATT_FilterNumbers.Visit1FilterCombinationsAndStoreFilterCombinationThicknesses(fThickness := 7.1,
                                                  eRoundingMode := E_HE_SATT_RoundingMode.FLOOR,
                                                  bUseFilterHolder := bUseFilterArray,
                                                  abFiltersSelected => abFiltersSelected);
@@ -206,7 +207,11 @@ TEST_FINISHED();
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterNumbers_Test.GivenThicknessAndRoundingModeCeilExpectCorrectFilterNumber">
-      <LineId Id="3" Count="68" />
+      <LineId Id="3" Count="40" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="48" Count="23" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterNumbers_Test.GivenThicknessAndRoundingModeFloorExpectCorrectFilterNumber">

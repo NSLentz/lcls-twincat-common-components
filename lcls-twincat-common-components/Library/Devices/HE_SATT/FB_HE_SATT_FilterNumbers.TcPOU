@@ -5,7 +5,7 @@
 FUNCTION_BLOCK FB_HE_SATT_FilterNumbers
 VAR
     iFilterHolder : ARRAY[1..5] OF I_HE_SATT_FilterHolder;
-    fbThicknesses : FB_FilterCombinations;
+    fbFilterCombinations : FB_FilterCombinations;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -34,9 +34,9 @@ THIS^.iFilterHolder[4] := iFilterHolder4;
 THIS^.iFilterHolder[5] := iFilterHolder5;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetFilterNumbersSelected" Id="{7c13fec6-168e-45cc-b0da-0d7734610d00}">
+    <Method Name="Visit1FilterCombinationsAndStoreFilterCombinationThicknesses" Id="{7c13fec6-168e-45cc-b0da-0d7734610d00}">
       <Declaration><![CDATA[
-METHOD PUBLIC GetFilterNumbersSelected
+METHOD PUBLIC Visit1FilterCombinationsAndStoreFilterCombinationThicknesses
 VAR_INPUT
     fThickness : LREAL;
     eRoundingMode : E_HE_SATT_RoundingMode;
@@ -46,14 +46,8 @@ VAR_OUTPUT
     abFiltersSelected : ARRAY[1..5] OF ARRAY[1..14] OF BOOL;
 END_VAR
 VAR
-    nCurrentBestFilterForEachHolder : ARRAY[1..5] OF INT(0..14);
-    // nCurrentBestFilterForEachHolder [0, 0, 0, 0, 0]
-    fCurrentBestThickness : LREAL; // --> [1, 0, 5, 0, 0] --> thickness of [1][1] +  thickness of [3][5]
-
-    nCounterFilterHolder : INT;
-    nCounterFilter : INT;
-
-    stFilter : ARRAY[1..14] OF ST_Filter;
+    nIteratorHolder : INT;
+    nIteratorFilter : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -62,107 +56,21 @@ IF fThickness = 0 THEN
     RETURN;
 END_IF
 
-//    x
-// x 1.2 - 1.4 - 1.6 - (4-10) - (11-16) 
-//   2.0 - 1.3 - 1.4 - 1.3 - 1.
-//   5.0 - 1.1 - 2.4 - 4.3 - 0.0
-// ...
-// 13 rows
+THIS^.fbFilterCombinations.Reset();
 
-FOR nCounterFilterHolder := 1 TO 5 BY 1 DO
-    IF bUseFilterHolder[nCounterFilterHolder] THEN
-        THIS^.iFilterHolder[nCounterFilterHolder].GetConfiguration(
-            stFilter => stFilter
-        );
-        FOR nCounterFilter := 1 TO 14 BY 1 DO
-            FOR nCounterFilterHolderInner := 1 TO 5 BY 1 DO
-                IF bUseFilterHolder[nCounterFilterHolder] THEN
-                    THIS^.iFilterHolder[nCounterFilterHolder].GetConfiguration(
-                        stFilter => stFilter
-                    );
-                    FOR nCounterFilterInner := 1 TO 14 BY 1 DO
-                        IF nCounterFilterHolder = nCounterFilterHolderInner AND nCounterFilter = nCounterFilterInner THEN
-                            // comparing to itself so skip
-                            CONTINUE;
-                        ELSE
-
-                        END_IF
-                    END_FOR
-                 END_IF
-            END_FOR
-            CASE stFilter[nCounterFilter].eFilterType OF
-                E_FilterType.None:
-                    CONTINUE;
-                E_FilterType.FixedThickness:
-                    IF eRoundingMode = E_HE_SATT_RoundingMode.CEIL THEN
-                        // do something ceiling related
-                        // Compute the thickness of the current best combination we have found so far
-                        // Compute the thickness of the combination if we used the current nCounterFilter
-                        // If the thickness of the combination with the current nCounterFilter better than the best combination thus far?
-                            // If yes --> update best combination with current nCounterFilter
-                            // If no --> continue with next filter
-                        nCurrentBestFilterForEachHolder[
-                        IF stFilter[nCounterFilter].uFilterThickness.fThickness -  > fCurrentBestThickness THEN
-                            fCurrentBestThickness := stFilter[nCounterFilter].uFilterThickness.fThickness;
-                        END_IF
-                    ELSIF IF eRoundingMode = E_HE_SATT_RoundingMode.FLOOR THEN
-                        // do something floor related
-                        IF stFilter[nCounterFilter].uFilterThickness.fThickness THEN
-                            fCurrentBestThickness := stFilter[nCounterFilter].uFilterThickness.fThickness;
-                        END_IF
-                    END_IF
-                E_FilterType.Wedge:
-                    stFilter[nCounterFilter].uFilterThickness.stWedge.fLength;
-                    stFilter[nCounterFilter].uFilterThickness.stWedge.fThicknessRange;
-            END_CASE
-        END_FOR
+FOR nIteratorHolder := 1 TO 5 BY 1 DO
+    IF NOT bUseFilterHolder[nIteratorHolder] THEN
+        CONTINUE;
     END_IF
+    FOR nIteratorFilter := 1 TO 14 BY 1 DO
+        Visit2FilterCombinationsAndStoreFilterCombinationThicknesses(
+            nCurrentFilterHolder := nIteratorHolder,
+            nCurrentFilterNumber := nIteratorFilter,
+            bUseFilterHolder := bUseFilterHolder
+        );
+    END_FOR
 END_FOR
-
-IF eRoundingMode = E_HE_SATT_RoundingMode.CEIL THEN
-    iFilterHolder1
-END_IF
-
-// 50.0
-// 150.0
-// 25.0
-// 7.0
-
-// 50.0 + 25.0
-// 50.0 + 7.0
-
-// 150.0 + 25.0
-// 150.0 + 7.0
-
-// 0.0
-
-// 7.1 --> 25.0 picked for CEIL
-// > 175.0 --> ERROR for CEIL
-// < 7.0 --> 7.0 for CEIL
-
-// 7.1 --> 7.0 picked for FLOOR
-// > 175.0 --> 175.0 for FLOOR
-// < 7.0 --> ERROR for FLOOR
-
 ]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="GetTotalThicknessOfCurrentSelection" Id="{dca40b9f-a33e-4520-9769-258c3b544144}">
-      <Declaration><![CDATA[METHOD PRIVATE GetTotalThicknessOfCurrentSelection : LREAL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="GetTotalThicknessOfCurrentSelectionWithCurrentHolderAndFilterSwappedIn" Id="{40fe795d-6fc5-4bd8-a041-5431415ffe0e}">
-      <Declaration><![CDATA[METHOD PRIVATE GetTotalThicknessOfCurrentSelectionWithCurrentHolderAndFilterSwappedIn : LREAL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="Visit2FilterCombinationsAndStoreFilterCombinationThicknesses" Id="{dae95028-1f21-4cec-8106-885515d209dd}">
@@ -173,23 +81,23 @@ VAR_INPUT
     bUseFilterHolder : ARRAY[1..5] OF BOOL;
 END_VAR
 VAR
-    stFilter : ST_Filter;
+    aFilter : ARRAY[1..5] OF ST_Filter;
     nIteratorHolder : INT;
     nIteratorFilter : INT;
-    stFilterIterator : ST_Filter;
     aCombination : ARRAY[1..5] OF INT;
+    stEmptyFilter : ST_Filter;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-stFilter := THIS^.iFilterHolder[nCurrentFilterHolder].GetFilter(nFilterNumber := nCurrentFilterNumber);
+aFilter[nCurrentFilterHolder] := THIS^.iFilterHolder[nCurrentFilterHolder].GetFilter(nFilterNumber := nCurrentFilterNumber);
 
 aCombination[nCurrentFilterHolder] := nCurrentFilterNumber;
-THIS^.fbThicknesses.AddFilterCombination(
-    fThickness := stFilter.GetThickness(),
+
+THIS^.fbFilterCombinations.AddFilterCombination(
+    aFilter := aFilter,
     aCombination := aCombination
 );
-    
 
 // Here we combine our filter with every other single filter combination
 FOR nIteratorHolder := 1 TO 5 BY 1 DO
@@ -197,17 +105,17 @@ FOR nIteratorHolder := 1 TO 5 BY 1 DO
         CONTINUE;
     END_IF
     FOR nIteratorFilter := 1 TO 14 BY 1 DO
-        stFilterIterator := THIS^.iFilterHolder[nIteratorHolder].GetFilter(nFilterNumber := nIteratorFilter);
+        aFilter[nIteratorHolder] := THIS^.iFilterHolder[nIteratorHolder].GetFilter(nFilterNumber := nIteratorFilter);
         aCombination[nIteratorHolder] := nIteratorFilter;
-        THIS^.fbThicknesses.AddFilterCombination(
-            fThickness := stFilter.GetThickness() + stFilterIterator.GetThickness(),
+        THIS^.fbFilterCombinations.AddFilterCombination(
+            aFilter := aFilter,
             aCombination := aCombination
-        );  
+        ); 
+        aFilter[nIteratorHolder] := stEmptyFilter; 
         aCombination[nIteratorHolder] := 0;
     END_FOR
 END_FOR
 
-// Here we combine our filter and 1 other with every other single filter combination
 FOR nIteratorHolder := 1 TO 5 BY 1 DO
     IF nIteratorHolder = nCurrentFilterHolder OR NOT bUseFilterHolder[nIteratorHolder] THEN
         CONTINUE;
@@ -234,24 +142,23 @@ VAR_INPUT
     bUseFilterHolder : ARRAY[1..5] OF BOOL;
 END_VAR
 VAR
-    fThickness : LREAL;
-    stFilter1 : ST_Filter;
-    stFilter2 : ST_Filter;
+    aFilter : ARRAY[1..5] OF ST_Filter;
     nIteratorHolder : INT;
     nIteratorFilter : INT;
-    stFilterIterator : ST_Filter;
     aCombination : ARRAY[1..5] OF INT;
+    stEmptyFilter : ST_Filter;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-stFilter1 := THIS^.iFilterHolder[nCurrentFilterHolder1].GetFilter(nFilterNumber := nCurrentFilterNumber1);
-stFilter2 := THIS^.iFilterHolder[nCurrentFilterHolder2].GetFilter(nFilterNumber := nCurrentFilterNumber2);
+aFilter[nCurrentFilterHolder1] := THIS^.iFilterHolder[nCurrentFilterHolder1].GetFilter(nFilterNumber := nCurrentFilterNumber1);
+aFilter[nCurrentFilterHolder2] := THIS^.iFilterHolder[nCurrentFilterHolder2].GetFilter(nFilterNumber := nCurrentFilterNumber2);
 
 aCombination[nCurrentFilterHolder1] := nCurrentFilterNumber1;
 aCombination[nCurrentFilterHolder2] := nCurrentFilterNumber2;
-THIS^.fbThicknesses.AddFilterCombination(
-    fThickness := stFilter1.GetThickness() + stFilter2.GetThickness(),
+
+THIS^.fbFilterCombinations.AddFilterCombination(
+    aFilter := aFilter,
     aCombination := aCombination
 );
 
@@ -262,16 +169,17 @@ FOR nIteratorHolder := 1 TO 5 BY 1 DO
         CONTINUE;
     END_IF
     FOR nIteratorFilter := 1 TO 14 BY 1 DO
-        stFilterIterator := THIS^.iFilterHolder[nIteratorHolder].GetFilter(nFilterNumber := nIteratorFilter);
+        aFilter[nIteratorHolder] := THIS^.iFilterHolder[nIteratorHolder].GetFilter(nFilterNumber := nIteratorFilter);
         aCombination[nIteratorHolder] := nIteratorFilter;
-        THIS^.fbThicknesses.AddFilterCombination(
-            fThickness := stFilter1.GetThickness() + stFilter2.GetThickness() + stFilterIterator.GetThickness(),
+        THIS^.fbFilterCombinations.AddFilterCombination(
+            aFilter := aFilter,
             aCombination := aCombination
-        );
+        ); 
+        aFilter[nIteratorHolder] := stEmptyFilter; 
+        aCombination[nIteratorHolder] := 0;
     END_FOR
 END_FOR
 
-// Here we combine our filter and 2 others with every other single filter combination
 FOR nIteratorHolder := 1 TO 5 BY 1 DO
     IF nIteratorHolder = nCurrentFilterHolder1 OR
        nIteratorHolder = nCurrentFilterHolder2 OR NOT bUseFilterHolder[nIteratorHolder] THEN
@@ -304,27 +212,25 @@ VAR_INPUT
     bUseFilterHolder : ARRAY[1..5] OF BOOL;
 END_VAR
 VAR
-    fThickness : LREAL;
-    stFilter1 : ST_Filter;
-    stFilter2 : ST_Filter;
-    stFilter3 : ST_Filter;
+    aFilter : ARRAY[1..5] OF ST_Filter;
     nIteratorHolder : INT;
     nIteratorFilter : INT;
-    stFilterIterator : ST_Filter;
     aCombination : ARRAY[1..5] OF INT;
+    stEmptyFilter : ST_Filter;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-stFilter1 := THIS^.iFilterHolder[nCurrentFilterHolder1].GetFilter(nFilterNumber := nCurrentFilterNumber1);
-stFilter2 := THIS^.iFilterHolder[nCurrentFilterHolder2].GetFilter(nFilterNumber := nCurrentFilterNumber2);
-stFilter3 := THIS^.iFilterHolder[nCurrentFilterHolder3].GetFilter(nFilterNumber := nCurrentFilterNumber3);
+aFilter[nCurrentFilterHolder1] := THIS^.iFilterHolder[nCurrentFilterHolder1].GetFilter(nFilterNumber := nCurrentFilterNumber1);
+aFilter[nCurrentFilterHolder2] := THIS^.iFilterHolder[nCurrentFilterHolder2].GetFilter(nFilterNumber := nCurrentFilterNumber2);
+aFilter[nCurrentFilterHolder3] := THIS^.iFilterHolder[nCurrentFilterHolder3].GetFilter(nFilterNumber := nCurrentFilterNumber3);
 
 aCombination[nCurrentFilterHolder1] := nCurrentFilterNumber1;
 aCombination[nCurrentFilterHolder2] := nCurrentFilterNumber2;
 aCombination[nCurrentFilterHolder3] := nCurrentFilterNumber3;
-THIS^.fbThicknesses.AddFilterCombination(
-    fThickness := stFilter1.GetThickness() + stFilter2.GetThickness() + stFilter3.GetThickness(),
+
+THIS^.fbFilterCombinations.AddFilterCombination(
+    aFilter := aFilter,
     aCombination := aCombination
 );
 
@@ -336,16 +242,17 @@ FOR nIteratorHolder := 1 TO 5 BY 1 DO
         CONTINUE;
     END_IF
     FOR nIteratorFilter := 1 TO 14 BY 1 DO
-        stFilterIterator := THIS^.iFilterHolder[nIteratorHolder].GetFilter(nFilterNumber := nIteratorFilter);
+        aFilter[nIteratorHolder] := THIS^.iFilterHolder[nIteratorHolder].GetFilter(nFilterNumber := nIteratorFilter);
         aCombination[nIteratorHolder] := nIteratorFilter;
-        THIS^.fbThicknesses.AddFilterCombination(
-            fThickness := stFilter1.GetThickness() + stFilter2.GetThickness() + stFilter3.GetThickness() + stFilterIterator.GetThickness(),
+        THIS^.fbFilterCombinations.AddFilterCombination(
+            aFilter := aFilter,
             aCombination := aCombination
-        );
+        ); 
+        aFilter[nIteratorHolder] := stEmptyFilter; 
+        aCombination[nIteratorHolder] := 0;
     END_FOR
 END_FOR
 
-// Here we combine our filter and 2 others with every other single filter combination
 FOR nIteratorHolder := 1 TO 5 BY 1 DO
     IF nIteratorHolder = nCurrentFilterHolder1 OR
        nIteratorHolder = nCurrentFilterHolder2 OR
@@ -383,30 +290,27 @@ VAR_INPUT
     bUseFilterHolder : ARRAY[1..5] OF BOOL;
 END_VAR
 VAR
-    fThickness : LREAL;
-    stFilter1 : ST_Filter;
-    stFilter2 : ST_Filter;
-    stFilter3 : ST_Filter;
-    stFilter4 : ST_Filter;
+    aFilter : ARRAY[1..5] OF ST_Filter;
     nIteratorHolder : INT;
     nIteratorFilter : INT;
-    stFilterIterator : ST_Filter;
     aCombination : ARRAY[1..5] OF INT;
+    stEmptyFilter : ST_Filter;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-stFilter1 := THIS^.iFilterHolder[nCurrentFilterHolder1].GetFilter(nFilterNumber := nCurrentFilterNumber1);
-stFilter2 := THIS^.iFilterHolder[nCurrentFilterHolder2].GetFilter(nFilterNumber := nCurrentFilterNumber2);
-stFilter3 := THIS^.iFilterHolder[nCurrentFilterHolder3].GetFilter(nFilterNumber := nCurrentFilterNumber3);
-stFilter4 := THIS^.iFilterHolder[nCurrentFilterHolder4].GetFilter(nFilterNumber := nCurrentFilterNumber4);
+aFilter[nCurrentFilterHolder1] := THIS^.iFilterHolder[nCurrentFilterHolder1].GetFilter(nFilterNumber := nCurrentFilterNumber1);
+aFilter[nCurrentFilterHolder2] := THIS^.iFilterHolder[nCurrentFilterHolder2].GetFilter(nFilterNumber := nCurrentFilterNumber2);
+aFilter[nCurrentFilterHolder3] := THIS^.iFilterHolder[nCurrentFilterHolder3].GetFilter(nFilterNumber := nCurrentFilterNumber3);
+aFilter[nCurrentFilterHolder4] := THIS^.iFilterHolder[nCurrentFilterHolder4].GetFilter(nFilterNumber := nCurrentFilterNumber4);
 
 aCombination[nCurrentFilterHolder1] := nCurrentFilterNumber1;
 aCombination[nCurrentFilterHolder2] := nCurrentFilterNumber2;
 aCombination[nCurrentFilterHolder3] := nCurrentFilterNumber3;
 aCombination[nCurrentFilterHolder4] := nCurrentFilterNumber4;
-THIS^.fbThicknesses.AddFilterCombination(
-    fThickness := stFilter1.GetThickness() + stFilter2.GetThickness() + stFilter3.GetThickness() + stFilter4.GetThickness(),
+
+THIS^.fbFilterCombinations.AddFilterCombination(
+    aFilter := aFilter,
     aCombination := aCombination
 );
 
@@ -419,12 +323,14 @@ FOR nIteratorHolder := 1 TO 5 BY 1 DO
         CONTINUE;
     END_IF
     FOR nIteratorFilter := 1 TO 14 BY 1 DO
-        stFilterIterator := THIS^.iFilterHolder[nIteratorHolder].GetFilter(nFilterNumber := nIteratorFilter);
+        aFilter[nIteratorHolder] := THIS^.iFilterHolder[nIteratorHolder].GetFilter(nFilterNumber := nIteratorFilter);
         aCombination[nIteratorHolder] := nIteratorFilter;
-        THIS^.fbThicknesses.AddFilterCombination(
-            fThickness := stFilter1.GetThickness() + stFilter2.GetThickness() + stFilter3.GetThickness() + stFilter4.GetThickness() + stFilterIterator.GetThickness(),
+        THIS^.fbFilterCombinations.AddFilterCombination(
+            aFilter := aFilter,
             aCombination := aCombination
-        );
+        ); 
+        aFilter[nIteratorHolder] := stEmptyFilter; 
+        aCombination[nIteratorHolder] := 0;
     END_FOR
 END_FOR
 ]]></ST>
@@ -437,38 +343,34 @@ END_FOR
       <LineId Id="3" Count="3" />
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterNumbers.GetFilterNumbersSelected">
-      <LineId Id="3" Count="7" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="11" Count="77" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterNumbers.GetTotalThicknessOfCurrentSelection">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterNumbers.GetTotalThicknessOfCurrentSelectionWithCurrentHolderAndFilterSwappedIn">
+    <LineIds Name="FB_HE_SATT_FilterNumbers.Visit1FilterCombinationsAndStoreFilterCombinationThicknesses">
+      <LineId Id="3" Count="3" />
+      <LineId Id="148" Count="1" />
+      <LineId Id="184" Count="7" />
+      <LineId Id="194" Count="3" />
+      <LineId Id="138" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterNumbers.Visit2FilterCombinationsAndStoreFilterCombinationThicknesses">
       <LineId Id="2" Count="0" />
       <LineId Id="4" Count="0" />
-      <LineId Id="19" Count="0" />
+      <LineId Id="86" Count="0" />
       <LineId Id="74" Count="0" />
+      <LineId Id="87" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="71" Count="2" />
-      <LineId Id="70" Count="0" />
       <LineId Id="43" Count="0" />
       <LineId Id="5" Count="2" />
       <LineId Id="9" Count="1" />
       <LineId Id="12" Count="0" />
       <LineId Id="34" Count="0" />
       <LineId Id="79" Count="0" />
-      <LineId Id="76" Count="2" />
+      <LineId Id="83" Count="2" />
       <LineId Id="36" Count="0" />
+      <LineId Id="82" Count="0" />
       <LineId Id="80" Count="0" />
       <LineId Id="14" Count="0" />
       <LineId Id="8" Count="0" />
-      <LineId Id="58" Count="0" />
       <LineId Id="45" Count="3" />
       <LineId Id="3" Count="0" />
       <LineId Id="66" Count="0" />
@@ -480,13 +382,13 @@ END_FOR
       <LineId Id="67" Count="1" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterNumbers.Visit3FilterCombinationsAndStoreFilterCombinationThicknesses">
-      <LineId Id="1" Count="45" />
+      <LineId Id="1" Count="47" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterNumbers.Visit4FilterCombinationsAndStoreFilterCombinationThicknesses">
-      <LineId Id="1" Count="51" />
+      <LineId Id="1" Count="53" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterNumbers.Visit5FilterCombinationsAndStoreFilterCombinationThicknesses">
-      <LineId Id="1" Count="32" />
+      <LineId Id="1" Count="35" />
     </LineIds>
   </POU>
 </TcPlcObject>
