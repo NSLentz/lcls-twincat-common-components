@@ -19,5 +19,11 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Property Name="NumberOfSlots" Id="{e83b7fb5-7407-4813-b9cc-d270aebd7af9}">
+      <Declaration><![CDATA[PROPERTY NumberOfSlots : INT]]></Declaration>
+      <Get Name="Get" Id="{3b73d66b-ce03-4755-bc84-99831ecd961a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
   </Itf>
 </TcPlcObject>

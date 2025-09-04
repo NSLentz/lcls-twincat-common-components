@@ -3,6 +3,8 @@
   <DUT Name="ST_Filter" Id="{60dc1f96-f95d-46a1-9aa8-1dcc67cd5427}">
     <Declaration><![CDATA[TYPE ST_Filter :
 STRUCT
+    nHolderNumber : INT;
+    nFilterNumber : INT;
     eFilterType : E_FilterType;
     eFilterMaterial : E_FilterMaterial;
     uFilterThickness : U_FilterThickness;

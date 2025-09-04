@@ -74,7 +74,7 @@ fbHE_SATT_FilterHolderTestDouble[2].SetConfiguration(stFilter := stFilter[2]);
 // > 175.0 --> 175.0 for FLOOR
 // < 7.0 --> ERROR for FLOOR
 
-fbHE_SATT_FilterNumbers.Visit1FilterCombinationsAndStoreFilterCombinationThicknesses(
+fbHE_SATT_FilterNumbers.Visit1FilterCombinationsAndStoreFilterCombinations(
     fThickness := 7.1,
     eRoundingMode := E_HE_SATT_RoundingMode.CEIL,
     bUseFilterHolder := bUseFilterArray,
@@ -170,7 +170,7 @@ fbHE_SATT_FilterHolderTestDouble[2].SetConfiguration(stFilter := stFilter[2]);
 // > 175.0 --> 175.0 for FLOOR
 // < 7.0 --> ERROR for FLOOR
 
-fbHE_SATT_FilterNumbers.Visit1FilterCombinationsAndStoreFilterCombinationThicknesses(fThickness := 7.1,
+fbHE_SATT_FilterNumbers.Visit1FilterCombinationsAndStoreFilterCombinations(fThickness := 7.1,
                                                  eRoundingMode := E_HE_SATT_RoundingMode.FLOOR,
                                                  bUseFilterHolder := bUseFilterArray,
                                                  abFiltersSelected => abFiltersSelected);
