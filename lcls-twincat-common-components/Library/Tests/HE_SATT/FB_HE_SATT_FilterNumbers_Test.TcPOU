@@ -58,11 +58,11 @@ fbHE_SATT_FilterHolderTestDouble[2].SetConfiguration(stFilter := stFilter[2]);
 // 25.0
 // 7.0
 
-// 50.0 + 25.0
-// 50.0 + 7.0
+// 50.0 + 25.0 = 75.0
+// 50.0 + 7.0 = 57.0
 
-// 150.0 + 25.0
-// 150.0 + 7.0
+// 150.0 + 25.0 = 175.0
+// 150.0 + 7.0 = 157.0
 
 // 0.0
 
@@ -201,5 +201,17 @@ TEST_FINISHED();
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_HE_SATT_FilterNumbers_Test">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterNumbers_Test.GivenThicknessAndRoundingModeCeilExpectCorrectFilterNumber">
+      <LineId Id="3" Count="68" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterNumbers_Test.GivenThicknessAndRoundingModeFloorExpectCorrectFilterNumber">
+      <LineId Id="3" Count="68" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

@@ -11,5 +11,13 @@ VAR_OUTPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="GetFilter" Id="{b9af26ac-850d-4c8d-8479-197f9f19bd28}">
+      <Declaration><![CDATA[
+METHOD GetFilter : ST_Filter
+VAR_INPUT
+    nFilterNumber : INT;
+END_VAR
+]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>

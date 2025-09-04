@@ -93,6 +93,12 @@
     <Compile Include="Devices\HE_SATT\FB_HE_SATT_UserRequest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\FB_FilterCombinations.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\F_GetThicknessForFilter.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\I_CalculateThickness.TcIO">
       <SubType>Code</SubType>
     </Compile>
