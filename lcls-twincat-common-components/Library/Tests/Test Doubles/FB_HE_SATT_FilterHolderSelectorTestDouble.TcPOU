@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterHolderSelectorTestDouble" Id="{62fc66af-1dd0-41c9-b277-7ece72acbf00}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterHolderSelectorTestDouble IMPLEMENTS I_HE_SATT_FilterHolderSelector
+VAR
+    abSelectedHolder : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="DeselectHolder" Id="{171b5c60-aec1-40cd-b9a6-5433eef26b2a}">
+      <Declaration><![CDATA[
+METHOD DeselectHolder
+VAR_INPUT
+	nHolderNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.abSelectedHolder[nHolderNumber] := FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsSelected" Id="{f3405b0e-228d-440b-b29e-fa5167707509}">
+      <Declaration><![CDATA[
+METHOD IsSelected : BOOL
+VAR_INPUT
+	nHolderNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IsSelected := THIS^.abSelectedHolder[nHolderNumber];
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SelectHolder" Id="{a98d1e51-3f4d-40d6-ba80-dfbe1e56d8ca}">
+      <Declaration><![CDATA[
+METHOD SelectHolder
+VAR_INPUT
+	nHolderNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.abSelectedHolder[nHolderNumber] := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelectorTestDouble">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelectorTestDouble.DeselectHolder">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelectorTestDouble.IsSelected">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelectorTestDouble.SelectHolder">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

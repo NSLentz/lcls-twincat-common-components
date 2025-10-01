@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterCombination" Id="{3f5c161d-1dfa-48b6-b045-ee3172059675}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterCombination IMPLEMENTS I_HE_SATT_FilterCombination
+VAR
+    aiFilter : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
+    nHolderNumberOfLastFilterAdded : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddFilter" Id="{49246903-5cd5-45d9-b201-71e59c896238}">
+      <Declaration><![CDATA[
+METHOD AddFilter
+VAR_INPUT
+	nHolderNumber	: INT;
+	iFilter	: I_HE_SATT_Filter;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF NOT THIS^.IsValidHolderNumber(nHolderNumber := nHolderNumber) THEN
+    RETURN;
+END_IF
+
+THIS^.aiFilter[nHolderNumber] := iFilter;
+
+THIS^.nHolderNumberOfLastFilterAdded := nHolderNumber;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Clear" Id="{fc41e55f-411e-43c9-bca4-e1a17785476b}">
+      <Declaration><![CDATA[
+METHOD Clear
+VAR
+    nIteratorHolder : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+    aiFilter[nIteratorHolder] := 0;
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFilter" Id="{8f99526e-89c4-4076-a4d2-8f5516465bd6}">
+      <Declaration><![CDATA[
+METHOD GetFilter : I_HE_SATT_Filter
+VAR_INPUT
+    nHolderNumber : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+GetFilter := THIS^.aiFilter[nHolderNumber];
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="HolderNumberOfLastFilterAdded" Id="{2725ac41-65d3-46b9-87a3-6477d388d25f}">
+      <Declaration><![CDATA[
+PROPERTY HolderNumberOfLastFilterAdded : INT
+]]></Declaration>
+      <Get Name="Get" Id="{171c8033-4a4d-4327-8d62-5b55a130569b}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+HolderNumberOfLastFilterAdded := THIS^.nHolderNumberOfLastFilterAdded;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="IsValidHolderNumber" Id="{72e9bbce-8dd2-449c-a056-f356a1b70094}">
+      <Declaration><![CDATA[
+METHOD PUBLIC IsValidHolderNumber : BOOL
+VAR_INPUT
+    nHolderNumber : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF nHolderNumber >= 1 AND nHolderNumber <= PL_HE_SATT_Parameters.nNumHolders THEN
+    IsValidHolderNumber := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RemoveFilter" Id="{e4fa1af3-e2be-41a6-8f51-e9bee6544b1f}">
+      <Declaration><![CDATA[
+METHOD RemoveFilter
+VAR_INPUT
+	nHolderNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF NOT THIS^.IsValidHolderNumber(nHolderNumber := nHolderNumber) THEN
+    RETURN;
+END_IF
+
+THIS^.aiFilter[nHolderNumber] := 0;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterCombination">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombination.AddFilter">
+      <LineId Id="1" Count="8" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombination.Clear">
+      <LineId Id="1" Count="4" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombination.GetFilter">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombination.HolderNumberOfLastFilterAdded.Get">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombination.IsValidHolderNumber">
+      <LineId Id="1" Count="4" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombination.RemoveFilter">
+      <LineId Id="1" Count="6" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FilterCombinationCollector" Id="{d62d89ff-9614-47fb-a95f-4d39cf574fa3}">
+    <Declaration><![CDATA[
+INTERFACE I_HE_SATT_FilterCombinationCollector
+]]></Declaration>
+    <Method Name="AddFilterCombination" Id="{392deb49-e7c1-42de-a162-b2150e85c96b}">
+      <Declaration><![CDATA[
+METHOD PUBLIC AddFilterCombination
+VAR_INPUT
+    fbFilterCombination : REFERENCE TO FB_HE_SATT_FilterCombination;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="GetCombination" Id="{4ce62b9d-ae68-40dd-bd58-fb785c38dc50}">
+      <Declaration><![CDATA[
+METHOD GetCombination : REFERENCE TO FB_HE_SATT_FilterCombination
+VAR_INPUT
+    nCombinationNumber : DINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="NumCombinationsAdded" Id="{5f7a125b-9a63-4aa0-852e-b406eaebb5ac}">
+      <Declaration><![CDATA[
+PROPERTY NumCombinationsAdded : DINT
+]]></Declaration>
+      <Get Name="Get" Id="{c4909db4-9c88-4e8b-9e54-c5c601d0e095}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{ba0e24e0-3175-4624-b36e-00ba04724f68}">
+      <Declaration><![CDATA[
+METHOD PUBLIC Reset
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

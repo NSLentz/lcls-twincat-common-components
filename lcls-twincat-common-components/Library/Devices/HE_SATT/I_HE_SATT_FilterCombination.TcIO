@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FilterCombination" Id="{96edba00-4311-46ae-81cc-61667d9a4d75}">
+    <Declaration><![CDATA[
+INTERFACE I_HE_SATT_FilterCombination
+]]></Declaration>
+    <Method Name="AddFilter" Id="{bb54440e-55fa-40d0-88ba-788a33bb0420}">
+      <Declaration><![CDATA[
+METHOD AddFilter
+VAR_INPUT
+    nHolderNumber : INT;
+    iFilter : I_HE_SATT_Filter;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Clear" Id="{901fa0c3-b6fb-4fb6-82ce-93ed790f7f52}">
+      <Declaration><![CDATA[
+METHOD Clear
+]]></Declaration>
+    </Method>
+    <Method Name="GetFilter" Id="{e8597add-85f4-4e55-a782-ee4a22f37285}">
+      <Declaration><![CDATA[
+METHOD GetFilter : I_HE_SATT_Filter
+VAR_INPUT
+    nHolderNumber : INT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="HolderNumberOfLastFilterAdded" Id="{b8af32c5-e022-4c4b-9f55-c8e24c5c0188}">
+      <Declaration><![CDATA[PROPERTY HolderNumberOfLastFilterAdded : INT]]></Declaration>
+      <Get Name="Get" Id="{cda57f61-b089-4d98-acf5-d298d688222f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="IsValidHolderNumber" Id="{1ab4956d-f484-47eb-ab28-e0dd2c17f494}">
+      <Declaration><![CDATA[
+METHOD PUBLIC IsValidHolderNumber : BOOL
+VAR_INPUT
+    nHolderNumber : INT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="RemoveFilter" Id="{724ee1be-803b-4869-978b-ca9aee6a66f5}">
+      <Declaration><![CDATA[
+METHOD RemoveFilter
+VAR_INPUT
+    nHolderNumber : INT;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

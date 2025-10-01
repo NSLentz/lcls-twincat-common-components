@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FilterHolderSelector" Id="{2309a12e-dd09-4cf7-84a3-3982b60eb98c}">
+    <Declaration><![CDATA[INTERFACE I_HE_SATT_FilterHolderSelector
+]]></Declaration>
+    <Method Name="DeselectHolder" Id="{31578d46-5b1a-451b-9ce8-c7bd877a8e4a}">
+      <Declaration><![CDATA[
+METHOD DeselectHolder
+VAR_INPUT
+    nHolderNumber : INT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="IsSelected" Id="{dfc29f85-3adb-491a-90a0-3fea9c02e137}">
+      <Declaration><![CDATA[
+METHOD IsSelected : BOOL
+VAR_INPUT
+    nHolderNumber : INT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="SelectHolder" Id="{269cef13-4783-4c78-b9a9-5596ef9fb147}">
+      <Declaration><![CDATA[
+METHOD SelectHolder
+VAR_INPUT
+    nHolderNumber : INT;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

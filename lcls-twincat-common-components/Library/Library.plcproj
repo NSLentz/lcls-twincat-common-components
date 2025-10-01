@@ -54,10 +54,13 @@
     <Compile Include="Devices\ATM\FB_ATM.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Devices\HE_SATT\E_FilterMaterial.TcDUT">
+    <Compile Include="Devices\HE_SATT\E_HE_SATT_FilterMaterial.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Devices\HE_SATT\E_FilterType.TcDUT">
+    <Compile Include="Devices\HE_SATT\E_HE_SATT_FilterStatus.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\E_HE_SATT_FilterType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\E_HE_SATT_RoundingMode.TcDUT">
@@ -75,10 +78,13 @@
     <Compile Include="Devices\HE_SATT\FB_CalculateGermaniumThickness.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterCombination.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterHolder.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterNumbers.TcPOU">
+    <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterCombinationFinder.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterSelection.TcPOU">
@@ -93,20 +99,45 @@
     <Compile Include="Devices\HE_SATT\FB_HE_SATT_UserRequest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Devices\HE_SATT\FB_FilterCombinations.TcPOU">
+    <Compile Include="Devices\HE_SATT\FB_HE_SATT_FilterCombinationCollector.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\F_GetThicknessForFilter.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\F_HE_SATT_IsUsableFilter.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\I_CalculateThickness.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\I_HE_SATT_Filter.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\I_HE_SATT_FilterCombination.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\I_HE_SATT_FilterCombinationCollector.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\I_HE_SATT_FilterHolderSelector.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\I_HE_SATT_FilterWedge.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\I_HE_SATT_FilterHolder.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\I_HE_SATT_FilterConstantThickness.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\I_HE_SATT_Sequence.TcIO">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\PL_HE_SATT_Parameters.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="Devices\HE_SATT\ST_Filter.TcDUT">
       <SubType>Code</SubType>
@@ -249,13 +280,10 @@
     <Compile Include="Tests\HE_SATT\FB_HE_SATT_EpicsHeartBeatTest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterNumbers_Test.TcPOU">
+    <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterCombinationFinder_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\HE_SATT\FB_HE_SATT_UserRequest_Test.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterSelection_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\PRG_TEST.TcPOU">
@@ -264,7 +292,13 @@
     <Compile Include="Tests\Test Doubles\FB_CalculateThicknessTestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\Test Doubles\FB_HE_SATT_FilterHolderSelectorTestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\Test Doubles\FB_HE_SATT_FilterHolderTestDouble.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Test Doubles\FB_HE_SATT_FilterTestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\Test Doubles\FB_HE_SATT_SequenceTestDouble.TcPOU">

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="PL_HE_SATT_Parameters" Id="{db872c99-00c7-4339-b019-6a9c9e232e30}" ParameterList="True">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+    nNumHolders : INT := 5;
+    nMaxNumFiltersPerHolder : INT := 14;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

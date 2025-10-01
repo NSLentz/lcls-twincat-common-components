@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterCombinationCollector" Id="{4b240f92-978e-4d19-be0a-9ddef7b6361c}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterCombinationCollector IMPLEMENTS I_HE_SATT_FilterCombinationCollector
+VAR CONSTANT
+    nMAXIMUM_NUMBER_OF_COMBINATIONS : DINT := 1000;
+END_VAR
+VAR
+    nNumberOfCombinations : DINT;
+    afbFilterCombination : ARRAY[1..nMAXIMUM_NUMBER_OF_COMBINATIONS] OF FB_HE_SATT_FilterCombination;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddFilterCombination" Id="{f4eb5908-4a36-48dd-84ff-a98c52084b57}">
+      <Declaration><![CDATA[
+METHOD PUBLIC AddFilterCombination
+VAR_INPUT
+    fbFilterCombination : REFERENCE TO FB_HE_SATT_FilterCombination;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF nNumberOfCombinations >= nMAXIMUM_NUMBER_OF_COMBINATIONS THEN
+    RETURN;
+END_IF
+
+nNumberOfCombinations := nNumberOfCombinations + 1;
+afbFilterCombination[nNumberOfCombinations] := fbFilterCombination;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetCombination" Id="{faf7cc6b-d99e-4611-9630-58003c4f0463}">
+      <Declaration><![CDATA[
+METHOD GetCombination : REFERENCE TO FB_HE_SATT_FilterCombination
+VAR_INPUT
+	nCombinationNumber	: DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+GetCombination REF= afbFilterCombination[nCombinationNumber];
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="NumCombinationsAdded" Id="{ad157a5f-587e-40b1-a6f3-2671ffb46be8}">
+      <Declaration><![CDATA[
+PROPERTY NumCombinationsAdded : DINT
+]]></Declaration>
+      <Get Name="Get" Id="{d44944df-ff85-4924-a4fe-41bc08897ab9}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+NumCombinationsAdded := THIS^.nNumberOfCombinations;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{912b6c75-b835-4fa2-8b93-0deeceaaf550}">
+      <Declaration><![CDATA[
+METHOD PUBLIC Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+nNumberOfCombinations := 0;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector.AddFilterCombination">
+      <LineId Id="1" Count="6" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector.GetCombination">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector.NumCombinationsAdded.Get">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector.Reset">
+      <LineId Id="1" Count="1" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

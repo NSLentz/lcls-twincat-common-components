@@ -7,7 +7,7 @@ VAR
     //fbATMTest: FB_ATMTest;
     fbHE_SATT_EpicsHeartBeatTest : FB_HE_SATT_EpicsHeartBeatTest;
     fbHE_SATT_UserRequest_Test : FB_HE_SATT_UserRequest_Test;
-    fbHE_SATT_FilterNumber_Test : FB_HE_SATT_FilterNumbers_Test;
+    fbHE_SATT_FilterNumber_Test : FB_HE_SATT_FilterCombinationFinder_Test;
 //     fbLICTest: FB_LICTest;
 //     fbPPMTest: FB_PPMTest;
 //     fbREFTest: FB_REFTest;
@@ -39,5 +39,9 @@ END_VAR
 // Run the tests
 TcUnit.RUN();]]></ST>
     </Implementation>
+    <LineIds Name="PRG_TEST">
+      <LineId Id="3" Count="12" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

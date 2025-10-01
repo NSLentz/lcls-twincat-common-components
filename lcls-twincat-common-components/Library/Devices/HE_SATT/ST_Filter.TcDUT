@@ -5,8 +5,8 @@
 STRUCT
     nHolderNumber : INT;
     nFilterNumber : INT;
-    eFilterType : E_FilterType;
-    eFilterMaterial : E_FilterMaterial;
+    eFilterType : E_HE_SATT_FilterType;
+    eFilterMaterial : E_HE_SATT_FilterMaterial;
     uFilterThickness : U_FilterThickness;
 END_STRUCT
 END_TYPE

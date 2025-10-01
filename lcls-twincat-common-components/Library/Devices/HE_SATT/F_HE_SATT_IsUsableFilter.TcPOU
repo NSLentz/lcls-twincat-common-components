@@ -1,18 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="F_GetThicknessForFilter" Id="{d0d7190a-2a5e-4d3e-8d36-de9d58d9f292}" SpecialFunc="None">
+  <POU Name="F_HE_SATT_IsUsableFilter" Id="{71ef2912-7b5e-4b3f-91f1-0c5f670d46d4}" SpecialFunc="None">
     <Declaration><![CDATA[
-FUNCTION F_GetThicknessForFilter : LREAL
+FUNCTION F_HE_SATT_IsUsableFilter : BOOL
 VAR_INPUT
-    stFilter : ST_Filter;
-END_VAR
-VAR
+    iFilter : I_HE_SATT_Filter;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <LineIds Name="F_GetThicknessForFilter">
+    <LineIds Name="F_HE_SATT_IsUsableFilter">
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

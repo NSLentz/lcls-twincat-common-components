@@ -2,44 +2,32 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_HE_SATT_FilterHolderTestDouble" Id="{cdcd1eb9-bd8a-4335-a22e-020e71cca194}" SpecialFunc="None">
     <Declaration><![CDATA[
-FUNCTION_BLOCK FB_HE_SATT_FilterHolderTestDouble
-IMPLEMENTS I_HE_SATT_FilterHolder
-VAR CONSTANT
-    nNumberOfSlots : INT := 14;
-END_VAR
+FUNCTION_BLOCK FB_HE_SATT_FilterHolderTestDouble IMPLEMENTS I_HE_SATT_FilterHolder
 VAR
-    stFilter : ARRAY [1..nNumberOfSlots] OF ST_Filter;
+    nNumberOfSlots : INT;
+    aiFilter : ARRAY[1..PL_HE_SATT_Parameters.nMaxNumFiltersPerHolder] Of I_HE_SATT_Filter;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="GetConfiguration" Id="{c9eefbaf-dcdf-44b0-8e9c-966cbc404b6a}">
-      <Declaration><![CDATA[
-METHOD GetConfiguration
-VAR_OUTPUT
-    stFilter : ARRAY [1..14] OF ST_Filter;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[stFilter := THIS^.stFilter;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="GetFilter" Id="{f3113dd3-83dc-41e8-8f98-24b65c8cff42}">
       <Declaration><![CDATA[
-METHOD GetFilter : ST_Filter
+METHOD PUBLIC GetFilter : I_HE_SATT_Filter
 VAR_INPUT
 	nFilterNumber	: INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-GetFilter := THIS^.stFilter[nFilterNumber];
+GetFilter := THIS^.aiFilter[nFilterNumber];
 ]]></ST>
       </Implementation>
     </Method>
     <Property Name="NumberOfSlots" Id="{ef65f36b-3c7e-4172-b32f-a37ed4256cd1}">
-      <Declaration><![CDATA[PROPERTY NumberOfSlots : INT]]></Declaration>
+      <Declaration><![CDATA[
+PROPERTY NumberOfSlots : INT
+]]></Declaration>
       <Get Name="Get" Id="{06805441-e0e5-454c-86b1-29fec17549b7}">
         <Declaration><![CDATA[]]></Declaration>
         <Implementation>
@@ -48,24 +36,30 @@ NumberOfSlots := THIS^.nNumberOfSlots;
 ]]></ST>
         </Implementation>
       </Get>
+      <Set Name="Set" Id="{5d65dd31-5c2a-4e11-acdd-05afe612d3aa}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+THIS^.nNumberOfSlots := NumberOfSlots;
+]]></ST>
+        </Implementation>
+      </Set>
     </Property>
-    <Method Name="SetConfiguration" Id="{016822f4-bd6b-4b77-9c33-1e8001b25f82}">
+    <Method Name="SetFilter" Id="{0681b4de-c29f-4596-8a7e-f634078a4db1}">
       <Declaration><![CDATA[
-METHOD SetConfiguration
+METHOD PUBLIC SetFilter
 VAR_INPUT
-    stFilter : ARRAY [1..14] OF ST_Filter;
+	nFilterNumber : INT;
+    iFilter : I_HE_SATT_Filter;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-THIS^.stFilter := stFilter;
+THIS^.aiFilter[nFilterNumber] := iFilter;
 ]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_HE_SATT_FilterHolderTestDouble">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.GetConfiguration">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.GetFilter">
@@ -74,9 +68,11 @@ THIS^.stFilter := stFilter;
     <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.NumberOfSlots.Get">
       <LineId Id="1" Count="2" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.SetConfiguration">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
+    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.NumberOfSlots.Set">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.SetFilter">
+      <LineId Id="1" Count="2" />
     </LineIds>
   </POU>
 </TcPlcObject>

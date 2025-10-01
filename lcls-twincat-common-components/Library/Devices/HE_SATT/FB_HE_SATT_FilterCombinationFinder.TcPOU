@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterCombinationFinder" Id="{feca836f-e8bb-4515-a1e0-f38c0fee151e}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterCombinationFinder
+VAR
+    aiFilterHolder : REFERENCE TO ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_FilterHolder;
+    iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddFilterCombination" Id="{e1d24285-8482-4b01-9c0b-1f99bf56e030}">
+      <Declaration><![CDATA[
+METHOD PRIVATE AddFilterCombination
+VAR_INPUT
+    fbFilterCombination : REFERENCE TO FB_HE_SATT_FilterCombination;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iFilterCombinationCollector.AddFilterCombination(
+    fbFilterCombination := fbFilterCombination
+);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DetermineFilterCombinations" Id="{39fb4cfd-2f37-4c9b-9ea6-493956bc079d}">
+      <Declaration><![CDATA[
+METHOD PUBLIC DetermineFilterCombinations
+VAR_INPUT
+    iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
+END_VAR
+VAR_INST
+    nFilterHolderIterator : INT; 
+    nCombinationIterator : DINT;
+    nNumCombinationsThusFar : DINT;  
+    nFilterIterator : INT; 
+    
+    iFilter : I_HE_SATT_Filter;
+
+    fbFilterCombination : FB_HE_SATT_FilterCombination;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iFilterCombinationCollector.Reset();
+
+fbFilterCombination.Clear();
+
+// First combination that is always valid is the combination which doesn't use any filters.
+THIS^.AddFilterCombination(
+    fbFilterCombination := fbFilterCombination
+);
+    
+FOR nFilterHolderIterator := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+    IF NOT iFilterHolderSelector.IsSelected(nFilterHolderIterator) THEN
+        CONTINUE;
+    END_IF
+    
+    nNumCombinationsThusFar := THIS^.iFilterCombinationCollector.NumCombinationsAdded;
+    
+    FOR nCombinationIterator := 1 TO nNumCombinationsThusFar BY 1 DO
+        FOR nFilterIterator := 1 TO THIS^.aiFilterHolder[nFilterHolderIterator].NumberOfSlots BY 1 DO
+            fbFilterCombination := THIS^.iFilterCombinationCollector.GetCombination(
+                nCombinationNumber := nCombinationIterator
+            );
+            
+            iFilter := aiFilterHolder[nFilterHolderIterator].GetFilter(
+                nFilterNumber := nFilterIterator
+            );
+            
+            IF iFilter.Status = E_HE_SATT_FilterStatus.DISABLED THEN
+                CONTINUE;
+            END_IF
+            
+            fbFilterCombination.AddFilter(
+                nHolderNumber := nFilterHolderIterator,
+                iFilter := iFilter
+            );
+            
+            THIS^.AddFilterCombination(
+                fbFilterCombination := fbFilterCombination
+            );
+        END_FOR
+    END_FOR
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{fe188b1b-d576-4a67-a589-f463588eddf2}">
+      <Declaration><![CDATA[
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    
+    aiFilterHolder : REFERENCE TO ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_FilterHolder;
+    iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.aiFilterHolder REF= aiFilterHolder;
+THIS^.iFilterCombinationCollector := iFilterCombinationCollector;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterCombinationFinder">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationFinder.AddFilterCombination">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationFinder.DetermineFilterCombinations">
+      <LineId Id="1" Count="42" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationFinder.FB_Init">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

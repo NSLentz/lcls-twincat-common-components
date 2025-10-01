@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_Filter" Id="{bd19a689-7463-44af-b072-8b6f73cd8774}">
+    <Declaration><![CDATA[
+INTERFACE I_HE_SATT_Filter EXTENDS __System.IQueryInterface 
+]]></Declaration>
+    <Property Name="Holder" Id="{d8427123-d076-4c33-81b3-e42e5841a1a7}">
+      <Declaration><![CDATA[
+PROPERTY Holder : I_HE_SATT_FilterHolder
+]]></Declaration>
+      <Get Name="Get" Id="{6bd88ea0-16ab-446f-83ea-d28b5c458d10}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Length" Id="{57153b5d-5a4f-4305-9157-7d3519776bf9}">
+      <Declaration><![CDATA[PROPERTY Length : LREAL]]></Declaration>
+      <Get Name="Get" Id="{5895a230-5fe2-4050-ad38-007145f6c400}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Material" Id="{747da635-30df-44d3-bc75-fc8861c47f45}">
+      <Declaration><![CDATA[PROPERTY Material : E_HE_SATT_FilterMaterial]]></Declaration>
+      <Get Name="Get" Id="{38b506b1-38db-462d-afbc-4d62274581f0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="PositionInHolder" Id="{e7d68f98-1d2c-4db3-a5da-c6091cf346e0}">
+      <Declaration><![CDATA[
+PROPERTY PositionInHolder : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{6502bdc0-d03f-4983-acce-fc4bcb1658f0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Status" Id="{bb6a4b26-2f02-4902-83bb-232dfe0204b2}">
+      <Declaration><![CDATA[PROPERTY Status : E_HE_SATT_FilterStatus]]></Declaration>
+      <Get Name="Get" Id="{6f954fc4-8797-4be2-b028-5988ed9b6329}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

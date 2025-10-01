@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FilterConstantThickness" Id="{9d932342-e0ca-4906-9116-279ce19d9c00}">
+    <Declaration><![CDATA[
+INTERFACE I_HE_SATT_FilterConstantThickness EXTENDS I_HE_SATT_Filter 
+]]></Declaration>
+    <Property Name="Thickness" Id="{5d39f9ee-8615-4426-b7c8-f2e4785a0ab4}">
+      <Declaration><![CDATA[PROPERTY Thickness : LREAL]]></Declaration>
+      <Get Name="Get" Id="{d219a0c1-ed05-4429-bacb-2918c10e1377}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>
