@@ -9,6 +9,36 @@ FUNCTION_BLOCK FB_HE_SATT_FilterCombinationFinder_Test EXTENDS FB_TestSuite
 GivenHoldersAndSelectionExpectCorrectListOfCombinations();
 ]]></ST>
     </Implementation>
+    <Method Name="AssertEquals_Combination" Id="{c3fbddf7-05b6-47cc-bb3b-c4e12c3764ee}">
+      <Declaration><![CDATA[
+METHOD PRIVATE AssertEquals_Combination
+VAR_INPUT
+    iFilterCombinationExpected : I_HE_SATT_FilterCombination;
+    iFilterCombinationResult : I_HE_SATT_FilterCombination;
+END_VAR
+VAR
+    sMessageBuilder : T_MaxString;
+    nIteratorHolder : INT;
+    iFilterExpected : I_HE_SATT_Filter;
+    iFilterResult : I_HE_SATT_Filter;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+    iFilterExpected := iFilterCombinationExpected.GetFilter(nIteratorHolder);
+    iFilterResult := iFilterCombinationResult.GetFilter(nIteratorHolder);
+    sMessageBuilder := 'Combination filter in slot for holder ';
+    sMessageBuilder := CONCAT(sMessageBuilder, TO_STRING(nIteratorHolder));
+    sMessageBuilder := CONCAT(sMessageBuilder, ' was not the expected filter. ');
+    AssertTrue(
+        Condition := iFilterExpected = iFilterResult,
+        Message := sMessageBuilder
+    );
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="GivenHoldersAndSelectionExpectCorrectListOfCombinations" Id="{80ebffa4-0785-47a2-ac1f-106bcccb9b20}">
       <Declaration><![CDATA[
 METHOD PRIVATE GivenHoldersAndSelectionExpectCorrectListOfCombinations
@@ -52,7 +82,9 @@ VAR
     // Variables for test
     sConcatString : T_MaxString;
     fbFilterCombinationExpected : FB_HE_SATT_FilterCombination;
+    aiFilterExpected : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
     fbFilterCombinationResult : FB_HE_SATT_FilterCombination;
+    aiFilterResult : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -92,22 +124,72 @@ fbHE_SATT_FilterCombinationFinder.DetermineFilterCombinations(
     iFilterHolderSelector := fbFilterHolderSelectorTestDouble
 );
 
-fbFilterCombinationExpected.Clear();
-fbFilterCombinationResult := fbFilterCombinationCollector.GetCombination(1);
-AssertTrue(
-    Condition := fbFilterCombinationResult.GetFilter(1) = fbFilterCombinationExpected.GetFilter(2),
-    Message := ''
+AssertEquals_DINT(
+    Expected := 24,
+    Actual := fbFilterCombinationCollector.NumCombinationsAdded,
+    Message := 'Number of combinations found was not correct.'
 );
 
-fbFilterCombination.Clear();
-fbFilterCombination.AddFilter(1, 
-fbFilterCombination.AddFilter(1,
-fbFilterCombination.AddFilter(1,
-fbFilterCombination.AddFilter(1,
-fbFilterCombination.AddFilter(1,
-AssertTrue(
-    Condition := fbFilterCombinationCollector.GetCombination(1) = ,
-    Message := ''
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationResult := fbFilterCombinationCollector.GetCombination(1);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, 0);
+fbFilterCombinationExpected.AddFilter(2, afbFilter[4]);
+fbFilterCombinationExpected.AddFilter(3, 0);
+fbFilterCombinationExpected.AddFilter(4, 0);
+fbFilterCombinationExpected.AddFilter(5, 0);
+fbFilterCombinationResult := fbFilterCombinationCollector.GetCombination(2);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, 0);
+fbFilterCombinationExpected.AddFilter(2, afbFilter[4]);
+fbFilterCombinationExpected.AddFilter(3, afbFilter[8]);
+fbFilterCombinationExpected.AddFilter(4, 0);
+fbFilterCombinationExpected.AddFilter(5, 0);
+fbFilterCombinationResult := fbFilterCombinationCollector.GetCombination(8);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, 0);
+fbFilterCombinationExpected.AddFilter(2, afbFilter[4]);
+fbFilterCombinationExpected.AddFilter(3, afbFilter[8]);
+fbFilterCombinationExpected.AddFilter(4, afbFilter[10]);
+fbFilterCombinationExpected.AddFilter(5, 0);
+fbFilterCombinationResult := fbFilterCombinationCollector.GetCombination(20);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, 0);
+fbFilterCombinationExpected.AddFilter(2, afbFilter[5]);
+fbFilterCombinationExpected.AddFilter(3, afbFilter[9]);
+fbFilterCombinationExpected.AddFilter(4, afbFilter[10]);
+fbFilterCombinationExpected.AddFilter(5, 0);
+fbFilterCombinationResult := fbFilterCombinationCollector.GetCombination(24);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationResult := fbFilterCombinationCollector.GetCombination(25);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
 );
 
 TEST_FINISHED();
@@ -118,34 +200,25 @@ TEST_FINISHED();
       <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationFinder_Test.AssertEquals_Combination">
+      <LineId Id="1" Count="12" />
+    </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder_Test.GivenHoldersAndSelectionExpectCorrectListOfCombinations">
-      <LineId Id="3" Count="1" />
-      <LineId Id="74" Count="2" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="78" Count="1" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="81" Count="1" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="90" Count="1" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="84" Count="1" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="103" Count="0" />
-      <LineId Id="87" Count="1" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="94" Count="5" />
-      <LineId Id="68" Count="1" />
-      <LineId Id="92" Count="1" />
-      <LineId Id="113" Count="0" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="129" Count="0" />
-      <LineId Id="108" Count="3" />
-      <LineId Id="119" Count="9" />
-      <LineId Id="118" Count="0" />
-      <LineId Id="70" Count="1" />
+      <LineId Id="205" Count="34" />
+      <LineId Id="297" Count="0" />
+      <LineId Id="296" Count="0" />
+      <LineId Id="298" Count="3" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="279" Count="3" />
+      <LineId Id="284" Count="1" />
+      <LineId Id="290" Count="4" />
+      <LineId Id="286" Count="3" />
+      <LineId Id="302" Count="37" />
+      <LineId Id="345" Count="4" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="268" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
