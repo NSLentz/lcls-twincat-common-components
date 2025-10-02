@@ -36,7 +36,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-IF iFilter := 0 THEN
+IF iFilter = 0 THEN
     fMinimumTransmission := 1.0;
     fMaximumTransmission := fMinimumTransmission;
     RETURN;
@@ -56,7 +56,7 @@ END_IF
 
 fDensity_gm3 := F_MaterialDensityLookup(
     sMaterialName := iFilter.MaterialFormula
-);
+) * 1e6;
 
 fAtomicWeight := F_AtomicMassLookup(
     sMaterialName := iFilter.MaterialFormula
@@ -104,7 +104,7 @@ VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-THIS^.CalculateTransmission := iScatteringFactorLookup;
+THIS^.iScatteringFactorLookup := iScatteringFactorLookup;
 ]]></ST>
       </Implementation>
     </Method>

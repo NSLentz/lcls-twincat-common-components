@@ -13,14 +13,123 @@ GivenFilterExpectCorrectTransmission();
       <Declaration><![CDATA[
 METHOD PRIVATE GivenFilterExpectCorrectTransmission
 VAR
+    fbFilterHolderTestDouble : FB_HE_SATT_FilterHolderTestDouble;    
+
+    fbFilterConstantThickness : FB_HE_SATT_FilterConstantThickness(
+        iHolder := fbFilterHolderTestDouble,
+        eDefaultMaterial := E_HE_SATT_FilterMaterial.Diamond,
+        eDefaultStatus := E_HE_SATT_FilterStatus.ENABLED,
+        fDefaultLength := 1.0,
+        fDefaultThickness := 1e-3
+    );
     
+    fbFilterWedgeSilicon : FB_HE_SATT_FilterWedge(
+        iHolder := fbFilterHolderTestDouble,
+        eDefaultMaterial := E_HE_SATT_FilterMaterial.Silicon,
+        eDefaultStatus := E_HE_SATT_FilterStatus.ENABLED,
+        fDefaultLength := 2.0,
+        fDefaultThicknessAt0 := 1e-5,
+        fDefaultThicknessAtLength := 2e-5
+    );
+    
+    fbFilterWedgeGermanium : FB_HE_SATT_FilterWedge(
+        iHolder := fbFilterHolderTestDouble,
+        eDefaultMaterial := E_HE_SATT_FilterMaterial.Germanium,
+        eDefaultStatus := E_HE_SATT_FilterStatus.ENABLED,
+        fDefaultLength := 3.0,
+        fDefaultThicknessAt0 := 2e-4,
+        fDefaultThicknessAtLength := 1e-4
+    );
+    
+    fbScatteringFactorLookup : FB_ScatteringFactorLookupCXRO;
+
+    // Subject under test
+    fbHE_SATT_FilterToTransmission : FB_HE_SATT_FilterToTransmission(
+        iScatteringFactorLookup := fbScatteringFactorLookup
+    );
+    
+    // Variables for the test
+    fMinimumTransmissionExpected : LREAL;
+    fMaximumTransmissionExpected : LREAL;
+    fMinimumTransmissionResult : LREAL;
+    fMaximumTransmissionResult : LREAL;
+    fAllowableDelta : LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 TEST('GivenFilterExpectCorrectTransmission');
 
+fAllowableDelta := 1e-4;
 
+fMinimumTransmissionExpected := 0.4844590049714352;
+fMaximumTransmissionExpected := 0.4844590049714352;
+
+fbHE_SATT_FilterToTransmission.CalculateTransmission(
+    fPhotonEnergy_eV := 10000.0,
+    iFilter := fbFilterConstantThickness,
+    fMinimumTransmission => fMinimumTransmissionResult,
+    fMaximumTransmission => fMaximumTransmissionResult
+);
+
+AssertEquals_LREAL(
+    Expected := fMinimumTransmissionExpected,
+    Actual := fMinimumTransmissionResult,
+    Delta := fAllowableDelta,
+    Message := 'Diamond filter with constant thickness minimum transmission was incorrect.'
+);
+AssertEquals_LREAL(
+    Expected := fMaximumTransmissionExpected,
+    Actual := fMaximumTransmissionResult,
+    Delta := fAllowableDelta,
+    Message := 'Diamond filter with constant thickness miaximum transmission was incorrect.'
+);
+
+fMinimumTransmissionExpected := 0.0005707894566343199;
+fMaximumTransmissionExpected := 0.023891200401702714;
+
+fbHE_SATT_FilterToTransmission.CalculateTransmission(
+    fPhotonEnergy_eV := 1000,
+    iFilter := fbFilterWedgeSilicon,
+    fMinimumTransmission => fMinimumTransmissionResult,
+    fMaximumTransmission => fMaximumTransmissionResult
+);
+
+AssertEquals_LREAL(
+    Expected := fMinimumTransmissionExpected,
+    Actual := fMinimumTransmissionResult,
+    Delta := fAllowableDelta,
+    Message := 'Silicon filter with wedge thickness minimum transmission was incorrect.'
+);
+AssertEquals_LREAL(
+    Expected := fMaximumTransmissionExpected,
+    Actual := fMaximumTransmissionResult,
+    Delta := fAllowableDelta,
+    Message := 'Silicon filter with wedge thickness maximum transmission was incorrect.'
+);
+
+fMinimumTransmissionExpected := 0.010728580119616998;
+fMaximumTransmissionExpected := 0.10357885942419427;
+
+fbHE_SATT_FilterToTransmission.CalculateTransmission(
+    fPhotonEnergy_eV := 20000,
+    iFilter := fbFilterWedgeGermanium,
+    fMinimumTransmission => fMinimumTransmissionResult,
+    fMaximumTransmission => fMaximumTransmissionResult
+);
+
+AssertEquals_LREAL(
+    Expected := fMinimumTransmissionExpected,
+    Actual := fMinimumTransmissionResult,
+    Delta := fAllowableDelta,
+    Message := 'Germanium filter with wedge thickness minimum transmission was incorrect.'
+);
+AssertEquals_LREAL(
+    Expected := fMaximumTransmissionExpected,
+    Actual := fMaximumTransmissionResult,
+    Delta := fAllowableDelta,
+    Message := 'Germanium filter with wedge thickness maximum transmission was incorrect.'
+);
 
 TEST_FINISHED();
 ]]></ST>
@@ -30,7 +139,7 @@ TEST_FINISHED();
       <LineId Id="1" Count="2" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterToTransmission_Test.GivenFilterExpectCorrectTransmission">
-      <LineId Id="1" Count="6" />
+      <LineId Id="1" Count="75" />
     </LineIds>
   </POU>
 </TcPlcObject>

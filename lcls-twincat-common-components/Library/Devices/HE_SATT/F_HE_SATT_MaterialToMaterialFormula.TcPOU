@@ -11,7 +11,7 @@ END_VAR
       <ST><![CDATA[
 CASE eMaterial OF
     E_HE_SATT_FilterMaterial.Diamond:
-        F_HE_SATT_MaterialToMaterialFormula := 'C';
+        F_HE_SATT_MaterialToMaterialFormula := 'C (Diamond)';
         
     E_HE_SATT_FilterMaterial.Germanium:
         F_HE_SATT_MaterialToMaterialFormula := 'Ge';
