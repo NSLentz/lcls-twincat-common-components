@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterToTransmission" Id="{0ed6af88-ffbf-4027-abc4-8a943473da7b}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterToTransmission
+VAR
+    iScatteringFactorLookup : I_ScatteringFactorLookup;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="CalculateTransmission" Id="{032d47dc-a19d-4da4-8ad8-06779d47321b}">
+      <Declaration><![CDATA[
+METHOD PUBLIC CalculateTransmission
+VAR_INPUT
+    fPhotonEnergy_eV : LREAL;
+    iFilter : I_HE_SATT_Filter;
+END_VAR
+VAR_OUTPUT
+    fMinimumTransmission : LREAL;
+    fMaximumTransmission : LREAL;
+END_VAR
+VAR    
+    iFilterConstantThickness : I_HE_SATT_FilterConstantThickness;
+    iFilterWedge : I_HE_SATT_FilterWedge;
+    
+    f2 : LREAL;
+    fDensity_gm3 : LREAL;
+    fAtomicWeight : LREAL;
+    fMassAttenuationCoefficient : LREAL;
+    
+    bError : BOOL;
+    sErrorMsg : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF iFilter := 0 THEN
+    fMinimumTransmission := 1.0;
+    fMaximumTransmission := fMinimumTransmission;
+    RETURN;
+END_IF
+
+iScatteringFactorLookup.GetScatteringFactor(
+    sMaterialName := iFilter.MaterialFormula,
+    fPhotonEnergy_eV := fPhotonEnergy_eV,
+    f2 => f2,
+    bError => bError,
+    sErrorMsg => sErrorMsg
+);
+
+IF bError THEN
+    // TODO: Log error
+END_IF
+
+fDensity_gm3 := F_MaterialDensityLookup(
+    sMaterialName := iFilter.MaterialFormula
+);
+
+fAtomicWeight := F_AtomicMassLookup(
+    sMaterialName := iFilter.MaterialFormula
+);
+
+fMassAttenuationCoefficient := F_CalculateMassAttenuationCoefficient(
+    f2 := f2,
+    fPhotonEnergy_eV := fPhotonEnergy_eV,
+    fDensity_gm3 := fDensity_gm3,
+    fAtomicWeight := fAtomicWeight
+);
+
+IF __QUERYINTERFACE(iFilter, iFilterConstantThickness) THEN
+    fMinimumTransmission := F_CalculateTransmission(
+        fAbsorptionConstant := fMassAttenuationCoefficient,
+        fThickness_in_m := iFilterConstantThickness.Thickness
+    );
+    
+    fMaximumTransmission := fMinimumTransmission;
+    
+ELSIF __QUERYINTERFACE(iFilter, iFilterWedge) THEN
+    fMinimumTransmission := F_CalculateTransmission(
+        fAbsorptionConstant := fMassAttenuationCoefficient,
+        fThickness_in_m := iFilterWedge.MaxThickness
+    );
+    
+    fMaximumTransmission := F_CalculateTransmission(
+        fAbsorptionConstant := fMassAttenuationCoefficient,
+        fThickness_in_m := iFilterWedge.MinThickness
+    );
+ELSE
+    // TODO: Log error
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{3425a3a9-d5f7-4b42-8c20-2afb290bc765}">
+      <Declaration><![CDATA[
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+
+    iScatteringFactorLookup : I_ScatteringFactorLookup;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.CalculateTransmission := iScatteringFactorLookup;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterToTransmission">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterToTransmission.CalculateTransmission">
+      <LineId Id="1" Count="55" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterToTransmission.FB_Init">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

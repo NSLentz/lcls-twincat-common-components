@@ -20,5 +20,11 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <LineIds Name="FB_HE_SATT_Sequence">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_Sequence.SequenceState.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

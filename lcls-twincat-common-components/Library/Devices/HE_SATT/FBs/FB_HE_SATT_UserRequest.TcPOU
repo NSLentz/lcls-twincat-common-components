@@ -64,5 +64,17 @@ THIS^.fRequestAttenuation := fRequestedAttenuation;
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_HE_SATT_UserRequest">
+      <LineId Id="1" Count="5" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_UserRequest.ApplyConfig">
+      <LineId Id="1" Count="8" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_UserRequest.FB_Init">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_UserRequest.RequestAttenuation">
+      <LineId Id="1" Count="2" />
+    </LineIds>
   </POU>
 </TcPlcObject>

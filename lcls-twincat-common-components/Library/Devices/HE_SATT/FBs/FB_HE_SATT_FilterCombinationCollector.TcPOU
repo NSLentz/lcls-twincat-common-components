@@ -71,8 +71,7 @@ nNumberOfCombinations := 0;
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationCollector.AddFilterCombination">
-      <LineId Id="1" Count="6" />
-      <LineId Id="9" Count="0" />
+      <LineId Id="1" Count="7" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationCollector.GetCombination">
       <LineId Id="1" Count="2" />
@@ -81,8 +80,7 @@ nNumberOfCombinations := 0;
       <LineId Id="1" Count="2" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationCollector.Reset">
-      <LineId Id="1" Count="1" />
-      <LineId Id="11" Count="0" />
+      <LineId Id="1" Count="2" />
     </LineIds>
   </POU>
 </TcPlcObject>

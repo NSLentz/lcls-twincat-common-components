@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FilterWedge" Id="{07fda710-a856-45c4-9342-2b90967d8a83}">
+    <Declaration><![CDATA[
+INTERFACE I_HE_SATT_FilterWedge EXTENDS I_HE_SATT_Filter 
+]]></Declaration>
+    <Property Name="MaxThickness" Id="{37b68b46-62a8-4e25-864a-75a9f7bf8336}">
+      <Declaration><![CDATA[PROPERTY MaxThickness : LREAL]]></Declaration>
+      <Get Name="Get" Id="{a57adced-ca37-4f0a-a390-d0064ce6e00b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MinThickness" Id="{db1d9ef8-484e-41f5-968a-55e08eeada88}">
+      <Declaration><![CDATA[PROPERTY MinThickness : LREAL]]></Declaration>
+      <Get Name="Get" Id="{d61d3c84-6847-4fbc-9c71-da60b0c809eb}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="ThicknessAt" Id="{81688184-8feb-4b22-ab03-0cd1e3659053}">
+      <Declaration><![CDATA[
+METHOD ThicknessAt : LREAL
+VAR_INPUT
+    fPosition : LREAL; // Position in units of property Length and with value from 0 to value of property Length
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

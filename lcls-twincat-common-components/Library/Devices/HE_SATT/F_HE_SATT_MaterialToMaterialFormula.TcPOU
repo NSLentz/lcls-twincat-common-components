@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_HE_SATT_MaterialToMaterialFormula" Id="{351079bf-21c6-4c05-8134-9faa64daf259}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION F_HE_SATT_MaterialToMaterialFormula : T_MaxString
+VAR_INPUT
+    eMaterial : E_HE_SATT_FilterMaterial;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+CASE eMaterial OF
+    E_HE_SATT_FilterMaterial.Diamond:
+        F_HE_SATT_MaterialToMaterialFormula := 'C';
+        
+    E_HE_SATT_FilterMaterial.Germanium:
+        F_HE_SATT_MaterialToMaterialFormula := 'Ge';
+        
+    E_HE_SATT_FilterMaterial.Silicon:
+        F_HE_SATT_MaterialToMaterialFormula := 'Si';
+        
+    ELSE
+        F_HE_SATT_MaterialToMaterialFormula := TO_STRING(eMaterial);
+END_CASE
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_HE_SATT_MaterialToMaterialFormula">
+      <LineId Id="1" Count="14" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -24,5 +24,11 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_CalculateSiliconThickness">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_CalculateSiliconThickness.Calculate">
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

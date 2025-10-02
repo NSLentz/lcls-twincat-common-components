@@ -1,16 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="F_HE_SATT_IsUsableFilter" Id="{71ef2912-7b5e-4b3f-91f1-0c5f670d46d4}" SpecialFunc="None">
+  <POU Name="FB_HE_SATT_FilterCombinationToTransmission" Id="{57b92a13-f75a-4ff7-bbe9-5e6dee3c26e5}" SpecialFunc="None">
     <Declaration><![CDATA[
-FUNCTION F_HE_SATT_IsUsableFilter : BOOL
-VAR_INPUT
-    iFilter : I_HE_SATT_Filter;
+FUNCTION_BLOCK FB_HE_SATT_FilterCombinationToTransmission
+VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <LineIds Name="F_HE_SATT_IsUsableFilter">
+    <LineIds Name="FB_HE_SATT_FilterCombinationToTransmission">
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

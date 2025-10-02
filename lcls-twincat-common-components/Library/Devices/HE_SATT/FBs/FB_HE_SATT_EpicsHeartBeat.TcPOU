@@ -43,5 +43,17 @@ IsHeartbeatExpired := THIS^.fbHeartbeatTimer.Q;
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_HE_SATT_EpicsHeartBeat">
+      <LineId Id="1" Count="3" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_EpicsHeartBeat.FB_Init">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_EpicsHeartBeat.Heartbeat">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_EpicsHeartBeat.IsHeartbeatExpired">
+      <LineId Id="1" Count="2" />
+    </LineIds>
   </POU>
 </TcPlcObject>

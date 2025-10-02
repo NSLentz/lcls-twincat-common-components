@@ -12,23 +12,25 @@ PROPERTY Holder : I_HE_SATT_FilterHolder
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="Length" Id="{57153b5d-5a4f-4305-9157-7d3519776bf9}">
-      <Declaration><![CDATA[PROPERTY Length : LREAL]]></Declaration>
-      <Get Name="Get" Id="{5895a230-5fe2-4050-ad38-007145f6c400}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="Material" Id="{747da635-30df-44d3-bc75-fc8861c47f45}">
-      <Declaration><![CDATA[PROPERTY Material : E_HE_SATT_FilterMaterial]]></Declaration>
-      <Get Name="Get" Id="{38b506b1-38db-462d-afbc-4d62274581f0}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="PositionInHolder" Id="{e7d68f98-1d2c-4db3-a5da-c6091cf346e0}">
+    <Property Name="Length" Id="{950ec1a2-9429-4ffc-bb31-b4743299bd35}">
       <Declaration><![CDATA[
-PROPERTY PositionInHolder : LREAL
+PROPERTY Length : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{6502bdc0-d03f-4983-acce-fc4bcb1658f0}">
+      <Get Name="Get" Id="{214889b9-0f87-4344-af90-850efc1dac34}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Material" Id="{643cb2d7-b5cb-4b11-900a-64fe1430e86c}">
+      <Declaration><![CDATA[
+PROPERTY Material : E_HE_SATT_FilterMaterial
+]]></Declaration>
+      <Get Name="Get" Id="{88a78f22-035c-4585-aec5-e6783836e3bd}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="MaterialFormula" Id="{9e7d0162-9d6f-4bea-9492-8ee2a77816ee}">
+      <Declaration><![CDATA[PROPERTY MaterialFormula : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{d290165d-4fbf-45a0-af70-49c51bd8a6e3}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>

@@ -1,24 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_HE_SATT_FilterTestDouble" Id="{78e15cd5-2ad9-4e36-8049-41459bd3f9ff}" SpecialFunc="None">
+  <POU Name="FB_HE_SATT_Filter" Id="{88a3f423-5332-4112-92bc-be5fb052a1e4}" SpecialFunc="None">
     <Declaration><![CDATA[
-FUNCTION_BLOCK FB_HE_SATT_FilterTestDouble IMPLEMENTS I_HE_SATT_Filter
+FUNCTION_BLOCK ABSTRACT FB_HE_SATT_Filter IMPLEMENTS I_HE_SATT_Filter
 VAR
     iHolder : I_HE_SATT_FilterHolder;
     fLength : LREAL;
     eMaterial : E_HE_SATT_FilterMaterial;
-    fPositionInHolder : LREAL;
     eStatus : E_HE_SATT_FilterStatus;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Property Name="Holder" Id="{36a88056-bfc1-4156-bf8f-9ebd187d96c5}">
+    <Method Name="FB_Init" Id="{f9013f92-842c-4d98-883a-911e2061f181}">
+      <Declaration><![CDATA[
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+    
+    iHolder : I_HE_SATT_FilterHolder;
+    fDefaultLength : LREAL;
+    eDefaultMaterial : E_HE_SATT_FilterMaterial;
+    eDefaultStatus : E_HE_SATT_FilterStatus;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iHolder := iHolder;
+THIS^.fLength := fDefaultLength;
+THIS^.eMaterial := eDefaultMaterial;
+THIS^.eStatus := eDefaultStatus;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Holder" Id="{84c76333-6b2c-448b-afba-b10d7ed07d24}">
       <Declaration><![CDATA[
 PROPERTY Holder : I_HE_SATT_FilterHolder
 ]]></Declaration>
-      <Get Name="Get" Id="{258f7eac-4a17-40dd-8fee-e62cc47c80bc}">
+      <Get Name="Get" Id="{d0ad6522-eae7-48b4-99c3-287e93e09af7}">
         <Declaration><![CDATA[]]></Declaration>
         <Implementation>
           <ST><![CDATA[
@@ -26,20 +46,12 @@ Holder := THIS^.iHolder;
 ]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{5f1a7c2e-9baa-4822-80c8-368d615fbb6d}">
-        <Declaration><![CDATA[]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[
-THIS^.iHolder := Holder;
-]]></ST>
-        </Implementation>
-      </Set>
     </Property>
-    <Property Name="Length" Id="{80d6f460-3dda-488b-acc8-c395f1fef9cf}">
+    <Property Name="Length" Id="{ff7c6bec-3745-4b90-9216-0cfcef73e077}">
       <Declaration><![CDATA[
 PROPERTY Length : LREAL
 ]]></Declaration>
-      <Get Name="Get" Id="{948ab73f-d9d5-4816-8ac9-602575a7954b}">
+      <Get Name="Get" Id="{d297bb58-3c41-4eb0-b6a4-fce9907a9c35}">
         <Declaration><![CDATA[]]></Declaration>
         <Implementation>
           <ST><![CDATA[
@@ -47,7 +59,7 @@ Length := THIS^.fLength;
 ]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{63de0404-317b-48ed-a31a-37cad81f0a04}">
+      <Set Name="Set" Id="{038089bd-f63d-49ea-acda-2ae7ba207169}">
         <Declaration><![CDATA[]]></Declaration>
         <Implementation>
           <ST><![CDATA[
@@ -56,11 +68,11 @@ THIS^.fLength := Length;
         </Implementation>
       </Set>
     </Property>
-    <Property Name="Material" Id="{6ea46809-3b90-489c-8c6d-36817f6cc304}">
+    <Property Name="Material" Id="{af789a46-91c4-49e3-a56f-f49c20f68172}">
       <Declaration><![CDATA[
 PROPERTY Material : E_HE_SATT_FilterMaterial
 ]]></Declaration>
-      <Get Name="Get" Id="{37ebdd02-cbb1-4174-babb-568b506bdb5c}">
+      <Get Name="Get" Id="{b0329835-5996-4837-af01-deefa0300606}">
         <Declaration><![CDATA[]]></Declaration>
         <Implementation>
           <ST><![CDATA[
@@ -68,7 +80,7 @@ Material := THIS^.eMaterial;
 ]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{ded793c4-3c47-4e91-863a-a722b926a8bd}">
+      <Set Name="Set" Id="{79259363-e825-4934-9c47-7ae0e1080a2d}">
         <Declaration><![CDATA[]]></Declaration>
         <Implementation>
           <ST><![CDATA[
@@ -77,11 +89,11 @@ THIS^.eMaterial := Material;
         </Implementation>
       </Set>
     </Property>
-    <Property Name="MaterialFormula" Id="{afbd6be6-45b7-4c27-9436-0403d0a8be78}">
+    <Property Name="MaterialFormula" Id="{9821b05d-679a-4604-83c0-ac734674db22}">
       <Declaration><![CDATA[
 PROPERTY MaterialFormula : T_MaxString
 ]]></Declaration>
-      <Get Name="Get" Id="{934d1cff-2e76-48fb-a835-192fba8e1a9f}">
+      <Get Name="Get" Id="{c51c21c2-fbdc-4482-bed7-37cdb2c1fab5}">
         <Declaration><![CDATA[]]></Declaration>
         <Implementation>
           <ST><![CDATA[
@@ -90,11 +102,11 @@ MaterialFormula := F_HE_SATT_MaterialToMaterialFormula(eMaterial := THIS^.eMater
         </Implementation>
       </Get>
     </Property>
-    <Property Name="Status" Id="{ef2b89b8-ff34-418f-8bd7-7cae8ad13291}">
+    <Property Name="Status" Id="{57007480-c1de-4d13-9843-5d9e9ffa8744}">
       <Declaration><![CDATA[
 PROPERTY Status : E_HE_SATT_FilterStatus
 ]]></Declaration>
-      <Get Name="Get" Id="{7a4a7987-733b-44b1-a6d9-76aa51d09552}">
+      <Get Name="Get" Id="{7610e0be-6d49-4f72-a1fa-04855866f59c}">
         <Declaration><![CDATA[]]></Declaration>
         <Implementation>
           <ST><![CDATA[
@@ -102,7 +114,7 @@ Status := THIS^.eStatus;
 ]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{08d464be-7328-4fff-9b52-ba3023011098}">
+      <Set Name="Set" Id="{3fa0680d-7481-4a03-8cf1-0e6a15b23d1c}">
         <Declaration><![CDATA[]]></Declaration>
         <Implementation>
           <ST><![CDATA[
@@ -111,34 +123,34 @@ THIS^.eStatus := Status;
         </Implementation>
       </Set>
     </Property>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble">
+    <LineIds Name="FB_HE_SATT_Filter">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble.Holder.Get">
+    <LineIds Name="FB_HE_SATT_Filter.FB_Init">
+      <LineId Id="1" Count="4" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_Filter.Holder.Get">
       <LineId Id="1" Count="2" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble.Holder.Set">
+    <LineIds Name="FB_HE_SATT_Filter.Length.Get">
       <LineId Id="1" Count="2" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble.Length.Get">
+    <LineIds Name="FB_HE_SATT_Filter.Length.Set">
       <LineId Id="1" Count="2" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble.Length.Set">
+    <LineIds Name="FB_HE_SATT_Filter.Material.Get">
       <LineId Id="1" Count="2" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble.Material.Get">
+    <LineIds Name="FB_HE_SATT_Filter.Material.Set">
       <LineId Id="1" Count="2" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble.Material.Set">
+    <LineIds Name="FB_HE_SATT_Filter.MaterialFormula.Get">
       <LineId Id="1" Count="2" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble.MaterialFormula.Get">
+    <LineIds Name="FB_HE_SATT_Filter.Status.Get">
       <LineId Id="1" Count="2" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble.Status.Get">
-      <LineId Id="1" Count="2" />
-    </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterTestDouble.Status.Set">
+    <LineIds Name="FB_HE_SATT_Filter.Status.Set">
       <LineId Id="1" Count="2" />
     </LineIds>
   </POU>

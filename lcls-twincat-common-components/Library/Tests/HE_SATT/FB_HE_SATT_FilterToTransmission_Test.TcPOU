@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterToTransmission_Test" Id="{eeaad0ba-8c82-43ea-ad82-ea5fbc896027}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterToTransmission_Test EXTENDS FB_TestSuite
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+GivenFilterExpectCorrectTransmission();
+]]></ST>
+    </Implementation>
+    <Method Name="GivenFilterExpectCorrectTransmission" Id="{5183906e-5d89-4e8f-ae4b-bfd27aeb0bf5}">
+      <Declaration><![CDATA[
+METHOD PRIVATE GivenFilterExpectCorrectTransmission
+VAR
+    
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+TEST('GivenFilterExpectCorrectTransmission');
+
+
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterToTransmission_Test">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterToTransmission_Test.GivenFilterExpectCorrectTransmission">
+      <LineId Id="1" Count="6" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

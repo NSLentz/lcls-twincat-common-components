@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterWedge" Id="{1b346c5d-0a0d-43fc-92fb-3d2a6236cfee}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterWedge EXTENDS FB_HE_SATT_Filter IMPLEMENTS I_HE_SATT_FilterWedge
+VAR
+    fThicknessAt0 : LREAL; // 0 is the part of the filter that is the closest to the center of the pipe when retracted.
+    fThicknessAtLength : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{04a4b23c-2bf7-4e51-be02-82f9b639729e}">
+      <Declaration><![CDATA[
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+    
+    iHolder : I_HE_SATT_FilterHolder;
+    fDefaultLength : LREAL;
+    eDefaultMaterial : E_HE_SATT_FilterMaterial;
+    eDefaultStatus : E_HE_SATT_FilterStatus;
+    fDefaultThicknessAt0 : LREAL;
+    fDefaultThicknessAtLength : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iHolder := iHolder;
+THIS^.fLength := fDefaultLength;
+THIS^.eMaterial := eDefaultMaterial;
+THIS^.eStatus := eDefaultStatus;
+THIS^.fThicknessAt0 := fDefaultThicknessAt0;
+THIS^.fThicknessAtLength := fDefaultThicknessAtLength;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MaxThickness" Id="{65b1867a-2cd2-46cd-a7f7-861ee80c6273}">
+      <Declaration><![CDATA[
+PROPERTY MaxThickness : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{442417cc-62b5-49ba-b449-3c53309716c0}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+MaxThickness := MAX(THIS^.fThicknessAt0, THIS^.fThicknessAtLength);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MinThickness" Id="{675934c1-6f44-4a35-aa50-d5d7d5b84a48}">
+      <Declaration><![CDATA[
+PROPERTY MinThickness : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{c2c8acc4-cb96-42fb-8c29-2b32540fca06}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+MinThickness := MIN(THIS^.fThicknessAt0, THIS^.fThicknessAtLength);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ThicknessAt" Id="{b61cd9fc-b08e-4e7f-9910-87a18d4cffe9}">
+      <Declaration><![CDATA[
+METHOD ThicknessAt : LREAL
+VAR_INPUT
+	(* Position in units of property Length and with value from 0 to value of property Length*)
+	fPosition	: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterWedge">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterWedge.FB_Init">
+      <LineId Id="1" Count="7" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterWedge.MaxThickness.Get">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterWedge.MinThickness.Get">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterWedge.ThicknessAt">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

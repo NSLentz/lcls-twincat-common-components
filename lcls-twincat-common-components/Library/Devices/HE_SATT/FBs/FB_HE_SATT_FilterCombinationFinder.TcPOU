@@ -108,20 +108,16 @@ THIS^.iFilterCombinationCollector := iFilterCombinationCollector;
       </Implementation>
     </Method>
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder.AddFilterCombination">
-      <LineId Id="2" Count="3" />
-      <LineId Id="1" Count="0" />
+      <LineId Id="1" Count="4" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder.DetermineFilterCombinations">
       <LineId Id="1" Count="42" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder.FB_Init">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="4" Count="0" />
+      <LineId Id="1" Count="3" />
     </LineIds>
   </POU>
 </TcPlcObject>

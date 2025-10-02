@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_CalculateGermaniumThickness" Id="{e3e3a7fb-d8d9-4b0b-a639-04b2da1ccafd}" SpecialFunc="None">
+  <POU Name="FB_CalculateDiamondThickness" Id="{bc9bfacc-7d3a-4611-b219-338ca75019df}" SpecialFunc="None">
     <Declaration><![CDATA[
-FUNCTION_BLOCK FB_CalculateGermaniumThickness
+FUNCTION_BLOCK FB_CalculateDiamondThickness
 VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Calculate" Id="{c5739e06-e7c5-4e98-b50b-7bc8aa2c70f5}">
+    <Method Name="Calculate" Id="{bf69efd6-1e63-4e72-bb10-5ffc888b9575}">
       <Declaration><![CDATA[
 METHOD PUBLIC Calculate
 VAR_INPUT
@@ -24,5 +24,11 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_CalculateDiamondThickness">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_CalculateDiamondThickness.Calculate">
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
