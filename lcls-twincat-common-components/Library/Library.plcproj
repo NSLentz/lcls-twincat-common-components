@@ -140,6 +140,9 @@
     <Compile Include="Devices\HE_SATT\ITFs\I_HE_SATT_FilterHolderSelector.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\ITFs\I_HE_SATT_FilterToTransmission.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\ITFs\I_HE_SATT_FilterWedge.TcIO">
       <SubType>Code</SubType>
     </Compile>

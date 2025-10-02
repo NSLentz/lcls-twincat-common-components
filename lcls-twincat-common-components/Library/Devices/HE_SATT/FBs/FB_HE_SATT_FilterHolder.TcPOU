@@ -2,14 +2,58 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_HE_SATT_FilterHolder" Id="{b304d3c6-0dc8-4a7a-9624-8e9a7095a200}" SpecialFunc="None">
     <Declaration><![CDATA[
-FUNCTION_BLOCK FB_HE_SATT_FilterHolder
+FUNCTION_BLOCK FB_HE_SATT_FilterHolder IMPLEMENTS I_HE_SATT_FilterHolder
 VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="GetFilter" Id="{dcf6eccc-ae4f-4d88-87a5-95aa1f4ace9d}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD GetFilter : I_HE_SATT_Filter
+VAR_INPUT
+	nFilterNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="NumberOfSlots" Id="{51acaa5e-3c0e-4900-9c99-5692eeb6943b}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY NumberOfSlots : INT
+]]></Declaration>
+      <Get Name="Get" Id="{f3e2489d-0230-4304-9a46-62762f15fd78}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="RegisterFilter" Id="{278e3d4c-d878-46b2-bbd8-9700c44f35a5}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD RegisterFilter
+VAR_INPUT
+	iFilter	: I_HE_SATT_Filter;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_HE_SATT_FilterHolder">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolder.GetFilter">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolder.NumberOfSlots.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolder.RegisterFilter">
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

@@ -4,13 +4,79 @@
     <Declaration><![CDATA[
 FUNCTION_BLOCK FB_HE_SATT_FilterCombinationToTransmission
 VAR
+    iFilterToTransmission : I_HE_SATT_FilterToTransmission;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="CalculateTransmission" Id="{db5319a5-ad47-49b0-b785-1d9bf0ec8b39}">
+      <Declaration><![CDATA[
+METHOD PUBLIC CalculateTransmission
+VAR_INPUT
+    fPhotonEnergy_eV : LREAL;
+    iFilterCombination : I_HE_SATT_FilterCombination;
+END_VAR
+VAR_OUTPUT
+    fMinimumTransmission : LREAL;
+    fMaximumTransmission : LREAL;
+END_VAR
+VAR
+    nIteratorHolder : INT;
+    iFilter : I_HE_SATT_Filter;
+    fMinimumTransmissionTemp : LREAL;
+    fMaximumTransmissionTemp : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+fMinimumTransmission := 1.0;
+fMaximumTransmission := 1.0;
+
+FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+    iFilter := iFilterCombination.GetFilter(nIteratorHolder);
+    
+    IF iFilter = 0 THEN
+        CONTINUE;
+    END_IF
+    
+    THIS^.iFilterToTransmission.CalculateTransmission(
+        fPhotonEnergy_eV := fPhotonEnergy_eV,
+        iFilter := iFilter,
+        fMinimumTransmission => fMinimumTransmissionTemp,
+        fMaximumTransmission => fMaximumTransmissionTemp
+    );
+    
+    fMinimumTransmission := fMinimumTransmission * fMinimumTransmissionTemp;
+    fMaximumTransmission := fMaximumTransmission * fMaximumTransmissionTemp;
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{d871cd0d-f3c0-44bc-aa60-c59f847df4ca}">
+      <Declaration><![CDATA[
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+    
+    iFilterToTransmission : I_HE_SATT_FilterToTransmission;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iFilterToTransmission := iFilterToTransmission;
+]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_HE_SATT_FilterCombinationToTransmission">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationToTransmission.CalculateTransmission">
+      <LineId Id="1" Count="21" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationToTransmission.FB_Init">
+      <LineId Id="1" Count="2" />
     </LineIds>
   </POU>
 </TcPlcObject>

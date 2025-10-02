@@ -45,6 +45,17 @@ THIS^.nNumberOfSlots := NumberOfSlots;
         </Implementation>
       </Set>
     </Property>
+    <Method Name="RegisterFilter" Id="{0989ed37-006f-4a64-a6ac-19fe5e29d4cc}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD RegisterFilter
+VAR_INPUT
+	iFilter	: I_HE_SATT_Filter;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetFilter" Id="{0681b4de-c29f-4596-8a7e-f634078a4db1}">
       <Declaration><![CDATA[
 METHOD PUBLIC SetFilter
@@ -70,6 +81,9 @@ THIS^.aiFilter[nFilterNumber] := iFilter;
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.NumberOfSlots.Set">
       <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.RegisterFilter">
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.SetFilter">
       <LineId Id="1" Count="2" />

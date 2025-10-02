@@ -44,7 +44,7 @@ VAR
     fbScatteringFactorLookup : FB_ScatteringFactorLookupCXRO;
 
     // Subject under test
-    fbHE_SATT_FilterToTransmission : FB_HE_SATT_FilterToTransmission(
+    fbFilterToTransmission : FB_HE_SATT_FilterToTransmission(
         iScatteringFactorLookup := fbScatteringFactorLookup
     );
     
@@ -65,7 +65,7 @@ fAllowableDelta := 1e-4;
 fMinimumTransmissionExpected := 0.4844590049714352;
 fMaximumTransmissionExpected := 0.4844590049714352;
 
-fbHE_SATT_FilterToTransmission.CalculateTransmission(
+fbFilterToTransmission.CalculateTransmission(
     fPhotonEnergy_eV := 10000.0,
     iFilter := fbFilterConstantThickness,
     fMinimumTransmission => fMinimumTransmissionResult,
@@ -88,7 +88,7 @@ AssertEquals_LREAL(
 fMinimumTransmissionExpected := 0.0005707894566343199;
 fMaximumTransmissionExpected := 0.023891200401702714;
 
-fbHE_SATT_FilterToTransmission.CalculateTransmission(
+fbFilterToTransmission.CalculateTransmission(
     fPhotonEnergy_eV := 1000,
     iFilter := fbFilterWedgeSilicon,
     fMinimumTransmission => fMinimumTransmissionResult,
@@ -111,7 +111,7 @@ AssertEquals_LREAL(
 fMinimumTransmissionExpected := 0.010728580119616998;
 fMaximumTransmissionExpected := 0.10357885942419427;
 
-fbHE_SATT_FilterToTransmission.CalculateTransmission(
+fbFilterToTransmission.CalculateTransmission(
     fPhotonEnergy_eV := 20000,
     iFilter := fbFilterWedgeGermanium,
     fMinimumTransmission => fMinimumTransmissionResult,

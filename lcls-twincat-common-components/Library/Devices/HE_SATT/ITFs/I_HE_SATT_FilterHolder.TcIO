@@ -20,5 +20,13 @@ PROPERTY NumberOfSlots : INT
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="RegisterFilter" Id="{120292f7-d437-453b-8f04-99e161e38474}">
+      <Declaration><![CDATA[
+METHOD RegisterFilter
+VAR_INPUT
+    iFilter : I_HE_SATT_Filter;
+END_VAR
+]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>

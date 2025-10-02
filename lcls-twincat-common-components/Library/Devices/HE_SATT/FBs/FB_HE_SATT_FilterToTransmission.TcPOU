@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_HE_SATT_FilterToTransmission" Id="{0ed6af88-ffbf-4027-abc4-8a943473da7b}" SpecialFunc="None">
     <Declaration><![CDATA[
-FUNCTION_BLOCK FB_HE_SATT_FilterToTransmission
+FUNCTION_BLOCK FB_HE_SATT_FilterToTransmission IMPLEMENTS I_HE_SATT_FilterToTransmission
 VAR
     iScatteringFactorLookup : I_ScatteringFactorLookup;
 END_VAR

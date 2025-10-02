@@ -34,6 +34,8 @@ THIS^.eMaterial := eDefaultMaterial;
 THIS^.eStatus := eDefaultStatus;
 THIS^.fThicknessAt0 := fDefaultThicknessAt0;
 THIS^.fThicknessAtLength := fDefaultThicknessAtLength;
+
+THIS^.iHolder.RegisterFilter(THIS^);
 ]]></ST>
       </Implementation>
     </Method>
@@ -79,7 +81,7 @@ END_VAR
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterWedge.FB_Init">
-      <LineId Id="1" Count="7" />
+      <LineId Id="1" Count="9" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterWedge.MaxThickness.Get">
       <LineId Id="1" Count="2" />

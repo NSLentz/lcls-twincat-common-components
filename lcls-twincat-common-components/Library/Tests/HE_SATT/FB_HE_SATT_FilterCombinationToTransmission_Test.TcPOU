@@ -13,14 +13,87 @@ GivenCombinationExpectCorrectTransmission();
       <Declaration><![CDATA[
 METHOD PRIVATE GivenCombinationExpectCorrectTransmission
 VAR
+    fbFilterHolderTestDouble : FB_HE_SATT_FilterHolderTestDouble;    
+
+    fbFilterConstantThickness : FB_HE_SATT_FilterConstantThickness(
+        iHolder := fbFilterHolderTestDouble,
+        eDefaultMaterial := E_HE_SATT_FilterMaterial.Diamond,
+        eDefaultStatus := E_HE_SATT_FilterStatus.ENABLED,
+        fDefaultLength := 1.0,
+        fDefaultThickness := 1e-3
+    );
     
+    fbFilterWedgeSilicon : FB_HE_SATT_FilterWedge(
+        iHolder := fbFilterHolderTestDouble,
+        eDefaultMaterial := E_HE_SATT_FilterMaterial.Silicon,
+        eDefaultStatus := E_HE_SATT_FilterStatus.ENABLED,
+        fDefaultLength := 2.0,
+        fDefaultThicknessAt0 := 1e-5,
+        fDefaultThicknessAtLength := 2e-5
+    );
+    
+    fbFilterWedgeGermanium : FB_HE_SATT_FilterWedge(
+        iHolder := fbFilterHolderTestDouble,
+        eDefaultMaterial := E_HE_SATT_FilterMaterial.Germanium,
+        eDefaultStatus := E_HE_SATT_FilterStatus.ENABLED,
+        fDefaultLength := 3.0,
+        fDefaultThicknessAt0 := 2e-4,
+        fDefaultThicknessAtLength := 1e-4
+    );
+    
+    fbFilterCombination : FB_HE_SATT_FilterCombination;
+    
+    fbScatteringFactorLookup : FB_ScatteringFactorLookupCXRO;
+    
+    fbFilterToTransmission : FB_HE_SATT_FilterToTransmission(
+        iScatteringFactorLookup := fbScatteringFactorLookup
+    );
+
+    // Subject under test
+    fbFilterCombinationToTransmission : FB_HE_SATT_FilterCombinationToTransmission(
+        iFilterToTransmission := fbFilterToTransmission
+    );
+    
+    // Variables for the test
+    fMinimumTransmissionExpected : LREAL;
+    fMaximumTransmissionExpected : LREAL;
+    fMinimumTransmissionResult : LREAL;
+    fMaximumTransmissionResult : LREAL;
+    fAllowableDelta : LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 TEST('GivenCombinationExpectCorrectTransmission');
 
+fAllowableDelta := 1e-4;
 
+fMinimumTransmissionExpected := 0.48445900560318955 * 0.8614762404598273 * 0.021584989971438408;
+fMaximumTransmissionExpected := 0.48445900560318955 * 0.9281574437884056 * 0.14691831053833423;
+
+fbFilterCombination.AddFilter(nHolderNumber := 1, iFilter := fbFilterConstantThickness);
+fbFilterCombination.AddFilter(nHolderNumber := 3, iFilter := fbFilterWedgeSilicon);
+fbFilterCombination.AddFilter(nHolderNumber := 5, iFilter := fbFilterWedgeGermanium);
+
+fbFilterCombinationToTransmission.CalculateTransmission(
+    fPhotonEnergy_eV := 10000.0,
+    iFilterCombination := fbFilterCombination,
+    fMinimumTransmission => fMinimumTransmissionResult,
+    fMaximumTransmission => fMaximumTransmissionResult
+);
+
+AssertEquals_LREAL(
+    Expected := fMinimumTransmissionExpected,
+    Actual := fMinimumTransmissionResult,
+    Delta := fAllowableDelta,
+    Message := 'Incorrect minimum transmission computed.'
+);
+AssertEquals_LREAL(
+    Expected := fMaximumTransmissionExpected,
+    Actual := fMaximumTransmissionResult,
+    Delta := fAllowableDelta,
+    Message := 'Incorrect maximum transmission computed.'
+);
 
 TEST_FINISHED();
 ]]></ST>
@@ -30,7 +103,7 @@ TEST_FINISHED();
       <LineId Id="1" Count="2" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationToTransmission_Test.GivenCombinationExpectCorrectTransmission">
-      <LineId Id="1" Count="6" />
+      <LineId Id="1" Count="33" />
     </LineIds>
   </POU>
 </TcPlcObject>
