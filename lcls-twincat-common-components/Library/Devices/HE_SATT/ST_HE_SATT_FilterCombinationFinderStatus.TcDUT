@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_HE_SATT_FilterCombinationFinderStatus" Id="{ac4221c7-ab5c-421c-94c2-48698d888084}">
+    <Declaration><![CDATA[
+TYPE ST_HE_SATT_FilterCombinationFinderStatus :
+STRUCT
+    bBusy : BOOL;
+    bDone : BOOL;
+    bError : BOOL;
+    sErrorMsg : T_MaxString;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

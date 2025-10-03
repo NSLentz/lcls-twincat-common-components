@@ -3,6 +3,22 @@
   <Itf Name="I_HE_SATT_FilterHolderSelector" Id="{2309a12e-dd09-4cf7-84a3-3982b60eb98c}">
     <Declaration><![CDATA[INTERFACE I_HE_SATT_FilterHolderSelector
 ]]></Declaration>
+    <Method Name="CoupleHolders" Id="{eaf3069d-83bc-4894-ad0f-850f60b111b0}">
+      <Declaration><![CDATA[
+METHOD CoupleHolders
+VAR_INPUT
+    abCoupledHolders : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="CouplingRulesSatisfied" Id="{c342b068-1c89-42b6-920f-2e9b123699f7}">
+      <Declaration><![CDATA[
+METHOD CouplingRulesSatisfied : BOOL
+VAR_INPUT
+    iFilterCombination : I_HE_SATT_FilterCombination;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="DeselectHolder" Id="{31578d46-5b1a-451b-9ce8-c7bd877a8e4a}">
       <Declaration><![CDATA[
 METHOD DeselectHolder
@@ -17,6 +33,11 @@ METHOD IsSelected : BOOL
 VAR_INPUT
     nHolderNumber : INT;
 END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Reset" Id="{211a3934-fc1b-4d02-8536-5d9a93e4035d}">
+      <Declaration><![CDATA[
+METHOD Reset
 ]]></Declaration>
     </Method>
     <Method Name="SelectHolder" Id="{269cef13-4783-4c78-b9a9-5596ef9fb147}">

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FilterCombinationFinder" Id="{66182892-49e1-4660-829e-cc3791522c27}">
+    <Declaration><![CDATA[
+INTERFACE I_HE_SATT_FilterCombinationFinder
+]]></Declaration>
+    <Method Name="DetermineFilterCombinations" Id="{30980698-8e56-4802-a113-3fcf19607234}">
+      <Declaration><![CDATA[
+METHOD PUBLIC DetermineFilterCombinations
+VAR_INPUT
+    iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
+END_VAR
+VAR_OUTPUT
+    bBusy : BOOL;
+    bDone : BOOL;
+    bError : BOOL;
+    sErrorMsg : T_MaxString;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

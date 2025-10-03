@@ -6,64 +6,44 @@ FUNCTION_BLOCK FB_HE_SATT_FilterCombinationFinder
 VAR
     aiFilterHolder : REFERENCE TO ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_FilterHolder;
     iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
-END_VAR
-]]></Declaration>
-    <Implementation>
-      <ST><![CDATA[]]></ST>
-    </Implementation>
-    <Method Name="AddFilterCombination" Id="{e1d24285-8482-4b01-9c0b-1f99bf56e030}">
-      <Declaration><![CDATA[
-METHOD PRIVATE AddFilterCombination
-VAR_INPUT
-    fbFilterCombination : REFERENCE TO FB_HE_SATT_FilterCombination;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-THIS^.iFilterCombinationCollector.AddFilterCombination(
-    fbFilterCombination := fbFilterCombination
-);
-]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="DetermineFilterCombinations" Id="{39fb4cfd-2f37-4c9b-9ea6-493956bc079d}">
-      <Declaration><![CDATA[
-METHOD PUBLIC DetermineFilterCombinations
-VAR_INPUT
+    nMaxNumberOfCombinationsFoundPerCycle : INT;
+    
     iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
-END_VAR
-VAR_INST
+    
+    stStatus : ST_HE_SATT_FilterCombinationFinderStatus;
+    
     nFilterHolderIterator : INT; 
+    nFilterHolderIteratorLastCycle : INT;
+    
     nCombinationIterator : DINT;
+    nCombinationIteratorLastCycle : DINT;
+    
     nNumCombinationsThusFar : DINT;  
-    nFilterIterator : INT; 
+    
+    nFilterIterator : INT;   
+    nFilterIteratorLastCycle : INT; 
+    
+    nMaxNumberOfCombinationsForThisCycle : DINT;
     
     iFilter : I_HE_SATT_Filter;
 
     fbFilterCombination : FB_HE_SATT_FilterCombination;
 END_VAR
 ]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-THIS^.iFilterCombinationCollector.Reset();
-
-fbFilterCombination.Clear();
-
-// First combination that is always valid is the combination which doesn't use any filters.
-THIS^.AddFilterCombination(
-    fbFilterCombination := fbFilterCombination
-);
+    <Implementation>
+      <ST><![CDATA[
+IF NOT stStatus.bBusy OR stStatus.bError THEN
+    RETURN;
+END_IF
     
-FOR nFilterHolderIterator := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+FOR nFilterHolderIterator := nFilterHolderIteratorLastCycle TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
     IF NOT iFilterHolderSelector.IsSelected(nFilterHolderIterator) THEN
         CONTINUE;
     END_IF
     
-    nNumCombinationsThusFar := THIS^.iFilterCombinationCollector.NumCombinationsAdded;
-    
-    FOR nCombinationIterator := 1 TO nNumCombinationsThusFar BY 1 DO
-        FOR nFilterIterator := 1 TO THIS^.aiFilterHolder[nFilterHolderIterator].NumberOfSlots BY 1 DO
-            fbFilterCombination := THIS^.iFilterCombinationCollector.GetCombination(
+    FOR nCombinationIterator := nCombinationIteratorLastCycle TO nNumCombinationsThusFar BY 1 DO
+        FOR nFilterIterator := nFilterIteratorLastCycle + 1 TO aiFilterHolder[nFilterHolderIterator].NumberOfSlots BY 1 DO
+            fbFilterCombination := iFilterCombinationCollector.GetCombination(
                 nCombinationNumber := nCombinationIterator
             );
             
@@ -80,12 +60,68 @@ FOR nFilterHolderIterator := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
                 iFilter := iFilter
             );
             
-            THIS^.AddFilterCombination(
+            IF NOT iFilterHolderSelector.CouplingRulesSatisfied(fbFilterCombination) THEN
+                CONTINUE;
+            END_IF
+            
+            iFilterCombinationCollector.AddFilterCombination(
                 fbFilterCombination := fbFilterCombination
             );
+                
+            IF iFilterCombinationCollector.NumCombinationsAdded < nMaxNumberOfCombinationsForThisCycle THEN
+                CONTINUE;
+            END_IF
+            
+            nFilterHolderIteratorLastCycle := nFilterHolderIterator;
+            nCombinationIteratorLastCycle := nCombinationIterator;
+            nFilterIteratorLastCycle := nFilterIterator;
+            nMaxNumberOfCombinationsForThisCycle := nMaxNumberOfCombinationsForThisCycle + nMaxNumberOfCombinationsFoundPerCycle;
+            RETURN;
         END_FOR
     END_FOR
+    nNumCombinationsThusFar := iFilterCombinationCollector.NumCombinationsAdded; 
 END_FOR
+
+stStatus.bBusy := FALSE;
+stStatus.bDone := TRUE;
+stStatus.bError := FALSE;
+stStatus.sErrorMsg := '';
+]]></ST>
+    </Implementation>
+    <Method Name="DetermineFilterCombinations" Id="{39fb4cfd-2f37-4c9b-9ea6-493956bc079d}">
+      <Declaration><![CDATA[
+METHOD PUBLIC DetermineFilterCombinations : REFERENCE TO ST_HE_SATT_FilterCombinationFinderStatus
+VAR_INPUT
+    iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iFilterHolderSelector := iFilterHolderSelector;
+    
+THIS^.stStatus.bBusy := TRUE;
+THIS^.stStatus.bDone := FALSE;
+THIS^.stStatus.bError := FALSE;
+THIS^.stStatus.sErrorMsg := '';
+
+DetermineFilterCombinations REF= THIS^.stStatus;
+
+THIS^.iFilterCombinationCollector.Reset();
+
+THIS^.fbFilterCombination.Clear();
+
+// First combination that is always valid is the combination which doesn't use any filters.
+THIS^.iFilterCombinationCollector.AddFilterCombination(
+    fbFilterCombination := THIS^.fbFilterCombination
+);
+
+THIS^.nFilterHolderIteratorLastCycle := 1;
+THIS^.nCombinationIteratorLastCycle := 1;
+THIS^.nFilterIteratorLastCycle := 0;
+
+THIS^.nNumCombinationsThusFar := THIS^.iFilterCombinationCollector.NumCombinationsAdded;
+
+THIS^.nMaxNumberOfCombinationsForThisCycle := THIS^.nMaxNumberOfCombinationsFoundPerCycle;
 ]]></ST>
       </Implementation>
     </Method>
@@ -98,26 +134,60 @@ VAR_INPUT
     
     aiFilterHolder : REFERENCE TO ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_FilterHolder;
     iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
+    nMaxNumberOfCombinationsFoundPerCycle : INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 THIS^.aiFilterHolder REF= aiFilterHolder;
 THIS^.iFilterCombinationCollector := iFilterCombinationCollector;
+THIS^.nMaxNumberOfCombinationsFoundPerCycle := nMaxNumberOfCombinationsFoundPerCycle;
 ]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder">
+      <LineId Id="3" Count="3" />
+      <LineId Id="23" Count="3" />
+      <LineId Id="29" Count="21" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="81" Count="2" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="68" Count="2" />
+      <LineId Id="56" Count="2" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="62" Count="1" />
+      <LineId Id="86" Count="0" />
       <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_HE_SATT_FilterCombinationFinder.AddFilterCombination">
-      <LineId Id="1" Count="4" />
+      <LineId Id="76" Count="3" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="80" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder.DetermineFilterCombinations">
-      <LineId Id="1" Count="42" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="67" Count="2" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="70" Count="5" />
+      <LineId Id="92" Count="1" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="81" Count="2" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="78" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder.FB_Init">
-      <LineId Id="1" Count="3" />
+      <LineId Id="1" Count="2" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="4" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

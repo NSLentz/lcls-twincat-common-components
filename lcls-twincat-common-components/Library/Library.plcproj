@@ -71,15 +71,6 @@
     <Compile Include="Devices\HE_SATT\E_HE_SATT_SequenceState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Devices\HE_SATT\FBs\FB_CalculateDiamondThickness.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Devices\HE_SATT\FBs\FB_CalculateGermaniumThickness.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Devices\HE_SATT\FBs\FB_CalculateSiliconThickness.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_EpicsHeartBeat.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -104,7 +95,7 @@
     <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FilterHolder.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FilterSelection.TcPOU">
+    <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FindOptimalCombination.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FilterToTransmission.TcPOU">
@@ -131,6 +122,9 @@
     <Compile Include="Devices\HE_SATT\ITFs\I_HE_SATT_FilterCombinationCollector.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\ITFs\I_HE_SATT_FilterCombinationFinder.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\ITFs\I_HE_SATT_FilterConstantThickness.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -152,6 +146,9 @@
     <Compile Include="Devices\HE_SATT\PL_HE_SATT_Parameters.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\ST_HE_SATT_FilterCombinationFinderStatus.TcDUT">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\LIC\E_LIC_States.TcDUT">
       <SubType>Code</SubType>

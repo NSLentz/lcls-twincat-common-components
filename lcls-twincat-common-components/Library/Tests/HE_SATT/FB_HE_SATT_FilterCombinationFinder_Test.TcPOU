@@ -74,9 +74,10 @@ VAR
     fbFilterHolderSelectorTestDouble : FB_HE_SATT_FilterHolderSelectorTestDouble;
 
     // Subject under test
-    fbHE_SATT_FilterCombinationFinder : FB_HE_SATT_FilterCombinationFinder(
+    fbFilterCombinationFinder : FB_HE_SATT_FilterCombinationFinder(
         aiFilterHolder := aiFilterHolder,
-        iFilterCombinationCollector := fbFilterCombinationCollector
+        iFilterCombinationCollector := fbFilterCombinationCollector,
+        nMaxNumberOfCombinationsFoundPerCycle := 500
     );
 
     // Variables for test
@@ -85,6 +86,7 @@ VAR
     aiFilterExpected : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
     fbFilterCombinationResult : FB_HE_SATT_FilterCombination;
     aiFilterResult : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
+    stStatus : REFERENCE TO ST_HE_SATT_FilterCombinationFinderStatus;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -120,8 +122,58 @@ fbFilterHolderSelectorTestDouble.SelectHolder(3);
 fbFilterHolderSelectorTestDouble.SelectHolder(4);
 fbFilterHolderSelectorTestDouble.DeselectHolder(5);
 
-fbHE_SATT_FilterCombinationFinder.DetermineFilterCombinations(
+stStatus REF= fbFilterCombinationFinder.DetermineFilterCombinations(
     iFilterHolderSelector := fbFilterHolderSelectorTestDouble
+);
+
+AssertEquals_BOOL(
+    Expected := TRUE,
+    Actual := stStatus.bBusy,
+    Message := 'bBusy bit should be true after calling determine filter combinations.'
+);
+
+AssertEquals_BOOL(
+    Expected := FALSE,
+    Actual := stStatus.bDone,
+    Message := 'bDone bit should be false after calling determine filter combinations.'
+);
+
+AssertEquals_BOOL(
+    Expected := FALSE,
+    Actual := stStatus.bError,
+    Message := 'bError bit should be false after calling determine filter combinations.'
+);
+
+AssertEquals_STRING(
+    Expected := '',
+    Actual := stStatus.sErrorMsg,
+    Message := 'sErrorMsg string should be emptry after calling determine filter combinations.'
+);
+
+fbFilterCombinationFinder();
+
+AssertEquals_BOOL(
+    Expected := FALSE,
+    Actual := stStatus.bBusy,
+    Message := 'bBusy bit should be false after first function body call since less combination than max per cycle.'
+);
+
+AssertEquals_BOOL(
+    Expected := TRUE,
+    Actual := stStatus.bDone,
+    Message := 'bDone bit should be true after first function body call since less combination than max per cycle.'
+);
+
+AssertEquals_BOOL(
+    Expected := FALSE,
+    Actual := stStatus.bError,
+    Message := 'Should have been no errors after function body call.'
+);
+
+AssertEquals_STRING(
+    Expected := '',
+    Actual := stStatus.sErrorMsg,
+    Message := 'Should have been no errors after function body call.'
 );
 
 AssertEquals_DINT(
@@ -204,21 +256,24 @@ TEST_FINISHED();
       <LineId Id="1" Count="12" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder_Test.GivenHoldersAndSelectionExpectCorrectListOfCombinations">
-      <LineId Id="205" Count="34" />
-      <LineId Id="297" Count="0" />
-      <LineId Id="296" Count="0" />
-      <LineId Id="298" Count="3" />
-      <LineId Id="240" Count="0" />
-      <LineId Id="246" Count="0" />
-      <LineId Id="252" Count="0" />
-      <LineId Id="279" Count="3" />
-      <LineId Id="284" Count="1" />
-      <LineId Id="290" Count="4" />
-      <LineId Id="286" Count="3" />
-      <LineId Id="302" Count="37" />
-      <LineId Id="345" Count="4" />
-      <LineId Id="283" Count="0" />
-      <LineId Id="268" Count="1" />
+      <LineId Id="352" Count="30" />
+      <LineId Id="470" Count="0" />
+      <LineId Id="384" Count="2" />
+      <LineId Id="460" Count="0" />
+      <LineId Id="459" Count="0" />
+      <LineId Id="461" Count="2" />
+      <LineId Id="471" Count="0" />
+      <LineId Id="476" Count="0" />
+      <LineId Id="472" Count="3" />
+      <LineId Id="477" Count="5" />
+      <LineId Id="464" Count="0" />
+      <LineId Id="484" Count="4" />
+      <LineId Id="483" Count="0" />
+      <LineId Id="387" Count="0" />
+      <LineId Id="489" Count="0" />
+      <LineId Id="512" Count="0" />
+      <LineId Id="490" Count="21" />
+      <LineId Id="388" Count="70" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
