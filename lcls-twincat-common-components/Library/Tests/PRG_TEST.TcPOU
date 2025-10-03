@@ -5,9 +5,11 @@
 PROGRAM PRG_TEST
 VAR
     //fbATMTest: FB_ATMTest;
-    fbHE_SATT_EpicsHeartBeatTest : FB_HE_SATT_EpicsHeartBeatTest;
+    fbHE_SATT_EpicsHeartBeatTest : FB_HE_SATT_EpicsHeartBeat_Test;
+    fbHE_SATT_FilterCombinationCollector_Test : FB_HE_SATT_FilterCombinationCollector_Test;
     fbHE_SATT_FilterCombinationFinder_Test : FB_HE_SATT_FilterCombinationFinder_Test;
     fbHE_SATT_FilterCombinationToTransmission_Test : FB_HE_SATT_FilterCombinationToTransmission_Test;
+    fbHE_SATT_FilterHolderSelector_Test : FB_HE_SATT_FilterHolderSelector_Test;
     fbHE_SATT_FilterToTransmission_Test : FB_HE_SATT_FilterToTransmission_Test;
     fbHE_SATT_UserRequest_Test : FB_HE_SATT_UserRequest_Test;
 //     fbLICTest: FB_LICTest;

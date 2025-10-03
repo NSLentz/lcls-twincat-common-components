@@ -60,10 +60,6 @@ FOR nFilterHolderIterator := nFilterHolderIteratorLastCycle TO PL_HE_SATT_Parame
                 iFilter := iFilter
             );
             
-            IF NOT iFilterHolderSelector.CouplingRulesSatisfied(fbFilterCombination) THEN
-                CONTINUE;
-            END_IF
-            
             iFilterCombinationCollector.AddFilterCombination(
                 fbFilterCombination := fbFilterCombination
             );
@@ -148,8 +144,8 @@ THIS^.nMaxNumberOfCombinationsFoundPerCycle := nMaxNumberOfCombinationsFoundPerC
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder">
       <LineId Id="3" Count="3" />
       <LineId Id="23" Count="3" />
-      <LineId Id="29" Count="21" />
-      <LineId Id="65" Count="1" />
+      <LineId Id="29" Count="18" />
+      <LineId Id="66" Count="0" />
       <LineId Id="81" Count="2" />
       <LineId Id="72" Count="0" />
       <LineId Id="54" Count="0" />

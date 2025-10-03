@@ -31,6 +31,35 @@ afbFilterCombination[nNumberOfCombinations] := fbFilterCombination;
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="DownselectByCouplingRule" Id="{01d1d994-8d4b-4cf4-b747-4cc8f4021254}">
+      <Declaration><![CDATA[
+METHOD PUBLIC DownselectByCouplingRule
+VAR_INPUT
+    iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
+    iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
+END_VAR
+VAR
+    nCombinationIterator : DINT;
+    nNumCombinationsAdded : DINT;
+    fbFilterCombination : REFERENCE TO FB_HE_SATT_FilterCombination;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+nNumCombinationsAdded := THIS^.NumCombinationsAdded;
+
+FOR nCombinationIterator := 1 TO nNumCombinationsAdded BY 1 DO
+    fbFilterCombination REF= THIS^.GetCombination(nCombinationIterator);
+    
+    IF NOT __ISVALIDREF(fbFilterCombination) OR_ELSE NOT iFilterHolderSelector.CouplingRulesSatisfied(fbFilterCombination) THEN
+        CONTINUE;
+    END_IF
+    
+    iFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="GetCombination" Id="{faf7cc6b-d99e-4611-9630-58003c4f0463}">
       <Declaration><![CDATA[
 METHOD GetCombination : REFERENCE TO FB_HE_SATT_FilterCombination
@@ -72,6 +101,9 @@ nNumberOfCombinations := 0;
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationCollector.AddFilterCombination">
       <LineId Id="1" Count="7" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector.DownselectByCouplingRule">
+      <LineId Id="1" Count="12" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationCollector.GetCombination">
       <LineId Id="1" Count="2" />

@@ -95,6 +95,9 @@
     <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FilterHolder.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FilterHolderSelector.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FindOptimalCombination.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -279,7 +282,13 @@
     <Compile Include="Tests\Helpers\FB_PMPSJsonTestHelper.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\HE_SATT\FB_HE_SATT_EpicsHeartBeatTest.TcPOU">
+    <Compile Include="Tests\HE_SATT\FB_HE_SATT_EpicsHeartBeat_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterCombinationCollector_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterHolderSelector_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterCombinationFinder_Test.TcPOU">

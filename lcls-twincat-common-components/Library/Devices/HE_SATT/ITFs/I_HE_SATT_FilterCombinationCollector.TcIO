@@ -12,6 +12,15 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="DownselectByCouplingRule" Id="{973da3f9-d366-4ead-bda6-e21e8844903c}">
+      <Declaration><![CDATA[
+METHOD PUBLIC DownselectByCouplingRule
+VAR_INPUT
+    iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
+    iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="GetCombination" Id="{4ce62b9d-ae68-40dd-bd58-fb785c38dc50}">
       <Declaration><![CDATA[
 METHOD GetCombination : REFERENCE TO FB_HE_SATT_FilterCombination

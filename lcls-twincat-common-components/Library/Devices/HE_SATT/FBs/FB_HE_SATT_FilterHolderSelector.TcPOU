@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterHolderSelector" Id="{2aa7d618-8dc5-44ab-8dfd-b1f90d9e21ac}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterHolderSelector IMPLEMENTS I_HE_SATT_FilterHolderSelector
+VAR
+    abSelectedHolder : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF BOOL;
+    abCoupledHolders : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="CoupleHolders" Id="{2ba254ab-3943-4c44-aafc-e60244281d4f}">
+      <Declaration><![CDATA[
+METHOD CoupleHolders
+VAR_INPUT
+	abCoupledHolders : ARRAY [1..PL_HE_SATT_Parameters.nNumHolders] OF BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.abCoupledHolders := abCoupledHolders;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CouplingRulesSatisfied" Id="{b387d435-f96f-4411-a3bf-4daf2d4804b8}">
+      <Declaration><![CDATA[
+METHOD CouplingRulesSatisfied : BOOL
+VAR_INPUT
+	iFilterCombination	: I_HE_SATT_FilterCombination;
+END_VAR
+VAR
+    abFilterHolderIsUsed : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF BOOL;
+    nIteratorHolder : INT;
+    iFilter : I_HE_SATT_Filter;
+    bStateAllCoupledHoldersNeedToBeIn : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+CouplingRulesSatisfied := TRUE;
+
+FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+    iFilter := iFilterCombination.GetFilter(nIteratorHolder);
+    
+    abFilterHolderIsUsed[nIteratorHolder] := iFilter <> 0;
+    
+    IF THIS^.abCoupledHolders[nIteratorHolder] THEN
+        bStateAllCoupledHoldersNeedToBeIn := abFilterHolderIsUsed[nIteratorHolder];
+    END_IF
+END_FOR
+
+FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+    IF THIS^.abCoupledHolders[nIteratorHolder] THEN
+        CouplingRulesSatisfied := CouplingRulesSatisfied AND (NOT bStateAllCoupledHoldersNeedToBeIn XOR abFilterHolderIsUsed[nIteratorHolder]);
+    END_IF
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DeselectHolder" Id="{9c8ce84f-c16b-4dca-9baf-bb8ac0752ff9}">
+      <Declaration><![CDATA[
+METHOD DeselectHolder
+VAR_INPUT
+	nHolderNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.abSelectedHolder[nHolderNumber] := FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsSelected" Id="{4894af9d-86ba-4fdf-9e41-70bce879ed0f}">
+      <Declaration><![CDATA[
+METHOD IsSelected : BOOL
+VAR_INPUT
+	nHolderNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IsSelected := THIS^.abSelectedHolder[nHolderNumber];
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{f9233bc3-1986-4c92-9e64-727d67abab59}">
+      <Declaration><![CDATA[
+METHOD Reset
+VAR
+    nIteratorHolder : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+    THIS^.abSelectedHolder[nIteratorHolder] := FALSE;
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SelectHolder" Id="{1b971a68-1703-40cb-8b9c-8965d67e9a05}">
+      <Declaration><![CDATA[
+METHOD SelectHolder
+VAR_INPUT
+	nHolderNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.abSelectedHolder[nHolderNumber] := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector.CoupleHolders">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector.CouplingRulesSatisfied">
+      <LineId Id="1" Count="18" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector.DeselectHolder">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector.IsSelected">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector.Reset">
+      <LineId Id="1" Count="4" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector.SelectHolder">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

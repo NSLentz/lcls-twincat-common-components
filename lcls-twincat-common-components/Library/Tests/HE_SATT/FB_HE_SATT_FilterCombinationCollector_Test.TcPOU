@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterCombinationCollector_Test" Id="{f0c9aa0c-d4ce-4490-8552-ca5a0eb65105}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterCombinationCollector_Test EXTENDS FB_TestSuite
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+GivenCouplingExpectCorrectDownselectedListOfCombinations();
+]]></ST>
+    </Implementation>
+    <Method Name="AssertEquals_Combination" Id="{41199a88-f11e-447c-91a5-84a5c248f9e6}">
+      <Declaration><![CDATA[
+METHOD PRIVATE AssertEquals_Combination
+VAR_INPUT
+    iFilterCombinationExpected : I_HE_SATT_FilterCombination;
+    iFilterCombinationResult : I_HE_SATT_FilterCombination;
+END_VAR
+VAR
+    sMessageBuilder : T_MaxString;
+    nIteratorHolder : INT;
+    iFilterExpected : I_HE_SATT_Filter;
+    iFilterResult : I_HE_SATT_Filter;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+    iFilterExpected := iFilterCombinationExpected.GetFilter(nIteratorHolder);
+    iFilterResult := iFilterCombinationResult.GetFilter(nIteratorHolder);
+    sMessageBuilder := 'Combination filter in slot for holder ';
+    sMessageBuilder := CONCAT(sMessageBuilder, TO_STRING(nIteratorHolder));
+    sMessageBuilder := CONCAT(sMessageBuilder, ' was not the expected filter. ');
+    AssertTrue(
+        Condition := iFilterExpected = iFilterResult,
+        Message := sMessageBuilder
+    );
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenCouplingExpectCorrectDownselectedListOfCombinations" Id="{d9badbda-79d7-41d6-a9b0-57f5cb5216d2}">
+      <Declaration><![CDATA[
+METHOD PRIVATE GivenCouplingExpectCorrectDownselectedListOfCombinations
+VAR
+    afbFilter : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF FB_HE_SATT_FilterTestDouble;    
+    
+    fbFilterHolderSelector : FB_HE_SATT_FilterHolderSelector;
+
+    // Subject under test
+    fbFilterCombinationCollector1 : FB_HE_SATT_FilterCombinationCollector;
+    fbFilterCombinationCollector2 : FB_HE_SATT_FilterCombinationCollector;
+
+    // Variables for test
+    sConcatString : T_MaxString;
+    fbFilterCombination : FB_HE_SATT_FilterCombination;
+    fbFilterCombinationExpected : FB_HE_SATT_FilterCombination;
+    aiFilterExpected : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
+    fbFilterCombinationResult : FB_HE_SATT_FilterCombination;
+    aiFilterResult : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
+    abCoupledHolders : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+TEST('GivenCouplingExpectCorrectDownselectedListOfCombinations');
+
+// Couple 3 and 4 so that they must always be used together.
+abCoupledHolders[3] := abCoupledHolders[4] := TRUE;
+
+fbFilterHolderSelector.CoupleHolders(abCoupledHolders);
+
+fbFilterCombinationCollector2.Reset();
+
+fbFilterCombination.Clear();
+
+// Add a filter combination that doesn't use any filters.
+fbFilterCombinationCollector1.AddFilterCombination(fbFilterCombination);
+
+// Downselect should pick up the combination that doesn't use any filters.
+fbFilterCombinationCollector1.DownselectByCouplingRule(
+    iFilterCombinationCollector := fbFilterCombinationCollector2,
+    iFilterHolderSelector := fbFilterHolderSelector
+);
+
+AssertEquals_DINT(
+    Expected := 1,
+    Actual := fbFilterCombinationCollector2.NumCombinationsAdded,
+    Message := 'Number of combinations found was not correct.'
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationResult := fbFilterCombinationCollector2.GetCombination(1);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationCollector2.Reset();
+
+// Add a combination that only uses filter 3.
+fbFilterCombination.Clear();
+fbFilterCombination.AddFilter(3, afbFilter[3]);
+
+fbFilterCombinationCollector1.AddFilterCombination(fbFilterCombination);
+
+// Downselect by 3 to 4 coupling means this combination should be filtered out of the result.
+fbFilterCombinationCollector1.DownselectByCouplingRule(
+    iFilterCombinationCollector := fbFilterCombinationCollector2,
+    iFilterHolderSelector := fbFilterHolderSelector
+);
+
+AssertEquals_DINT(
+    Expected := 1,
+    Actual := fbFilterCombinationCollector2.NumCombinationsAdded,
+    Message := 'Number of combinations found was not correct.'
+);
+
+fbFilterCombinationCollector2.Reset();
+
+// Now we add 3 and 4 and the downselected result should contain this combination.
+fbFilterCombination.Clear();
+fbFilterCombination.AddFilter(3, afbFilter[3]);
+fbFilterCombination.AddFilter(4, afbFilter[4]);
+
+fbFilterCombinationCollector1.AddFilterCombination(fbFilterCombination);
+
+fbFilterCombinationCollector1.DownselectByCouplingRule(
+    iFilterCombinationCollector := fbFilterCombinationCollector2,
+    iFilterHolderSelector := fbFilterHolderSelector
+);
+
+AssertEquals_DINT(
+    Expected := 2,
+    Actual := fbFilterCombinationCollector2.NumCombinationsAdded,
+    Message := 'Number of combinations found was not correct.'
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, 0);
+fbFilterCombinationExpected.AddFilter(2, 0);
+fbFilterCombinationExpected.AddFilter(3, afbFilter[3]);
+fbFilterCombinationExpected.AddFilter(4, afbFilter[4]);
+fbFilterCombinationExpected.AddFilter(5, 0);
+fbFilterCombinationResult := fbFilterCombinationCollector2.GetCombination(2);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationResult := fbFilterCombinationCollector2.GetCombination(3);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector_Test">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector_Test.AssertEquals_Combination">
+      <LineId Id="1" Count="12" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector_Test.GivenCouplingExpectCorrectDownselectedListOfCombinations">
+      <LineId Id="1" Count="94" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

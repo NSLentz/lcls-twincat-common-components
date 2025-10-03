@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_HE_SATT_EpicsHeartBeatTest" Id="{6737a63f-a220-4ec1-8820-e4e83f0e728d}" SpecialFunc="None">
+  <POU Name="FB_HE_SATT_EpicsHeartBeat_Test" Id="{6737a63f-a220-4ec1-8820-e4e83f0e728d}" SpecialFunc="None">
     <Declaration><![CDATA[
-FUNCTION_BLOCK FB_HE_SATT_EpicsHeartBeatTest EXTENDS FB_TestSuite
+FUNCTION_BLOCK FB_HE_SATT_EpicsHeartBeat_Test EXTENDS FB_TestSuite
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -61,13 +61,13 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_HE_SATT_EpicsHeartBeatTest">
+    <LineIds Name="FB_HE_SATT_EpicsHeartBeat_Test">
       <LineId Id="4" Count="0" />
       <LineId Id="3" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_EpicsHeartBeatTest.GivenThatHeartbeatIsProvidedExpectNoExpiration">
+    <LineIds Name="FB_HE_SATT_EpicsHeartBeat_Test.GivenThatHeartbeatIsProvidedExpectNoExpiration">
       <LineId Id="13" Count="0" />
       <LineId Id="3" Count="0" />
       <LineId Id="15" Count="0" />
@@ -76,7 +76,7 @@ END_IF
       <LineId Id="2" Count="0" />
       <LineId Id="14" Count="0" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_EpicsHeartBeatTest.GivenThatHeartbeatTimeHasExpiredExpectHeartBeatPropertyToIndicateSo">
+    <LineIds Name="FB_HE_SATT_EpicsHeartBeat_Test.GivenThatHeartbeatTimeHasExpiredExpectHeartBeatPropertyToIndicateSo">
       <LineId Id="11" Count="0" />
       <LineId Id="3" Count="0" />
       <LineId Id="12" Count="0" />

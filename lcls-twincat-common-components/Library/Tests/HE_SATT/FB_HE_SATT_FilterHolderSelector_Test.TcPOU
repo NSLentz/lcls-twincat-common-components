@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FilterHolderSelector_Test" Id="{1b1d813f-ffdc-43f1-96bd-53b883b16954}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FilterHolderSelector_Test EXTENDS FB_TestSuite
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+GivenCoupledHoldersExpectCorrectFiltering_1();
+GivenCoupledHoldersExpectCorrectFiltering_2();
+]]></ST>
+    </Implementation>
+    <Method Name="GivenCoupledHoldersExpectCorrectFiltering_1" Id="{873ea5f5-50b5-431e-903a-309c2c5e0bd8}">
+      <Declaration><![CDATA[
+METHOD PRIVATE GivenCoupledHoldersExpectCorrectFiltering_1
+VAR_INST
+    // Test fixture   
+    afbFilterTestDouble : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF FB_HE_SATT_FilterTestDouble;
+ 
+    fbFilterCombination : FB_HE_SATT_FilterCombination;
+
+    // Subject under test
+    fbFilterHolderSelector : FB_HE_SATT_FilterHolderSelector;
+    
+    // Variables for test
+    abCoupledHolders : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF BOOL;
+    bExpected : BOOL;
+    bResult : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+TEST('GivenCoupledHoldersExpectCorrectFiltering_1');
+
+fbFilterCombination.AddFilter(1, afbFilterTestDouble[1]);
+fbFilterCombination.AddFilter(2, afbFilterTestDouble[2]);
+fbFilterCombination.AddFilter(4, afbFilterTestDouble[4]);
+
+abCoupledHolders[1] := abCoupledHolders[2] := abCoupledHolders[3] := TRUE;
+
+fbFilterHolderSelector.CoupleHolders(abCoupledHolders);
+
+bExpected := FALSE;
+
+bResult := fbFilterHolderSelector.CouplingRulesSatisfied(
+    iFilterCombination := fbFilterCombination
+);
+
+AssertEquals_BOOL(
+    Expected := bExpected,
+    Actual := bResult,
+    Message := 'Expected coupling rules to not be satisfied.'
+);
+
+fbFilterCombination.AddFilter(3, afbFilterTestDouble[3]);
+
+bExpected := TRUE;
+
+bResult := fbFilterHolderSelector.CouplingRulesSatisfied(
+    iFilterCombination := fbFilterCombination
+);
+
+AssertEquals_BOOL(
+    Expected := bExpected,
+    Actual := bResult,
+    Message := 'Expected coupling rules to be satisfied.'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenCoupledHoldersExpectCorrectFiltering_2" Id="{e1688302-93d3-4b2e-8c65-a87af2004190}">
+      <Declaration><![CDATA[
+METHOD PRIVATE GivenCoupledHoldersExpectCorrectFiltering_2
+VAR_INST
+    // Test fixture   
+    afbFilterTestDouble : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF FB_HE_SATT_FilterTestDouble;
+ 
+    fbFilterCombination : FB_HE_SATT_FilterCombination;
+
+    // Subject under test
+    fbFilterHolderSelector : FB_HE_SATT_FilterHolderSelector;
+    
+    // Variables for test
+    abCoupledHolders : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF BOOL;
+    bExpected : BOOL;
+    bResult : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+TEST('GivenCoupledHoldersExpectCorrectFiltering_2');
+
+fbFilterCombination.AddFilter(2, afbFilterTestDouble[2]);
+fbFilterCombination.AddFilter(4, afbFilterTestDouble[4]);
+
+abCoupledHolders[3] := abCoupledHolders[4] := TRUE;
+
+fbFilterHolderSelector.CoupleHolders(abCoupledHolders);
+
+bExpected := FALSE;
+
+bResult := fbFilterHolderSelector.CouplingRulesSatisfied(
+    iFilterCombination := fbFilterCombination
+);
+
+AssertEquals_BOOL(
+    Expected := bExpected,
+    Actual := bResult,
+    Message := 'Expected coupling rules to not be satisfied.'
+);
+
+fbFilterCombination.AddFilter(3, afbFilterTestDouble[3]);
+
+bExpected := TRUE;
+
+bResult := fbFilterHolderSelector.CouplingRulesSatisfied(
+    iFilterCombination := fbFilterCombination
+);
+
+AssertEquals_BOOL(
+    Expected := bExpected,
+    Actual := bResult,
+    Message := 'Expected coupling rules to be satisfied.'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector_Test">
+      <LineId Id="1" Count="3" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector_Test.GivenCoupledHoldersExpectCorrectFiltering_1">
+      <LineId Id="1" Count="38" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderSelector_Test.GivenCoupledHoldersExpectCorrectFiltering_2">
+      <LineId Id="1" Count="37" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
