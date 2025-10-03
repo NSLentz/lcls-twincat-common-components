@@ -35,26 +35,26 @@ IF NOT IsFinite(x := F_LREAL(THIS^.fRequestedTransmission)) OR NOT IsFinite(x :=
 END_IF
 
 CASE THIS^.eRequestedRoundingMode OF
-    E_HE_SATT_RoundingMode.CEIL:
+    E_HE_SATT_RoundingMode.CLOSEST_ABOVE:
         THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
         
-    E_HE_SATT_RoundingMode.CEIL_WITHIN_TOLERANCE:
+    E_HE_SATT_RoundingMode.FIRST_ABOVE_WITHIN_TOLERANCE:
         THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
         
-    E_HE_SATT_RoundingMode.FLOOR:
+    E_HE_SATT_RoundingMode.CLOSEST_BELOW:
         THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
         
-    E_HE_SATT_RoundingMode.FLOOR_WITHIN_TOLERANCE:
+    E_HE_SATT_RoundingMode.FIRST_BELOW_WITHIN_TOLERANCE:
         THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
         
     E_HE_SATT_RoundingMode.CLOSEST:
         THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
         
-    E_HE_SATT_RoundingMode.CLOSEST_WITHIN_TOLERANCE:
+    E_HE_SATT_RoundingMode.FIRST_WITHIN_TOLERANCE:
         THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
         
     ELSE
-        THIS^.eRequestedRoundingModeAfterInputValidation := E_HE_SATT_RoundingMode.FLOOR_WITHIN_TOLERANCE;
+        THIS^.eRequestedRoundingModeAfterInputValidation := E_HE_SATT_RoundingMode.FIRST_BELOW_WITHIN_TOLERANCE;
 END_CASE
 
 THIS^.fRequestedTransmissionAfterInputValidation := LIMIT(0.0, THIS^.fRequestedTransmission, 1.0);
@@ -105,7 +105,8 @@ THIS^.fRequestedAllowableTolerance := fRequestedAllowableTolerance;
       <LineId Id="1" Count="5" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_UserRequest.ApplyConfig">
-      <LineId Id="1" Count="37" />
+      <LineId Id="76" Count="36" />
+      <LineId Id="38" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_UserRequest.FB_Init">
       <LineId Id="1" Count="2" />

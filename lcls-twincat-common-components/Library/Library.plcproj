@@ -71,6 +71,9 @@
     <Compile Include="Devices\HE_SATT\E_HE_SATT_SequenceState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_EpicsHeartBeat.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -98,7 +101,7 @@
     <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FilterHolderSelector.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FindOptimalCombination.TcPOU">
+    <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FindOptimalFilterCombination.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\FBs\FB_HE_SATT_FilterToTransmission.TcPOU">
@@ -126,6 +129,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\ITFs\I_HE_SATT_FilterCombinationFinder.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Devices\HE_SATT\ITFs\I_HE_SATT_FilterCombinationToTransmission.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Devices\HE_SATT\ITFs\I_HE_SATT_FilterConstantThickness.TcIO">
@@ -288,6 +294,9 @@
     <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterCombinationCollector_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\HE_SATT\FB_HE_SATT_FindOptimalFilterCombination_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\HE_SATT\FB_HE_SATT_FilterHolderSelector_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -304,6 +313,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\PRG_TEST.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Test Doubles\FB_HE_SATT_FilterCombinationToTransmissionTestDouble.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\Test Doubles\FB_HE_SATT_FilterHolderSelectorTestDouble.TcPOU">

@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FindOptimalFilterCombination" Id="{03a9882a-fdb5-4066-a35a-05d3adec64d5}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FindOptimalFilterCombination
+VAR
+    iFilterCombinationToTransmission : I_HE_SATT_FilterCombinationToTransmission;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{d9b25ea1-1555-49c9-b3f1-9e893154d608}">
+      <Declaration><![CDATA[
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+    
+    iFilterCombinationToTransmission : I_HE_SATT_FilterCombinationToTransmission;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iFilterCombinationToTransmission := iFilterCombinationToTransmission;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FindOptimalCombination" Id="{11772ad2-35e1-4e17-8c00-98ae190f53b5}">
+      <Declaration><![CDATA[
+METHOD PUBLIC FindOptimalCombination : REFERENCE TO FB_HE_SATT_FilterCombination
+VAR_INPUT
+    fPhotonEnergy_eV : LREAL;
+	(* [0.0 - 1.0]*)
+	fRequestedTransmission	: LREAL;
+	eRequestedRoundingMode	: E_HE_SATT_RoundingMode;
+	fRequestedAllowableTolerance	: LREAL;
+    iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
+END_VAR
+VAR_OUTPUT
+    bWithinAllowableTolerance : BOOL;
+END_VAR
+VAR
+    nCombinationIterator : DINT;
+    fbFilterCombination : REFERENCE TO FB_HE_SATT_FilterCombination;
+    fMinimumTransmission : LREAL;
+    fMaximumTransmission : LREAL;
+    fAverageTransmission : LREAL;
+    fOptimalAverageTransmissionThusFar : LREAL;
+    fTransmissionError : LREAL;
+    fOptimalTransmissionErrorThusFar : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+fOptimalTransmissionErrorThusFar := 10000.0;
+fOptimalAverageTransmissionThusFar := 10000.0;
+
+FOR nCombinationIterator := 1 TO iFilterCombinationCollector.NumCombinationsAdded DO
+    fbFilterCombination REF= iFilterCombinationCollector.GetCombination(nCombinationIterator);
+    
+    THIS^.iFilterCombinationToTransmission.CalculateTransmission(
+        fPhotonEnergy_eV :=  fPhotonEnergy_eV,
+        iFilterCombination := fbFilterCombination,
+        fMinimumTransmission => fMinimumTransmission,
+        fMaximumTransmission => fMaximumTransmission
+    );
+    
+    CASE eRequestedRoundingMode OF
+        E_HE_SATT_RoundingMode.CLOSEST_ABOVE:
+            IF fRequestedTransmission > fMaximumTransmission THEN
+                CONTINUE;
+            ELSIF fRequestedTransmission <= fMaximumTransmission AND 
+                  fRequestedTransmission >= fMinimumTransmission THEN
+                fTransmissionError := 0.0;
+            ELSE
+                fTransmissionError := fRequestedTransmission - fMinimumTransmission;
+            END_IF
+            
+            IF ABS(fTransmissionError) > ABS(fOptimalTransmissionErrorThusFar) THEN
+                CONTINUE;
+            END_IF
+            
+            fAverageTransmission := (fMaximumTransmission + fMinimumTransmission) / 2.0;
+            
+            IF ABS(fTransmissionError) = ABS(fOptimalTransmissionErrorThusFar) AND
+               ABS(fRequestedTransmission - fAverageTransmission) > ABS(fRequestedTransmission - fOptimalAverageTransmissionThusFar) THEN
+                CONTINUE;
+            END_IF
+            
+            fOptimalAverageTransmissionThusFar := fAverageTransmission;
+        
+            fOptimalTransmissionErrorThusFar := fTransmissionError;
+            
+            FindOptimalCombination REF= fbFilterCombination;
+        
+        E_HE_SATT_RoundingMode.CLOSEST_BELOW:
+            IF fRequestedTransmission < fMinimumTransmission THEN
+                CONTINUE;
+            ELSIF fRequestedTransmission <= fMaximumTransmission AND 
+                  fRequestedTransmission >= fMinimumTransmission THEN
+                fTransmissionError := 0.0;
+            ELSE
+                fTransmissionError := fRequestedTransmission - fMaximumTransmission;
+            END_IF
+            
+            IF ABS(fTransmissionError) > ABS(fOptimalTransmissionErrorThusFar) THEN
+                CONTINUE;
+            END_IF
+            
+            fAverageTransmission := (fMaximumTransmission + fMinimumTransmission) / 2.0;
+            
+            IF ABS(fTransmissionError) = ABS(fOptimalTransmissionErrorThusFar) AND
+               ABS(fRequestedTransmission - fAverageTransmission) > ABS(fRequestedTransmission - fOptimalAverageTransmissionThusFar) THEN
+                CONTINUE;
+            END_IF
+            
+            fOptimalAverageTransmissionThusFar := fAverageTransmission;
+        
+            fOptimalTransmissionErrorThusFar := fTransmissionError;
+            
+            FindOptimalCombination REF= fbFilterCombination;
+            
+        E_HE_SATT_RoundingMode.CLOSEST:
+            IF fRequestedTransmission > fMaximumTransmission THEN
+                fTransmissionError := fRequestedTransmission - fMaximumTransmission;
+            ELSIF fRequestedTransmission <= fMaximumTransmission AND 
+                  fRequestedTransmission >= fMinimumTransmission THEN
+                fTransmissionError := 0.0;
+            ELSE
+                fTransmissionError := fRequestedTransmission - fMinimumTransmission;
+            END_IF
+            
+            IF ABS(fTransmissionError) > ABS(fOptimalTransmissionErrorThusFar) THEN
+                CONTINUE;
+            END_IF
+            
+            fAverageTransmission := (fMaximumTransmission + fMinimumTransmission) / 2.0;
+            
+            IF ABS(fTransmissionError) = ABS(fOptimalTransmissionErrorThusFar) AND
+               ABS(fRequestedTransmission - fAverageTransmission) > ABS(fRequestedTransmission - fOptimalAverageTransmissionThusFar) THEN
+                CONTINUE;
+            END_IF
+            
+            fOptimalAverageTransmissionThusFar := fAverageTransmission;
+        
+            fOptimalTransmissionErrorThusFar := fTransmissionError;
+            
+            FindOptimalCombination REF= fbFilterCombination;
+            
+        E_HE_SATT_RoundingMode.FIRST_ABOVE_WITHIN_TOLERANCE:
+            IF fRequestedTransmission > fMaximumTransmission THEN
+                CONTINUE;
+            ELSIF fRequestedTransmission <= fMaximumTransmission AND 
+                  fRequestedTransmission >= fMinimumTransmission THEN
+                fTransmissionError := 0.0;
+            ELSE
+                fTransmissionError := fRequestedTransmission - fMinimumTransmission;
+            END_IF
+            
+            IF fTransmissionError > 0 OR ABS(fTransmissionError) > ABS(fRequestedAllowableTolerance) THEN
+                CONTINUE;
+            END_IF
+            
+            fOptimalAverageTransmissionThusFar := fAverageTransmission;
+        
+            fOptimalTransmissionErrorThusFar := fTransmissionError;
+            
+            FindOptimalCombination REF= fbFilterCombination;
+            
+            RETURN;
+            
+        E_HE_SATT_RoundingMode.FIRST_BELOW_WITHIN_TOLERANCE:
+            IF fRequestedTransmission < fMinimumTransmission THEN
+                CONTINUE;
+            ELSIF fRequestedTransmission <= fMaximumTransmission AND 
+                  fRequestedTransmission >= fMinimumTransmission THEN
+                fTransmissionError := 0.0;
+            ELSE
+                fTransmissionError := fRequestedTransmission - fMaximumTransmission;
+            END_IF
+            
+            IF fTransmissionError < 0 OR ABS(fTransmissionError) > ABS(fRequestedAllowableTolerance) THEN
+                CONTINUE;
+            END_IF
+            
+            fOptimalAverageTransmissionThusFar := fAverageTransmission;
+        
+            fOptimalTransmissionErrorThusFar := fTransmissionError;
+            
+            FindOptimalCombination REF= fbFilterCombination;
+            
+            RETURN;
+            
+        E_HE_SATT_RoundingMode.FIRST_WITHIN_TOLERANCE:
+            IF fRequestedTransmission > fMaximumTransmission THEN
+                fTransmissionError := fRequestedTransmission - fMaximumTransmission;
+            ELSIF fRequestedTransmission <= fMaximumTransmission AND 
+                  fRequestedTransmission >= fMinimumTransmission THEN
+                fTransmissionError := 0.0;
+            ELSE
+                fTransmissionError := fRequestedTransmission - fMinimumTransmission;
+            END_IF
+            
+            IF ABS(fTransmissionError) > ABS(fRequestedAllowableTolerance) THEN
+                CONTINUE;
+            END_IF
+            
+            fOptimalAverageTransmissionThusFar := fAverageTransmission;
+        
+            fOptimalTransmissionErrorThusFar := fTransmissionError;
+            
+            FindOptimalCombination REF= fbFilterCombination;
+            
+            RETURN;
+    END_CASE
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FindOptimalFilterCombination">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FindOptimalFilterCombination.FB_Init">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FindOptimalFilterCombination.FindOptimalCombination">
+      <LineId Id="1" Count="163" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

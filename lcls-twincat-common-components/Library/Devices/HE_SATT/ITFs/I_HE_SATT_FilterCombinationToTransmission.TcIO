@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FilterCombinationToTransmission" Id="{071167ea-2ea5-46b9-9ac7-573a9e9fef7c}">
+    <Declaration><![CDATA[INTERFACE I_HE_SATT_FilterCombinationToTransmission
+]]></Declaration>
+    <Method Name="CalculateTransmission" Id="{1375f56e-e9d4-43e1-a6be-2e69ae78b920}">
+      <Declaration><![CDATA[
+METHOD PUBLIC CalculateTransmission
+VAR_INPUT
+    fPhotonEnergy_eV : LREAL;
+    iFilterCombination : I_HE_SATT_FilterCombination;
+END_VAR
+VAR_OUTPUT
+    fMinimumTransmission : LREAL;
+    fMaximumTransmission : LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

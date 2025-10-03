@@ -27,7 +27,7 @@ TEST('GivenApplyCommandedStartNewConfiguration');
 
 fbHE_SATT_UserRequest.RequestTransmission(
     fRequestedTransmission := 0.8,
-    eRequestedRoundingMode := E_HE_SATT_RoundingMode.CEIL_WITHIN_TOLERANCE,
+    eRequestedRoundingMode := E_HE_SATT_RoundingMode.FIRST_ABOVE_WITHIN_TOLERANCE,
     fRequestedAllowableTolerance := 1e-2
 );
 
@@ -39,7 +39,7 @@ AssertEquals_LREAL(
 );
 
 AssertEquals_UINT(
-    Expected := E_HE_SATT_RoundingMode.FLOOR_WITHIN_TOLERANCE,
+    Expected := E_HE_SATT_RoundingMode.FIRST_BELOW_WITHIN_TOLERANCE,
     Actual := fbHE_SATT_SequenceTestDouble.GetStartRoundingModeValue(),
     Message := 'Not correct value #2'
 );
@@ -61,7 +61,7 @@ AssertEquals_LREAL(
 );
 
 AssertEquals_UINT(
-    Expected := E_HE_SATT_RoundingMode.CEIL_WITHIN_TOLERANCE,
+    Expected := E_HE_SATT_RoundingMode.FIRST_ABOVE_WITHIN_TOLERANCE,
     Actual := fbHE_SATT_SequenceTestDouble.GetStartRoundingModeValue(),
     Message := 'Not correct value #5'
 );

@@ -11,6 +11,7 @@ VAR
     fbHE_SATT_FilterCombinationToTransmission_Test : FB_HE_SATT_FilterCombinationToTransmission_Test;
     fbHE_SATT_FilterHolderSelector_Test : FB_HE_SATT_FilterHolderSelector_Test;
     fbHE_SATT_FilterToTransmission_Test : FB_HE_SATT_FilterToTransmission_Test;
+    fbHE_SATT_FindOptimalFilterCombination_Test : FB_HE_SATT_FindOptimalFilterCombination_Test;
     fbHE_SATT_UserRequest_Test : FB_HE_SATT_UserRequest_Test;
 //     fbLICTest: FB_LICTest;
 //     fbPPMTest: FB_PPMTest;

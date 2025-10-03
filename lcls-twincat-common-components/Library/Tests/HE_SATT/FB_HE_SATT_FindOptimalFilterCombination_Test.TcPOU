@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_FindOptimalFilterCombination_Test" Id="{3e45d630-599c-4dba-8589-9fcd9b23b18e}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_FindOptimalFilterCombination_Test EXTENDS FB_TestSuite
+VAR
+    nAssertEquals_CombinationCounter : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+GivenCombinationCollectionAndRequestExpectOptimalCombinationFound();
+]]></ST>
+    </Implementation>
+    <Method Name="AssertEquals_Combination" Id="{52d28b22-353e-4552-a2f2-3eb322564d2e}">
+      <Declaration><![CDATA[
+METHOD PRIVATE AssertEquals_Combination
+VAR_INPUT
+    iFilterCombinationExpected : I_HE_SATT_FilterCombination;
+    iFilterCombinationResult : I_HE_SATT_FilterCombination;
+END_VAR
+VAR
+    sMessageBuilder : T_MaxString;
+    nIteratorHolder : INT;
+    iFilterExpected : I_HE_SATT_Filter;
+    iFilterResult : I_HE_SATT_Filter;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+nAssertEquals_CombinationCounter := nAssertEquals_CombinationCounter + 1;
+
+FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+    iFilterExpected := iFilterCombinationExpected.GetFilter(nIteratorHolder);
+    iFilterResult := iFilterCombinationResult.GetFilter(nIteratorHolder);
+    sMessageBuilder := 'Combination filter in slot for holder ';
+    sMessageBuilder := CONCAT(sMessageBuilder, TO_STRING(nIteratorHolder));
+    sMessageBuilder := CONCAT(sMessageBuilder, ' was not the expected filter. ');
+    sMessageBuilder := CONCAT(sMessageBuilder, '# ');
+    sMessageBuilder := CONCAT(sMessageBuilder, TO_STRING(nAssertEquals_CombinationCounter));
+    AssertTrue(
+        Condition := iFilterExpected = iFilterResult,
+        Message := sMessageBuilder
+    );
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GivenCombinationCollectionAndRequestExpectOptimalCombinationFound" Id="{e0671d9c-8dd6-4265-b89c-0ef1b54a8059}">
+      <Declaration><![CDATA[
+METHOD PRIVATE GivenCombinationCollectionAndRequestExpectOptimalCombinationFound
+VAR
+    // Test fixture
+    afbFilter : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF FB_HE_SATT_FilterTestDouble;    
+    
+    fbFilterCombination : FB_HE_SATT_FilterCombination;
+    
+    fbFilterCombinationCollector : FB_HE_SATT_FilterCombinationCollector;
+    
+    fbFilterCombinationToTransmissionTestDouble : FB_HE_SATT_FilterCombinationToTransmissionTestDouble;
+
+    // Subject under test
+    fbHE_SATT_FindOptimalFilterCombination : FB_HE_SATT_FindOptimalFilterCombination(
+        iFilterCombinationToTransmission := fbFilterCombinationToTransmissionTestDouble
+    );
+
+    // Variables for test
+    sConcatString : T_MaxString;
+    fbFilterCombinationExpected : FB_HE_SATT_FilterCombination;
+    aiFilterExpected : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
+    fbFilterCombinationResult : REFERENCE TO FB_HE_SATT_FilterCombination;
+    aiFilterResult : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
+    bWithinAllowableToleranceResult : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+TEST('GivenCombinationCollectionAndRequestExpectOptimalCombinationFound');
+
+fbFilterCombination.Clear();
+fbFilterCombinationToTransmissionTestDouble.PushTransmissionResultToSequence(
+    fMinimumTransmission := 1.0,
+    fMaximumTransmission := 1.0
+);
+fbFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
+
+fbFilterCombination.Clear();
+fbFilterCombination.AddFilter(1, afbFilter[1]);
+fbFilterCombinationToTransmissionTestDouble.PushTransmissionResultToSequence(
+    fMinimumTransmission := 0.8,
+    fMaximumTransmission := 0.8
+);
+fbFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
+
+fbFilterCombination.Clear();
+fbFilterCombination.AddFilter(1, afbFilter[1]);
+fbFilterCombination.AddFilter(2, afbFilter[2]);
+fbFilterCombinationToTransmissionTestDouble.PushTransmissionResultToSequence(
+    fMinimumTransmission := 0.7,
+    fMaximumTransmission := 0.7
+);
+fbFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
+
+fbFilterCombination.Clear();
+fbFilterCombination.AddFilter(3, afbFilter[3]);
+fbFilterCombination.AddFilter(4, afbFilter[4]);
+fbFilterCombinationToTransmissionTestDouble.PushTransmissionResultToSequence(
+    fMinimumTransmission := 0.6,
+    fMaximumTransmission := 0.8
+);
+fbFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
+
+fbFilterCombination.Clear();
+fbFilterCombination.AddFilter(1, afbFilter[1]);
+fbFilterCombination.AddFilter(2, afbFilter[2]);
+fbFilterCombination.AddFilter(5, afbFilter[5]);
+fbFilterCombinationToTransmissionTestDouble.PushTransmissionResultToSequence(
+    fMinimumTransmission := 0.1,
+    fMaximumTransmission := 0.9
+);
+fbFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
+
+fbFilterCombination.Clear();
+fbFilterCombination.AddFilter(1, afbFilter[1]);
+fbFilterCombination.AddFilter(3, afbFilter[3]);
+fbFilterCombination.AddFilter(5, afbFilter[5]);
+fbFilterCombinationToTransmissionTestDouble.PushTransmissionResultToSequence(
+    fMinimumTransmission := 0.95,
+    fMaximumTransmission := 0.95
+);
+fbFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
+
+fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+    fPhotonEnergy_eV := 1000,
+    fRequestedTransmission := 0.61,
+    eRequestedRoundingMode := E_HE_SATT_RoundingMode.CLOSEST_ABOVE,
+    fRequestedAllowableTolerance := 1e-3,
+    iFilterCombinationCollector := fbFilterCombinationCollector,
+    bWithinAllowableTolerance =>
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, 0);
+fbFilterCombinationExpected.AddFilter(2, 0);
+fbFilterCombinationExpected.AddFilter(3, afbFilter[3]);
+fbFilterCombinationExpected.AddFilter(4, afbFilter[4]);
+fbFilterCombinationExpected.AddFilter(5, 0);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationToTransmissionTestDouble.Reset();
+
+fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+    fPhotonEnergy_eV := 1000,
+    fRequestedTransmission := 0.94,
+    eRequestedRoundingMode := E_HE_SATT_RoundingMode.CLOSEST_BELOW,
+    fRequestedAllowableTolerance := 1e-3,
+    iFilterCombinationCollector := fbFilterCombinationCollector,
+    bWithinAllowableTolerance =>
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, afbFilter[1]);
+fbFilterCombinationExpected.AddFilter(2, afbFilter[2]);
+fbFilterCombinationExpected.AddFilter(3, 0);
+fbFilterCombinationExpected.AddFilter(4, 0);
+fbFilterCombinationExpected.AddFilter(5, afbFilter[5]);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationToTransmissionTestDouble.Reset();
+
+fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+    fPhotonEnergy_eV := 1000,
+    fRequestedTransmission := 0.96,
+    eRequestedRoundingMode := E_HE_SATT_RoundingMode.CLOSEST,
+    fRequestedAllowableTolerance := 1e-3,
+    iFilterCombinationCollector := fbFilterCombinationCollector,
+    bWithinAllowableTolerance =>
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, afbFilter[1]);
+fbFilterCombinationExpected.AddFilter(2, 0);
+fbFilterCombinationExpected.AddFilter(3, afbFilter[3]);
+fbFilterCombinationExpected.AddFilter(4, 0);
+fbFilterCombinationExpected.AddFilter(5, afbFilter[5]);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationToTransmissionTestDouble.Reset();
+
+fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+    fPhotonEnergy_eV := 1000,
+    fRequestedTransmission := 0.79,
+    eRequestedRoundingMode := E_HE_SATT_RoundingMode.FIRST_ABOVE_WITHIN_TOLERANCE,
+    fRequestedAllowableTolerance := 0.02,
+    iFilterCombinationCollector := fbFilterCombinationCollector,
+    bWithinAllowableTolerance =>
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, afbFilter[1]);
+fbFilterCombinationExpected.AddFilter(2, 0);
+fbFilterCombinationExpected.AddFilter(3, 0);
+fbFilterCombinationExpected.AddFilter(4, 0);
+fbFilterCombinationExpected.AddFilter(5, 0);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationToTransmissionTestDouble.Reset();
+
+fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+    fPhotonEnergy_eV := 1000,
+    fRequestedTransmission := 0.79,
+    eRequestedRoundingMode := E_HE_SATT_RoundingMode.FIRST_BELOW_WITHIN_TOLERANCE,
+    fRequestedAllowableTolerance := 0.1,
+    iFilterCombinationCollector := fbFilterCombinationCollector,
+    bWithinAllowableTolerance =>
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, afbFilter[1]);
+fbFilterCombinationExpected.AddFilter(2, afbFilter[2]);
+fbFilterCombinationExpected.AddFilter(3, 0);
+fbFilterCombinationExpected.AddFilter(4, 0);
+fbFilterCombinationExpected.AddFilter(5, 0);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationToTransmissionTestDouble.Reset();
+
+fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+    fPhotonEnergy_eV := 1000,
+    fRequestedTransmission := 0.89,
+    eRequestedRoundingMode := E_HE_SATT_RoundingMode.FIRST_WITHIN_TOLERANCE,
+    fRequestedAllowableTolerance := 0.1,
+    iFilterCombinationCollector := fbFilterCombinationCollector,
+    bWithinAllowableTolerance =>
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, afbFilter[1]);
+fbFilterCombinationExpected.AddFilter(2, 0);
+fbFilterCombinationExpected.AddFilter(3, 0);
+fbFilterCombinationExpected.AddFilter(4, 0);
+fbFilterCombinationExpected.AddFilter(5, 0);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationToTransmissionTestDouble.Reset();
+
+fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+    fPhotonEnergy_eV := 1000,
+    fRequestedTransmission := 0.55,
+    eRequestedRoundingMode := E_HE_SATT_RoundingMode.FIRST_WITHIN_TOLERANCE,
+    fRequestedAllowableTolerance := 0.1,
+    iFilterCombinationCollector := fbFilterCombinationCollector,
+    bWithinAllowableTolerance =>
+);
+
+fbFilterCombinationExpected.Clear();
+fbFilterCombinationExpected.AddFilter(1, 0);
+fbFilterCombinationExpected.AddFilter(2, 0);
+fbFilterCombinationExpected.AddFilter(3, afbFilter[3]);
+fbFilterCombinationExpected.AddFilter(4, afbFilter[4]);
+fbFilterCombinationExpected.AddFilter(5, 0);
+AssertEquals_Combination(
+    iFilterCombinationExpected := fbFilterCombinationExpected,
+    iFilterCombinationResult := fbFilterCombinationResult
+);
+
+fbFilterCombinationToTransmissionTestDouble.Reset();
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HE_SATT_FindOptimalFilterCombination_Test">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FindOptimalFilterCombination_Test.AssertEquals_Combination">
+      <LineId Id="1" Count="16" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FindOptimalFilterCombination_Test.GivenCombinationCollectionAndRequestExpectOptimalCombinationFound">
+      <LineId Id="1" Count="211" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
