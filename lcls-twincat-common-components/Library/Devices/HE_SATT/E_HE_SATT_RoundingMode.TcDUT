@@ -6,8 +6,11 @@
 {attribute 'to_string'}
 TYPE E_HE_SATT_RoundingMode :
 (
-    CEIL := 0,
+    FLOOR_WITHIN_TOLERANCE := 0,
+    CEIL,
     FLOOR,
+    CLOSEST,
+    CEIL_WITHIN_TOLERANCE,
     CLOSEST_WITHIN_TOLERANCE
 ) UINT;
 END_TYPE

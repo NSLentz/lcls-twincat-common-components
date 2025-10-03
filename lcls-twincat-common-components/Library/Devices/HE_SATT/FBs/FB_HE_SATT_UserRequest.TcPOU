@@ -6,8 +6,13 @@ FUNCTION_BLOCK FB_HE_SATT_UserRequest
 VAR
     iHE_SATT_Sequence : I_HE_SATT_Sequence;
 
-    fRequestAttenuation : LREAL; // [0.0 - 1.0] - Link to epics read-write
-    fRequestedAttenuation : LREAL; // [0.0 - 1.0] - Link to epics but read only
+    fRequestedTransmission : LREAL; // [0.0 - 1.0] - Link to epics read-write
+    fRequestedTransmissionAfterInputValidation : LREAL; // [0.0 - 1.0] - Link to epics but read only
+    eRequestedRoundingMode : E_HE_SATT_RoundingMode; // Link to epics read-write
+    eRequestedRoundingModeAfterInputValidation : E_HE_SATT_RoundingMode; // Link to epics but read-only
+    fRequestedAllowableTolerance : LREAL; // Link to epics read-write
+    fRequestedAllowableToleranceAfterInputValidation : LREAL; // Link to epics but read-only
+    
     bApplyConfig : BOOL; // Link to epics - read-write
 END_VAR
 ]]></Declaration>
@@ -25,25 +30,52 @@ METHOD PUBLIC ApplyConfig
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-IF NOT IsFinite(x := F_LREAL(THIS^.fRequestAttenuation)) THEN
+IF NOT IsFinite(x := F_LREAL(THIS^.fRequestedTransmission)) OR NOT IsFinite(x := F_LREAL(THIS^.fRequestedAllowableTolerance)) THEN
     RETURN;
 END_IF
 
-THIS^.fRequestedAttenuation := THIS^.fRequestAttenuation;
+CASE THIS^.eRequestedRoundingMode OF
+    E_HE_SATT_RoundingMode.CEIL:
+        THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
+        
+    E_HE_SATT_RoundingMode.CEIL_WITHIN_TOLERANCE:
+        THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
+        
+    E_HE_SATT_RoundingMode.FLOOR:
+        THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
+        
+    E_HE_SATT_RoundingMode.FLOOR_WITHIN_TOLERANCE:
+        THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
+        
+    E_HE_SATT_RoundingMode.CLOSEST:
+        THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
+        
+    E_HE_SATT_RoundingMode.CLOSEST_WITHIN_TOLERANCE:
+        THIS^.eRequestedRoundingModeAfterInputValidation := THIS^.eRequestedRoundingMode;
+        
+    ELSE
+        THIS^.eRequestedRoundingModeAfterInputValidation := E_HE_SATT_RoundingMode.FLOOR_WITHIN_TOLERANCE;
+END_CASE
 
-THIS^.iHE_SATT_Sequence.Start(fRequestedAttenuation := THIS^.fRequestAttenuation);
+THIS^.fRequestedTransmissionAfterInputValidation := LIMIT(0.0, THIS^.fRequestedTransmission, 1.0);
+
+THIS^.fRequestedAllowableToleranceAfterInputValidation := LIMIT(0.0, THIS^.fRequestedAllowableTolerance, 1.0);
+
+THIS^.iHE_SATT_Sequence.Start(
+    fRequestedTransmission := THIS^.fRequestedTransmissionAfterInputValidation,
+    eRequestedRoundingMode := THIS^.eRequestedRoundingModeAfterInputValidation,
+    fRequestedAllowableTolerance := THIS^.fRequestedAllowableToleranceAfterInputValidation
+);
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_Init" Id="{640c0c29-abac-4f20-8436-e914261d9bf6}">
-      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
-//The return value is not evaluated. For a specific influence, you can also declare the
-//methods explicitly and provide additional code there with the standard initialization
-//code. You can evaluate the return value.
+      <Declaration><![CDATA[
 METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    
     iHE_SATT_Sequence : I_HE_SATT_Sequence;
 END_VAR]]></Declaration>
       <Implementation>
@@ -52,15 +84,20 @@ THIS^.iHE_SATT_Sequence := iHE_SATT_Sequence;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="RequestAttenuation" Id="{fc0c7425-477a-4f85-a90c-7324115e545b}">
-      <Declaration><![CDATA[METHOD PUBLIC RequestAttenuation
+    <Method Name="RequestTransmission" Id="{fc0c7425-477a-4f85-a90c-7324115e545b}">
+      <Declaration><![CDATA[
+METHOD PUBLIC RequestTransmission
 VAR_INPUT
-    fRequestedAttenuation : LREAL; // [0.0 - 1.0]
+    fRequestedTransmission : LREAL; // [0.0 - 1.0]
+    eRequestedRoundingMode : E_HE_SATT_RoundingMode;
+    fRequestedAllowableTolerance : LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-THIS^.fRequestAttenuation := fRequestedAttenuation;
+THIS^.fRequestedTransmission := fRequestedTransmission;
+THIS^.eRequestedRoundingMode := eRequestedRoundingMode;
+THIS^.fRequestedAllowableTolerance := fRequestedAllowableTolerance;
 ]]></ST>
       </Implementation>
     </Method>
@@ -68,13 +105,13 @@ THIS^.fRequestAttenuation := fRequestedAttenuation;
       <LineId Id="1" Count="5" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_UserRequest.ApplyConfig">
-      <LineId Id="1" Count="8" />
+      <LineId Id="1" Count="37" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_UserRequest.FB_Init">
       <LineId Id="1" Count="2" />
     </LineIds>
-    <LineIds Name="FB_HE_SATT_UserRequest.RequestAttenuation">
-      <LineId Id="1" Count="2" />
+    <LineIds Name="FB_HE_SATT_UserRequest.RequestTransmission">
+      <LineId Id="1" Count="4" />
     </LineIds>
   </POU>
 </TcPlcObject>

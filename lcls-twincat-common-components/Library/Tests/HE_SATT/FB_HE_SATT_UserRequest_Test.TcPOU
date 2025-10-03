@@ -16,6 +16,7 @@ GivenApplyCommandedStartNewConfiguration();
 METHOD PRIVATE GivenApplyCommandedStartNewConfiguration
 VAR
     fbHE_SATT_SequenceTestDouble : FB_HE_SATT_SequenceTestDouble;
+    
     // Subject under test
     fbHE_SATT_UserRequest : FB_HE_SATT_UserRequest(iHE_SATT_Sequence := fbHE_SATT_SequenceTestDouble);
 END_VAR
@@ -24,22 +25,82 @@ END_VAR
         <ST><![CDATA[
 TEST('GivenApplyCommandedStartNewConfiguration');
 
-fbHE_SATT_UserRequest.RequestAttenuation(0.8);
-AssertEquals_LREAL(Expected := 0.0,
-                   Actual := fbHE_SATT_SequenceTestDouble.GetStartAttenuationValue(),
-                   Delta := 0.01,
-                   Message := 'Not correct value #1');
+fbHE_SATT_UserRequest.RequestTransmission(
+    fRequestedTransmission := 0.8,
+    eRequestedRoundingMode := E_HE_SATT_RoundingMode.CEIL_WITHIN_TOLERANCE,
+    fRequestedAllowableTolerance := 1e-2
+);
+
+AssertEquals_LREAL(
+    Expected := 0.0,
+    Actual := fbHE_SATT_SequenceTestDouble.GetStartTransmissionValue(),
+    Delta := 0.0001,
+    Message := 'Not correct value #1'
+);
+
+AssertEquals_UINT(
+    Expected := E_HE_SATT_RoundingMode.FLOOR_WITHIN_TOLERANCE,
+    Actual := fbHE_SATT_SequenceTestDouble.GetStartRoundingModeValue(),
+    Message := 'Not correct value #2'
+);
+
+AssertEquals_LREAL(
+    Expected := 0.0,
+    Actual := fbHE_SATT_SequenceTestDouble.GetStartAllowableToleranceValue(),
+    Delta := 0.0001,
+    Message := 'Not correct value #3'
+);
 
 fbHE_SATT_UserRequest.ApplyConfig();
 
-AssertEquals_LREAL(Expected := 0.8,
-                   Actual := fbHE_SATT_SequenceTestDouble.GetStartAttenuationValue(),
-                   Delta := 0.01,
-                   Message := 'Not correct value #2');
+AssertEquals_LREAL(
+    Expected := 0.8,
+    Actual := fbHE_SATT_SequenceTestDouble.GetStartTransmissionValue(),
+    Delta := 0.0001,
+    Message := 'Not correct value #4'
+);
+
+AssertEquals_UINT(
+    Expected := E_HE_SATT_RoundingMode.CEIL_WITHIN_TOLERANCE,
+    Actual := fbHE_SATT_SequenceTestDouble.GetStartRoundingModeValue(),
+    Message := 'Not correct value #5'
+);
+
+AssertEquals_LREAL(
+    Expected := 1e-2,
+    Actual := fbHE_SATT_SequenceTestDouble.GetStartAllowableToleranceValue(),
+    Delta := 0.0001,
+    Message := 'Not correct value #6'
+);
 
 TEST_FINISHED();
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_HE_SATT_UserRequest_Test">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_UserRequest_Test.GivenApplyCommandedStartNewConfiguration">
+      <LineId Id="3" Count="3" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="37" Count="4" />
+      <LineId Id="43" Count="7" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="11" Count="3" />
+      <LineId Id="32" Count="2" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="51" Count="12" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

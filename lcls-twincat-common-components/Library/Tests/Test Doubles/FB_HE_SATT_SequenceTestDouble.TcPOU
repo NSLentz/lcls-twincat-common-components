@@ -4,32 +4,77 @@
     <Declaration><![CDATA[
 FUNCTION_BLOCK FB_HE_SATT_SequenceTestDouble IMPLEMENTS I_HE_SATT_Sequence
 VAR
-    fStartAttenuationValue : LREAL;
+    fStartTransmissionValue : LREAL;
+    eStartRoundingModeValue : E_HE_SATT_RoundingMode;
+    fStartAllowableToleranceValue : LREAL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="GetStartAttenuationValue" Id="{e74118ec-f032-4530-8f94-664c658370ef}">
+    <Method Name="GetStartAllowableToleranceValue" Id="{a3a67367-ac29-48e6-b6de-5afbbc2488a3}">
       <Declaration><![CDATA[
-METHOD PUBLIC GetStartAttenuationValue : LREAL
+METHOD PUBLIC GetStartAllowableToleranceValue : LREAL
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-GetStartAttenuationValue := THIS^.fStartAttenuationValue;
+GetStartAllowableToleranceValue := THIS^.fStartAllowableToleranceValue;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetStartRoundingModeValue" Id="{abcbc0f9-a20e-4e83-931d-25e446b8ab73}">
+      <Declaration><![CDATA[
+METHOD PUBLIC GetStartRoundingModeValue : E_HE_SATT_RoundingMode
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+GetStartRoundingModeValue := THIS^.eStartRoundingModeValue;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetStartTransmissionValue" Id="{e74118ec-f032-4530-8f94-664c658370ef}">
+      <Declaration><![CDATA[
+METHOD PUBLIC GetStartTransmissionValue : LREAL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+GetStartTransmissionValue := THIS^.fStartTransmissionValue;
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="Start" Id="{db9ed80d-6597-4a2c-9821-62df0218fc99}">
-      <Declaration><![CDATA[METHOD Start
+      <Declaration><![CDATA[
+METHOD Start
 VAR_INPUT
-    fRequestedAttenuation : LREAL; // [0.0 - 1.0]
-END_VAR]]></Declaration>
+    fRequestedTransmission : LREAL; // [0.0 - 1.0]
+    eRequestedRoundingMode : E_HE_SATT_RoundingMode;
+    fRequestedAllowableTolerance : LREAL;
+END_VAR
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-THIS^.fStartAttenuationValue := fRequestedAttenuation;
+THIS^.fStartTransmissionValue := fRequestedTransmission;
+THIS^.eStartRoundingModeValue := eRequestedRoundingMode;
+THIS^.fStartAllowableToleranceValue := fRequestedAllowableTolerance;
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_HE_SATT_SequenceTestDouble">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_SequenceTestDouble.GetStartAllowableToleranceValue">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_SequenceTestDouble.GetStartRoundingModeValue">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_SequenceTestDouble.GetStartTransmissionValue">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_SequenceTestDouble.Start">
+      <LineId Id="3" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
