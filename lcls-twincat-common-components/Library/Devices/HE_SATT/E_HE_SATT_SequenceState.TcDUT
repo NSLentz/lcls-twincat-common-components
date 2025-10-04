@@ -6,7 +6,12 @@
 {attribute 'to_string'}
 TYPE E_HE_SATT_SequenceState :
 (
-    ERROR := 0
+    IDLE := 0,
+    ERROR,
+    DETERMINE_FILTER_COMBINATIONS,
+    CALCULATE,
+    TRIGGER_MOVE_START,
+    CONFIRM_MOVE_COMPLETE
 );
 END_TYPE
 ]]></Declaration>

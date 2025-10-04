@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_HE_SATT_FilterCombinationFinder" Id="{feca836f-e8bb-4515-a1e0-f38c0fee151e}" SpecialFunc="None">
     <Declaration><![CDATA[
-FUNCTION_BLOCK FB_HE_SATT_FilterCombinationFinder
+FUNCTION_BLOCK FB_HE_SATT_FilterCombinationFinder IMPLEMENTS I_HE_SATT_FilterCombinationFinder
 VAR
     aiFilterHolder : REFERENCE TO ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_FilterHolder;
     iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;

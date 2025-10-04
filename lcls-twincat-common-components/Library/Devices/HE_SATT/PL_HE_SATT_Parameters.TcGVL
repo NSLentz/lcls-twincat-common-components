@@ -4,7 +4,7 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
     nNumHolders : INT := 5;
-    nMaxNumFiltersPerHolder : INT := 14;
+    nMaxNumFiltersPerHolder : INT := 11;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

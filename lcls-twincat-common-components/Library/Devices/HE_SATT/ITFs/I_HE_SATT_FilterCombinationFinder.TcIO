@@ -6,15 +6,9 @@ INTERFACE I_HE_SATT_FilterCombinationFinder
 ]]></Declaration>
     <Method Name="DetermineFilterCombinations" Id="{30980698-8e56-4802-a113-3fcf19607234}">
       <Declaration><![CDATA[
-METHOD PUBLIC DetermineFilterCombinations
+METHOD PUBLIC DetermineFilterCombinations : REFERENCE TO ST_HE_SATT_FilterCombinationFinderStatus
 VAR_INPUT
     iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
-END_VAR
-VAR_OUTPUT
-    bBusy : BOOL;
-    bDone : BOOL;
-    bError : BOOL;
-    sErrorMsg : T_MaxString;
 END_VAR
 ]]></Declaration>
     </Method>

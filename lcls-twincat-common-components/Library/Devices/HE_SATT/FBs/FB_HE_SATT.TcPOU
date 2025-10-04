@@ -9,7 +9,18 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="CallAfterInit" Id="{6e69e5eb-5bcd-403c-97be-a9a2f04157d2}">
+      <Declaration><![CDATA[
+METHOD CallAfterInit
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_HE_SATT">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT.CallAfterInit">
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
