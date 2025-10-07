@@ -12,6 +12,15 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Method Name="MoveToFilter" Id="{42d2d649-ec14-4b4d-9b6b-ac71b890eebc}">
+      <Declaration><![CDATA[
+METHOD MoveToFilter
+VAR_INPUT
+    iFilter : I_HE_SATT_Filter;
+    fThickness : LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="NumberOfSlots" Id="{e83b7fb5-7407-4813-b9cc-d270aebd7af9}">
       <Declaration><![CDATA[
 PROPERTY NumberOfSlots : INT
@@ -28,5 +37,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Property Name="Status" Id="{838e8368-38e8-4eb9-851f-0c929494f5e3}">
+      <Declaration><![CDATA[
+PROPERTY Status : REFERENCE TO ST_HE_SATT_Status
+]]></Declaration>
+      <Get Name="Get" Id="{39407399-1ad2-4709-8508-ecccc47d1e58}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
   </Itf>
 </TcPlcObject>

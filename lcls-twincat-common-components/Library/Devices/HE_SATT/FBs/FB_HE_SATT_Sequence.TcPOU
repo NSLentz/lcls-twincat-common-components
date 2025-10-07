@@ -6,6 +6,11 @@ FUNCTION_BLOCK FB_HE_SATT_Sequence IMPLEMENTS I_HE_SATT_Sequence
 VAR
     iFilterCombinationFinder : I_HE_SATT_FilterCombinationFinder;
     iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
+    iPhotonEnergy_eV : I_HE_SATT_PhotonEnergy_eV;
+    iFindOptimalFilterCombination : I_HE_SATT_FindOptimalFilterCombination;
+    iFindOptimalThicknessFromFilterCombination : I_HE_SATT_FindOptimalThicknessFromFilterCombination;
+    iCommands : I_HE_SATT_Commands;
+    aiFilterHolder : REFERENCE TO ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_FilterHolder;
 
     eSequenceState : E_HE_SATT_SequenceState;
     
@@ -13,41 +18,195 @@ VAR
 	eRequestedRoundingMode	: E_HE_SATT_RoundingMode;
 	fRequestedAllowableTolerance	: LREAL;
     
-    stFilterCombinationFinderStatus : REFERENCE TO ST_HE_SATT_FilterCombinationFinderStatus;
+    fbFilterCombinationCollector : FB_HE_SATT_FilterCombinationCollector;
+    fbFilterCombinationCollectorDownselected : FB_HE_SATT_FilterCombinationCollector;
+    
+    iOptimalFilterCombination : I_HE_SATT_FilterCombination;
+    
+    afThickness : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF LREAL;
+    
+    nIteratorHolder : INT;
+    iFilter : I_HE_SATT_Filter;
+    
+    bAllDone : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+IF iCommands.Reset THEN
+    eSequenceState := E_HE_SATT_SequenceState.IDLE;
+END_IF
+
 CASE SequenceState OF
     E_HE_SATT_SequenceState.IDLE:
         // Do nothing for now
         
-    E_HE_SATT_SequenceState.DETERMINE_FILTER_COMBINATIONS:
-        stFilterCombinationFinderStatus REF= iFilterCombinationFinder.DetermineFilterCombinations(
-            iFilterHolderSelector := iFilterHolderSelector
+    E_HE_SATT_SequenceState.TRIGGER_DETERMINE_FILTER_COMBINATIONS:
+        iFilterCombinationFinder.DetermineFilterCombinations(
+            iFilterHolderSelector := iFilterHolderSelector,
+            iFilterCombinationCollector := fbFilterCombinationCollector
         );
         
-        IF stFilterCombinationFinderStatus.bDone THEN
-            eSequenceState := E_HE_SATT_SequenceState.CALCULATE;
-        ELSIF stFilterCombinationFinderStatus.bError THEN
+        eSequenceState := E_HE_SATT_SequenceState.CONFIRM_DETERMINE_FILTER_COMBINATIONS;
+        
+    E_HE_SATT_SequenceState.CONFIRM_DETERMINE_FILTER_COMBINATIONS:
+        IF iFilterCombinationFinder.Status.bError THEN
             eSequenceState := E_HE_SATT_SequenceState.ERROR;
             // TODO: error handling
+            RETURN;
         END_IF
         
-    E_HE_SATT_SequenceState.CALCULATE:
-        // Do nothing for now
+        IF iFilterCombinationFinder.Status.bDone THEN
+            eSequenceState := E_HE_SATT_SequenceState.TRIGGER_DOWNSELECT_FILTER_COMBINATIONS;
+        END_IF
+        
+    E_HE_SATT_SequenceState.TRIGGER_DOWNSELECT_FILTER_COMBINATIONS:
+        fbFilterCombinationCollector.DownselectByCouplingRule(
+            iFilterHolderSelector := iFilterHolderSelector,
+            iFilterCombinationCollector := fbFilterCombinationCollectorDownselected
+        );
+        
+        eSequenceState := E_HE_SATT_SequenceState.CONFIRM_DOWNSELECT_FILTER_COMBINATIONS;
+        
+    E_HE_SATT_SequenceState.CONFIRM_DOWNSELECT_FILTER_COMBINATIONS:
+        IF fbFilterCombinationCollector.DownselectStatus.bError THEN
+            eSequenceState := E_HE_SATT_SequenceState.ERROR;
+            // TODO: error handling
+            RETURN;
+        END_IF
+        
+        IF fbFilterCombinationCollector.DownselectStatus.bDone THEN
+            eSequenceState := E_HE_SATT_SequenceState.TRIGGER_CALCULATE_OPTIMAL_FILTER_COMBINATION;
+        END_IF
+        
+    E_HE_SATT_SequenceState.TRIGGER_CALCULATE_OPTIMAL_FILTER_COMBINATION:
+        IF iPhotonEnergy_eV.Error THEN
+            eSequenceState := E_HE_SATT_SequenceState.ERROR;
+            // TODO: error handling
+            RETURN;
+        END_IF
+    
+        iFindOptimalFilterCombination.FindOptimalCombination(
+            fPhotonEnergy_eV := iPhotonEnergy_eV.Value,
+            fRequestedTransmission := fRequestedTransmission,
+            eRequestedRoundingMode := eRequestedRoundingMode,
+            fRequestedAllowableTolerance := fRequestedAllowableTolerance,
+            iFilterCombinationCollector := fbFilterCombinationCollectorDownselected,
+            iOptimalFilterCombination => iOptimalFilterCombination,
+        );
+        
+        eSequenceState := E_HE_SATT_SequenceState.CONFIRM_CALCULATE_OPTIMAL_FILTER_COMBINATION;
+        
+    E_HE_SATT_SequenceState.CONFIRM_CALCULATE_OPTIMAL_FILTER_COMBINATION:
+        IF iFindOptimalFilterCombination.Status.bError THEN
+            eSequenceState := E_HE_SATT_SequenceState.ERROR;
+            // TODO: error handling
+            RETURN;
+        END_IF
+        
+        IF iFindOptimalFilterCombination.Status.bDone THEN
+            eSequenceState := E_HE_SATT_SequenceState.TRIGGER_CALCULATE_OPTIMAL_WEDGE_THICKNESSES;
+        END_IF
+        
+    E_HE_SATT_SequenceState.TRIGGER_CALCULATE_OPTIMAL_WEDGE_THICKNESSES:
+        IF iOptimalFilterCombination = 0 THEN
+            eSequenceState := E_HE_SATT_SequenceState.ERROR;
+            // TODO: error handling
+            RETURN;
+        END_IF
+        
+        IF iPhotonEnergy_eV.Error THEN
+            eSequenceState := E_HE_SATT_SequenceState.ERROR;
+            // TODO: error handling
+            RETURN;
+        END_IF
+        
+        iFindOptimalThicknessFromFilterCombination.FindOptimalThicknessFromFilterCombination(
+            fPhotonEnergy_eV := iPhotonEnergy_eV.Value,
+            fRequestedTransmission := fRequestedTransmission,
+            iFilterCombination := iOptimalFilterCombination,
+            afThickness => afThickness
+        );
+        
+    E_HE_SATT_SequenceState.CONFIRM_CALCULATE_OPTIMAL_WEDGE_THICKNESSES:
+        IF iFindOptimalThicknessFromFilterCombination.Status.bError THEN
+            eSequenceState := E_HE_SATT_SequenceState.ERROR;
+            // TODO: error handling
+            RETURN;
+        END_IF
+        
+        IF iFindOptimalThicknessFromFilterCombination.Status.bDone THEN
+            eSequenceState := E_HE_SATT_SequenceState.CONFIRM_MOVE_PERMITTED;
+        END_IF
+        
+    E_HE_SATT_SequenceState.CONFIRM_MOVE_PERMITTED:
+        IF iCommands.PermitMove THEN
+            eSequenceState := E_HE_SATT_SequenceState.TRIGGER_MOVE_START;
+        END_IF
         
     E_HE_SATT_SequenceState.TRIGGER_MOVE_START:
-        // Do nothing for now
+        FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+            iFilter := iOptimalFilterCombination.GetFilter(nIteratorHolder);
+            
+            aiFilterHolder[nIteratorHolder].MoveToFilter(
+                iFilter := iFilter,
+                fThickness := afThickness[nIteratorHolder]
+            );
+        END_FOR
+        
+        eSequenceState := E_HE_SATT_SequenceState.CONFIRM_MOVE_COMPLETE;
         
     E_HE_SATT_SequenceState.CONFIRM_MOVE_COMPLETE:
-        // Do nothing for now
+        FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+            IF aiFilterHolder[nIteratorHolder].Status.bError THEN
+                eSequenceState := E_HE_SATT_SequenceState.ERROR;
+                // TODO: error handling
+                RETURN;
+            END_IF
+        END_FOR
+        
+        bAllDone := TRUE;
+        
+        FOR nIteratorHolder := 1 TO PL_HE_SATT_Parameters.nNumHolders BY 1 DO
+            bAllDone := bAllDone AND aiFilterHolder[nIteratorHolder].Status.bDone;
+        END_FOR
+        
+        IF bAllDone THEN
+            eSequenceState := E_HE_SATT_SequenceState.IDLE;
+            // TODO: lof successful completion of move.
+        END_IF
         
     E_HE_SATT_SequenceState.ERROR:
         // TODO: error handling
+        
 END_CASE
 ]]></ST>
     </Implementation>
+    <Method Name="FB_Init" Id="{f4d7ec53-0767-47c2-8c9e-bc2f05fb3bef}">
+      <Declaration><![CDATA[
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+    
+    iFilterCombinationFinder : I_HE_SATT_FilterCombinationFinder;
+    iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
+    iFindOptimalFilterCombination : I_HE_SATT_FindOptimalFilterCombination;
+    iPhotonEnergy_eV : I_HE_SATT_PhotonEnergy_eV;
+    iCommands : I_HE_SATT_Commands;
+    aiFilterHolder : REFERENCE TO ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_FilterHolder;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.iFilterCombinationFinder := iFilterCombinationFinder;
+THIS^.iFilterHolderSelector := iFilterHolderSelector;
+THIS^.iFindOptimalFilterCombination := iFindOptimalFilterCombination;
+THIS^.iPhotonEnergy_eV := iPhotonEnergy_eV;
+THIS^.iCommands := iCommands;
+THIS^.aiFilterHolder REf= aiFilterHolder;
+    ]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="SequenceState" Id="{929427a0-ccc7-4946-99ca-5deed82b5dcf}">
       <Declaration><![CDATA[PROPERTY PUBLIC SequenceState : E_HE_SATT_SequenceState]]></Declaration>
       <Get Name="Get" Id="{6ccd5faf-c46b-4e55-9e3a-0a24258f6c4b}">
@@ -71,11 +230,16 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-THIS^.eSequenceState := E_HE_SATT_SequenceState.CALCULATE;
+THIS^.fRequestedTransmission := fRequestedTransmission;
+THIS^.eRequestedRoundingMode := eRequestedRoundingMode;
+THIS^.fRequestedAllowableTolerance := fRequestedAllowableTolerance;
+
+THIS^.eSequenceState := E_HE_SATT_SequenceState.TRIGGER_DETERMINE_FILTER_COMBINATIONS;
 ]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_HE_SATT_Sequence">
+      <LineId Id="85" Count="3" />
       <LineId Id="3" Count="1" />
       <LineId Id="8" Count="0" />
       <LineId Id="10" Count="0" />
@@ -83,31 +247,88 @@ THIS^.eSequenceState := E_HE_SATT_SequenceState.CALCULATE;
       <LineId Id="26" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="20" Count="0" />
+      <LineId Id="55" Count="0" />
       <LineId Id="22" Count="0" />
-      <LineId Id="27" Count="1" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="31" Count="1" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="103" Count="7" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="111" Count="1" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="113" Count="10" />
       <LineId Id="30" Count="0" />
       <LineId Id="37" Count="0" />
       <LineId Id="36" Count="0" />
-      <LineId Id="38" Count="0" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="38" Count="5" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="133" Count="8" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="145" Count="3" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="160" Count="3" />
+      <LineId Id="149" Count="1" />
+      <LineId Id="156" Count="2" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="184" Count="9" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="83" Count="1" />
       <LineId Id="17" Count="0" />
       <LineId Id="13" Count="1" />
+      <LineId Id="198" Count="1" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="200" Count="1" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="202" Count="1" />
       <LineId Id="18" Count="0" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="205" Count="3" />
       <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="231" Count="1" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="233" Count="2" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="236" Count="0" />
       <LineId Id="19" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="0" />
+      <LineId Id="82" Count="0" />
       <LineId Id="6" Count="0" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_Sequence.FB_Init">
+      <LineId Id="1" Count="7" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_Sequence.SequenceState.Get">
       <LineId Id="2" Count="1" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_Sequence.Start">
+      <LineId Id="4" Count="3" />
       <LineId Id="2" Count="1" />
       <LineId Id="1" Count="0" />
     </LineIds>

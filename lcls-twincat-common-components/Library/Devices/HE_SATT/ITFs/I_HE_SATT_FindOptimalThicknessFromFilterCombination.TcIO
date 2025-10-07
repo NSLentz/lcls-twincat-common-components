@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FindOptimalThicknessFromFilterCombination" Id="{14b544be-a7e9-4c90-bba6-2fd7cc813bd4}">
+    <Declaration><![CDATA[
+INTERFACE I_HE_SATT_FindOptimalThicknessFromFilterCombination
+]]></Declaration>
+    <Method Name="FindOptimalThicknessFromFilterCombination" Id="{79604f08-55da-4db0-b9e0-847e6948380f}">
+      <Declaration><![CDATA[
+METHOD FindOptimalThicknessFromFilterCombination
+VAR_INPUT
+    fPhotonEnergy_eV : LREAL;
+    fRequestedTransmission : LREAL;
+    iFilterCombination : I_HE_SATT_FilterCombination;
+END_VAR
+VAR_OUTPUT
+    afThickness : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Status" Id="{7f5404fa-c38a-4263-969a-c0a62dfd214a}">
+      <Declaration><![CDATA[
+PROPERTY Status : REFERENCE TO ST_HE_SATT_Status
+]]></Declaration>
+      <Get Name="Get" Id="{190c116e-3135-4d6f-94ae-ec87c4289fa7}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

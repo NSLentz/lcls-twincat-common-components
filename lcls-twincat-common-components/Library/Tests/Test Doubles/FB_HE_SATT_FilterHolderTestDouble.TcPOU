@@ -24,6 +24,18 @@ GetFilter := THIS^.aiFilter[nFilterNumber];
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="MoveToFilter" Id="{4da5af6e-c09f-4a4d-9f7d-8cd056002b91}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD MoveToFilter
+VAR_INPUT
+    iFilter : I_HE_SATT_Filter;
+    fThickness : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="NumberOfSlots" Id="{ef65f36b-3c7e-4172-b32f-a37ed4256cd1}">
       <Declaration><![CDATA[
 PROPERTY NumberOfSlots : INT
@@ -70,11 +82,27 @@ THIS^.aiFilter[nFilterNumber] := iFilter;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Status" Id="{1b9c7343-c8e8-4902-ac27-4b5d24ca034a}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Status : REFERENCE TO ST_HE_SATT_Status
+]]></Declaration>
+      <Get Name="Get" Id="{f7c981b3-5468-4e6c-8010-83bdfeb175dd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <LineIds Name="FB_HE_SATT_FilterHolderTestDouble">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.GetFilter">
       <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.MoveToFilter">
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.NumberOfSlots.Get">
       <LineId Id="1" Count="2" />
@@ -87,6 +115,9 @@ THIS^.aiFilter[nFilterNumber] := iFilter;
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.SetFilter">
       <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolderTestDouble.Status.Get">
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

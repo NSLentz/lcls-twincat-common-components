@@ -68,9 +68,8 @@ VAR
     sConcatString : T_MaxString;
     fbFilterCombinationExpected : FB_HE_SATT_FilterCombination;
     aiFilterExpected : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
-    fbFilterCombinationResult : REFERENCE TO FB_HE_SATT_FilterCombination;
+    iFilterCombinationResult : I_HE_SATT_FilterCombination;
     aiFilterResult : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
-    bWithinAllowableToleranceResult : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -130,13 +129,13 @@ fbFilterCombinationToTransmissionTestDouble.PushTransmissionResultToSequence(
 );
 fbFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
 
-fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
     fPhotonEnergy_eV := 1000,
     fRequestedTransmission := 0.61,
     eRequestedRoundingMode := E_HE_SATT_RoundingMode.CLOSEST_ABOVE,
     fRequestedAllowableTolerance := 1e-3,
     iFilterCombinationCollector := fbFilterCombinationCollector,
-    bWithinAllowableTolerance =>
+    iOptimalFilterCombination => iFilterCombinationResult
 );
 
 fbFilterCombinationExpected.Clear();
@@ -147,18 +146,18 @@ fbFilterCombinationExpected.AddFilter(4, afbFilter[4]);
 fbFilterCombinationExpected.AddFilter(5, 0);
 AssertEquals_Combination(
     iFilterCombinationExpected := fbFilterCombinationExpected,
-    iFilterCombinationResult := fbFilterCombinationResult
+    iFilterCombinationResult := iFilterCombinationResult
 );
 
 fbFilterCombinationToTransmissionTestDouble.Reset();
 
-fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
     fPhotonEnergy_eV := 1000,
     fRequestedTransmission := 0.94,
     eRequestedRoundingMode := E_HE_SATT_RoundingMode.CLOSEST_BELOW,
     fRequestedAllowableTolerance := 1e-3,
     iFilterCombinationCollector := fbFilterCombinationCollector,
-    bWithinAllowableTolerance =>
+    iOptimalFilterCombination => iFilterCombinationResult
 );
 
 fbFilterCombinationExpected.Clear();
@@ -169,18 +168,18 @@ fbFilterCombinationExpected.AddFilter(4, 0);
 fbFilterCombinationExpected.AddFilter(5, afbFilter[5]);
 AssertEquals_Combination(
     iFilterCombinationExpected := fbFilterCombinationExpected,
-    iFilterCombinationResult := fbFilterCombinationResult
+    iFilterCombinationResult := iFilterCombinationResult
 );
 
 fbFilterCombinationToTransmissionTestDouble.Reset();
 
-fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
     fPhotonEnergy_eV := 1000,
     fRequestedTransmission := 0.96,
     eRequestedRoundingMode := E_HE_SATT_RoundingMode.CLOSEST,
     fRequestedAllowableTolerance := 1e-3,
     iFilterCombinationCollector := fbFilterCombinationCollector,
-    bWithinAllowableTolerance =>
+    iOptimalFilterCombination => iFilterCombinationResult
 );
 
 fbFilterCombinationExpected.Clear();
@@ -191,18 +190,18 @@ fbFilterCombinationExpected.AddFilter(4, 0);
 fbFilterCombinationExpected.AddFilter(5, afbFilter[5]);
 AssertEquals_Combination(
     iFilterCombinationExpected := fbFilterCombinationExpected,
-    iFilterCombinationResult := fbFilterCombinationResult
+    iFilterCombinationResult := iFilterCombinationResult
 );
 
 fbFilterCombinationToTransmissionTestDouble.Reset();
 
-fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
     fPhotonEnergy_eV := 1000,
     fRequestedTransmission := 0.79,
     eRequestedRoundingMode := E_HE_SATT_RoundingMode.FIRST_ABOVE_WITHIN_TOLERANCE,
     fRequestedAllowableTolerance := 0.02,
     iFilterCombinationCollector := fbFilterCombinationCollector,
-    bWithinAllowableTolerance =>
+    iOptimalFilterCombination => iFilterCombinationResult
 );
 
 fbFilterCombinationExpected.Clear();
@@ -213,18 +212,18 @@ fbFilterCombinationExpected.AddFilter(4, 0);
 fbFilterCombinationExpected.AddFilter(5, 0);
 AssertEquals_Combination(
     iFilterCombinationExpected := fbFilterCombinationExpected,
-    iFilterCombinationResult := fbFilterCombinationResult
+    iFilterCombinationResult := iFilterCombinationResult
 );
 
 fbFilterCombinationToTransmissionTestDouble.Reset();
 
-fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
     fPhotonEnergy_eV := 1000,
     fRequestedTransmission := 0.79,
     eRequestedRoundingMode := E_HE_SATT_RoundingMode.FIRST_BELOW_WITHIN_TOLERANCE,
     fRequestedAllowableTolerance := 0.1,
     iFilterCombinationCollector := fbFilterCombinationCollector,
-    bWithinAllowableTolerance =>
+    iOptimalFilterCombination => iFilterCombinationResult
 );
 
 fbFilterCombinationExpected.Clear();
@@ -235,18 +234,18 @@ fbFilterCombinationExpected.AddFilter(4, 0);
 fbFilterCombinationExpected.AddFilter(5, 0);
 AssertEquals_Combination(
     iFilterCombinationExpected := fbFilterCombinationExpected,
-    iFilterCombinationResult := fbFilterCombinationResult
+    iFilterCombinationResult := iFilterCombinationResult
 );
 
 fbFilterCombinationToTransmissionTestDouble.Reset();
 
-fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
     fPhotonEnergy_eV := 1000,
     fRequestedTransmission := 0.89,
     eRequestedRoundingMode := E_HE_SATT_RoundingMode.FIRST_WITHIN_TOLERANCE,
     fRequestedAllowableTolerance := 0.1,
     iFilterCombinationCollector := fbFilterCombinationCollector,
-    bWithinAllowableTolerance =>
+    iOptimalFilterCombination => iFilterCombinationResult
 );
 
 fbFilterCombinationExpected.Clear();
@@ -257,18 +256,18 @@ fbFilterCombinationExpected.AddFilter(4, 0);
 fbFilterCombinationExpected.AddFilter(5, 0);
 AssertEquals_Combination(
     iFilterCombinationExpected := fbFilterCombinationExpected,
-    iFilterCombinationResult := fbFilterCombinationResult
+    iFilterCombinationResult := iFilterCombinationResult
 );
 
 fbFilterCombinationToTransmissionTestDouble.Reset();
 
-fbFilterCombinationResult REF= fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
+fbHE_SATT_FindOptimalFilterCombination.FindOptimalCombination(
     fPhotonEnergy_eV := 1000,
     fRequestedTransmission := 0.55,
     eRequestedRoundingMode := E_HE_SATT_RoundingMode.FIRST_WITHIN_TOLERANCE,
     fRequestedAllowableTolerance := 0.1,
     iFilterCombinationCollector := fbFilterCombinationCollector,
-    bWithinAllowableTolerance =>
+    iOptimalFilterCombination => iFilterCombinationResult
 );
 
 fbFilterCombinationExpected.Clear();
@@ -279,7 +278,7 @@ fbFilterCombinationExpected.AddFilter(4, afbFilter[4]);
 fbFilterCombinationExpected.AddFilter(5, 0);
 AssertEquals_Combination(
     iFilterCombinationExpected := fbFilterCombinationExpected,
-    iFilterCombinationResult := fbFilterCombinationResult
+    iFilterCombinationResult := iFilterCombinationResult
 );
 
 fbFilterCombinationToTransmissionTestDouble.Reset();
@@ -295,7 +294,28 @@ TEST_FINISHED();
       <LineId Id="1" Count="16" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FindOptimalFilterCombination_Test.GivenCombinationCollectionAndRequestExpectOptimalCombinationFound">
-      <LineId Id="1" Count="211" />
+      <LineId Id="213" Count="61" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="276" Count="19" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="296" Count="0" />
+      <LineId Id="298" Count="19" />
+      <LineId Id="430" Count="0" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="320" Count="19" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="342" Count="19" />
+      <LineId Id="436" Count="0" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="364" Count="19" />
+      <LineId Id="439" Count="0" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="386" Count="19" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="406" Count="0" />
+      <LineId Id="408" Count="15" />
+      <LineId Id="212" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

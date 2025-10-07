@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_Commands" Id="{a08734bf-785c-4688-8c5d-7461eb32ca94}">
+    <Declaration><![CDATA[
+INTERFACE I_HE_SATT_Commands
+]]></Declaration>
+    <Property Name="PermitMove" Id="{6e4d309d-0b60-41ee-a05a-62ef3d3fa462}">
+      <Declaration><![CDATA[
+PROPERTY PermitMove : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{bb4137e3-a65c-492e-85c6-fd552e96faf4}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Reset" Id="{3270352f-256d-4cb6-9760-b157566f6f50}">
+      <Declaration><![CDATA[
+PROPERTY Reset : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{3feb3014-39d2-4a7c-9b15-892de56959b9}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

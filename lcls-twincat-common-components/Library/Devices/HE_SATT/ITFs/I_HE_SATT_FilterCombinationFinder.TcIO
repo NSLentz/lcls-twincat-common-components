@@ -6,11 +6,20 @@ INTERFACE I_HE_SATT_FilterCombinationFinder
 ]]></Declaration>
     <Method Name="DetermineFilterCombinations" Id="{30980698-8e56-4802-a113-3fcf19607234}">
       <Declaration><![CDATA[
-METHOD PUBLIC DetermineFilterCombinations : REFERENCE TO ST_HE_SATT_FilterCombinationFinderStatus
+METHOD PUBLIC DetermineFilterCombinations
 VAR_INPUT
     iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
+    iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
 END_VAR
 ]]></Declaration>
     </Method>
+    <Property Name="Status" Id="{8a10b441-adf8-4ec2-a81d-e1818b464eda}">
+      <Declaration><![CDATA[
+PROPERTY Status : REFERENCE TO ST_HE_SATT_Status
+]]></Declaration>
+      <Get Name="Get" Id="{85cedd68-a4d3-4e39-a89f-a637a8949ca8}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
   </Itf>
 </TcPlcObject>

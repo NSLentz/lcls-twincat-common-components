@@ -9,9 +9,44 @@ END_VAR
 VAR
     nNumberOfCombinations : DINT;
     afbFilterCombination : ARRAY[1..nMAXIMUM_NUMBER_OF_COMBINATIONS] OF FB_HE_SATT_FilterCombination;
+    stStatus : ST_HE_SATT_Status;
+    eState : (DOWNSELECTING, IDLE);
+    
+    nCombinationIterator : DINT;
+    nNumCombinationsAdded : DINT;
+    fbFilterCombination : REFERENCE TO FB_HE_SATT_FilterCombination;
+    iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
+    iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[
+CASE eState OF
+    IDLE:
+        stStatus.bBusy := FALSE;
+        
+    DOWNSELECTING:
+        stStatus.bBusy := TRUE;
+        
+        nNumCombinationsAdded := THIS^.NumCombinationsAdded;
+        
+        FOR nCombinationIterator := 1 TO nNumCombinationsAdded BY 1 DO
+            fbFilterCombination REF= THIS^.GetCombination(nCombinationIterator);
+            
+            IF NOT __ISVALIDREF(fbFilterCombination) OR_ELSE NOT iFilterHolderSelector.CouplingRulesSatisfied(fbFilterCombination) THEN
+                CONTINUE;
+            END_IF
+            
+            iFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
+        END_FOR
+        
+        stStatus.bBusy := FALSE;
+        stStatus.bDone := TRUE;
+        stStatus.bError := FALSE;
+        stStatus.sErrorMsg := '';
+        
+        eState := IDLE;
+END_CASE
+]]></ST>
     </Implementation>
     <Method Name="AddFilterCombination" Id="{f4eb5908-4a36-48dd-84ff-a98c52084b57}">
       <Declaration><![CDATA[
@@ -38,28 +73,34 @@ VAR_INPUT
     iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
     iFilterHolderSelector : I_HE_SATT_FilterHolderSelector;
 END_VAR
-VAR
-    nCombinationIterator : DINT;
-    nNumCombinationsAdded : DINT;
-    fbFilterCombination : REFERENCE TO FB_HE_SATT_FilterCombination;
-END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-nNumCombinationsAdded := THIS^.NumCombinationsAdded;
+THIS^.iFilterCombinationCollector := iFilterCombinationCollector;
+THIS^.iFilterHolderSelector := iFilterHolderSelector;
 
-FOR nCombinationIterator := 1 TO nNumCombinationsAdded BY 1 DO
-    fbFilterCombination REF= THIS^.GetCombination(nCombinationIterator);
-    
-    IF NOT __ISVALIDREF(fbFilterCombination) OR_ELSE NOT iFilterHolderSelector.CouplingRulesSatisfied(fbFilterCombination) THEN
-        CONTINUE;
-    END_IF
-    
-    iFilterCombinationCollector.AddFilterCombination(fbFilterCombination);
-END_FOR
+THIS^.stStatus.bBusy := TRUE;
+THIS^.stStatus.bDone := FALSE;
+THIS^.stStatus.bError := FALSE;
+THIS^.stStatus.sErrorMsg := '';
+
+THIS^.eState := DOWNSELECTING;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="DownselectStatus" Id="{e8407f0e-f2ca-43f7-86c4-4a4b34f42e13}">
+      <Declaration><![CDATA[
+PROPERTY DownselectStatus : REFERENCE TO ST_HE_SATT_Status
+]]></Declaration>
+      <Get Name="Get" Id="{559fdacc-04e3-422a-8423-2a05aa603188}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+DownselectStatus REF= THIS^.stStatus;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="GetCombination" Id="{faf7cc6b-d99e-4611-9630-58003c4f0463}">
       <Declaration><![CDATA[
 METHOD GetCombination : REFERENCE TO FB_HE_SATT_FilterCombination
@@ -97,13 +138,34 @@ nNumberOfCombinations := 0;
       </Implementation>
     </Method>
     <LineIds Name="FB_HE_SATT_FilterCombinationCollector">
+      <LineId Id="3" Count="1" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="11" Count="9" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="6" Count="0" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationCollector.AddFilterCombination">
       <LineId Id="1" Count="7" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationCollector.DownselectByCouplingRule">
-      <LineId Id="1" Count="12" />
+      <LineId Id="15" Count="2" />
+      <LineId Id="20" Count="3" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="12" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterCombinationCollector.DownselectStatus.Get">
+      <LineId Id="1" Count="2" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterCombinationCollector.GetCombination">
       <LineId Id="1" Count="2" />

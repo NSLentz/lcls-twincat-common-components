@@ -9,11 +9,36 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="FB_Init" Id="{d3d486b6-acb1-4c10-9c60-66d79ba27f34}">
+      <Declaration><![CDATA[
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+
+//     iMotionStage : I_MotionStage;  
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="GetFilter" Id="{dcf6eccc-ae4f-4d88-87a5-95aa1f4ace9d}">
       <Declaration><![CDATA[{warning 'Add method implementation '}
 METHOD GetFilter : I_HE_SATT_Filter
 VAR_INPUT
 	nFilterNumber	: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveToFilter" Id="{f0e6fc12-47bc-4b32-b594-9d75e111e828}">
+      <Declaration><![CDATA[
+METHOD MoveToFilter
+VAR_INPUT
+    iFilter : I_HE_SATT_Filter;
+    fThickness : LREAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -44,16 +69,38 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Status" Id="{93b2128b-bca4-43fd-a301-b4934c80cc9c}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Status : REFERENCE TO ST_HE_SATT_Status
+]]></Declaration>
+      <Get Name="Get" Id="{3bbfaabc-1721-498f-8a0f-1fc7ebd28d64}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <LineIds Name="FB_HE_SATT_FilterHolder">
       <LineId Id="1" Count="0" />
     </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolder.FB_Init">
+      <LineId Id="1" Count="0" />
+    </LineIds>
     <LineIds Name="FB_HE_SATT_FilterHolder.GetFilter">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolder.MoveToFilter">
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterHolder.NumberOfSlots.Get">
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_HE_SATT_FilterHolder.RegisterFilter">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_FilterHolder.Status.Get">
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

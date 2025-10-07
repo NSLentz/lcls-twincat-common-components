@@ -21,6 +21,14 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
+    <Property Name="DownselectStatus" Id="{97279e63-9cd2-42af-8c3b-d22d6c2d5de1}">
+      <Declaration><![CDATA[
+PROPERTY DownselectStatus : REFERENCE TO ST_HE_SATT_Status
+]]></Declaration>
+      <Get Name="Get" Id="{cf57ad50-186e-46d3-be2c-bd39493d1b73}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="GetCombination" Id="{4ce62b9d-ae68-40dd-bd58-fb785c38dc50}">
       <Declaration><![CDATA[
 METHOD GetCombination : REFERENCE TO FB_HE_SATT_FilterCombination

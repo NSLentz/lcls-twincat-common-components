@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_HE_SATT_CommandsEpics" Id="{438d1cad-cb94-4f9e-b53f-7bd18ce892e3}" SpecialFunc="None">
+    <Declaration><![CDATA[
+FUNCTION_BLOCK FB_HE_SATT_CommandsEpics IMPLEMENTS I_HE_SATT_Commands
+VAR
+    bPermitMove : BOOL;
+    bReset : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="PermitMove" Id="{bde7f3ef-5c59-462a-8b06-ebaa73a456bb}">
+      <Declaration><![CDATA[
+PROPERTY PermitMove : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{b8a740ce-11c5-4a17-bf5b-7fbe705aeb0e}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+PermitMove := THIS^.bPermitMove;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a57ce744-269a-4c7f-98cb-fb53586ebfc3}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+THIS^.bPermitMove := PermitMove;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Reset" Id="{f99b62d3-c285-4fb4-bcb3-07b82fb8641c}">
+      <Declaration><![CDATA[
+PROPERTY Reset : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{7eae352d-6f12-4763-b39d-cc3c03ad0c23}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+Reset := THIS^.bReset;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c638c8b8-8043-40d4-ad97-ab3bb05aa75e}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[
+THIS^.bReset := Reset;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_HE_SATT_CommandsEpics">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_CommandsEpics.PermitMove.Get">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_CommandsEpics.PermitMove.Set">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_CommandsEpics.Reset.Get">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_HE_SATT_CommandsEpics.Reset.Set">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

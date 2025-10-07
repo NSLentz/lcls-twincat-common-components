@@ -76,7 +76,6 @@ VAR
     // Subject under test
     fbFilterCombinationFinder : FB_HE_SATT_FilterCombinationFinder(
         aiFilterHolder := aiFilterHolder,
-        iFilterCombinationCollector := fbFilterCombinationCollector,
         nMaxNumberOfCombinationsFoundPerCycle := 500
     );
 
@@ -86,7 +85,6 @@ VAR
     aiFilterExpected : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
     fbFilterCombinationResult : FB_HE_SATT_FilterCombination;
     aiFilterResult : ARRAY[1..PL_HE_SATT_Parameters.nNumHolders] OF I_HE_SATT_Filter;
-    stStatus : REFERENCE TO ST_HE_SATT_FilterCombinationFinderStatus;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -122,31 +120,32 @@ fbFilterHolderSelectorTestDouble.SelectHolder(3);
 fbFilterHolderSelectorTestDouble.SelectHolder(4);
 fbFilterHolderSelectorTestDouble.DeselectHolder(5);
 
-stStatus REF= fbFilterCombinationFinder.DetermineFilterCombinations(
-    iFilterHolderSelector := fbFilterHolderSelectorTestDouble
+fbFilterCombinationFinder.DetermineFilterCombinations(
+    iFilterHolderSelector := fbFilterHolderSelectorTestDouble,
+    iFilterCombinationCollector := fbFilterCombinationCollector
 );
 
 AssertEquals_BOOL(
     Expected := TRUE,
-    Actual := stStatus.bBusy,
+    Actual := fbFilterCombinationFinder.Status.bBusy,
     Message := 'bBusy bit should be true after calling determine filter combinations.'
 );
 
 AssertEquals_BOOL(
     Expected := FALSE,
-    Actual := stStatus.bDone,
+    Actual := fbFilterCombinationFinder.Status.bDone,
     Message := 'bDone bit should be false after calling determine filter combinations.'
 );
 
 AssertEquals_BOOL(
     Expected := FALSE,
-    Actual := stStatus.bError,
+    Actual := fbFilterCombinationFinder.Status.bError,
     Message := 'bError bit should be false after calling determine filter combinations.'
 );
 
 AssertEquals_STRING(
     Expected := '',
-    Actual := stStatus.sErrorMsg,
+    Actual := fbFilterCombinationFinder.Status.sErrorMsg,
     Message := 'sErrorMsg string should be emptry after calling determine filter combinations.'
 );
 
@@ -154,25 +153,25 @@ fbFilterCombinationFinder();
 
 AssertEquals_BOOL(
     Expected := FALSE,
-    Actual := stStatus.bBusy,
+    Actual := fbFilterCombinationFinder.Status.bBusy,
     Message := 'bBusy bit should be false after first function body call since less combination than max per cycle.'
 );
 
 AssertEquals_BOOL(
     Expected := TRUE,
-    Actual := stStatus.bDone,
+    Actual := fbFilterCombinationFinder.Status.bDone,
     Message := 'bDone bit should be true after first function body call since less combination than max per cycle.'
 );
 
 AssertEquals_BOOL(
     Expected := FALSE,
-    Actual := stStatus.bError,
+    Actual := fbFilterCombinationFinder.Status.bError,
     Message := 'Should have been no errors after function body call.'
 );
 
 AssertEquals_STRING(
     Expected := '',
-    Actual := stStatus.sErrorMsg,
+    Actual := fbFilterCombinationFinder.Status.sErrorMsg,
     Message := 'Should have been no errors after function body call.'
 );
 
@@ -258,7 +257,9 @@ TEST_FINISHED();
     <LineIds Name="FB_HE_SATT_FilterCombinationFinder_Test.GivenHoldersAndSelectionExpectCorrectListOfCombinations">
       <LineId Id="352" Count="30" />
       <LineId Id="470" Count="0" />
-      <LineId Id="384" Count="2" />
+      <LineId Id="384" Count="1" />
+      <LineId Id="513" Count="0" />
+      <LineId Id="386" Count="0" />
       <LineId Id="460" Count="0" />
       <LineId Id="459" Count="0" />
       <LineId Id="461" Count="2" />

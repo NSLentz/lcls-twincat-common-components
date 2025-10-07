@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_HE_SATT_FindOptimalFilterCombination" Id="{71a4134d-dc69-4439-95ed-acfd41c0007d}">
+    <Declaration><![CDATA[
+INTERFACE I_HE_SATT_FindOptimalFilterCombination
+]]></Declaration>
+    <Method Name="FindOptimalCombination" Id="{88e23ce1-0e8c-4bc9-8b84-c2597bd7af2f}">
+      <Declaration><![CDATA[
+METHOD PUBLIC FindOptimalCombination
+VAR_INPUT
+    fPhotonEnergy_eV : LREAL;
+	(* [0.0 - 1.0]*)
+	fRequestedTransmission	: LREAL;
+	eRequestedRoundingMode	: E_HE_SATT_RoundingMode;
+	fRequestedAllowableTolerance	: LREAL;
+    iFilterCombinationCollector : I_HE_SATT_FilterCombinationCollector;
+END_VAR
+VAR_OUTPUT
+    iOptimalFilterCombination : I_HE_SATT_FilterCombination;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Status" Id="{200598b7-4f17-4e4c-ace5-5ba4a0cb7ab0}">
+      <Declaration><![CDATA[
+PROPERTY Status : REFERENCE TO ST_HE_SATT_Status
+]]></Declaration>
+      <Get Name="Get" Id="{0c7cc512-3f9c-4c5f-9a29-18fb192bcc89}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>
